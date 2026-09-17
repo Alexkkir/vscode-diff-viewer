@@ -662,6 +662,21 @@ describe("DiffViewerProvider", () => {
       expect(mockOnDidChangeConfiguration).toHaveBeenCalled();
     });
 
+    it("does not redraw identical data after focus and file notifications", async () => {
+      await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
+      const callbacks = jest.mocked(MessageToExtensionHandlerImpl).mock.calls.at(-1)?.[0];
+      callbacks?.onReadyReceived?.({ shellGeneration: 1 });
+      await jest.runAllTimersAsync();
+      jest.mocked(mockWebview.postMessage).mockClear();
+      const onChange = jest.mocked(vscode.workspace.onDidChangeTextDocument).mock.calls.at(-1)?.[0];
+      onChange?.({ document: mockTextDocument } as vscode.TextDocumentChangeEvent);
+      await jest.runAllTimersAsync();
+      const onFocus = jest.mocked(vscode.window.onDidChangeWindowState).mock.calls.at(-1)?.[0];
+      onFocus?.({ focused: true, active: true });
+      await jest.runAllTimersAsync();
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+    });
+
     it("should handle diff parsing and webview update", async () => {
       await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
       const constructorArgs = jest.mocked(MessageToExtensionHandlerImpl).mock.calls.at(-1)?.[0];

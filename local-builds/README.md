@@ -1,3 +1,10 @@
+# Latest local build: 1.7.7
+
+Install `diff-viewer-1.7.7-refresh-dedup.vsix`, then run **Developer: Reload Window**.
+Repeated file/focus/poll notifications now skip both loading UI and redraw when the complete render data is unchanged. File and focus checks remain enabled. Includes all 1.7.6 changes below.
+Validation: 254 unit tests, lint, TypeScript, production build and formatting passed.
+Build with the commands below, replacing the output filename with 1.7.7.
+
 # Local build 1.7.6
 
 Install `diff-viewer-1.7.6-auto-refresh.vsix` using VS Code's **Extensions → Install from VSIX**, then run **Developer: Reload Window**.

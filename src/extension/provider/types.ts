@@ -18,6 +18,7 @@ export interface WebviewContext {
   shellInitialized: boolean;
   shellGeneration: number;
   webviewReady: boolean;
+  lastRenderedData?: string;
   pendingReadyRender?: {
     collapseAll: boolean;
   };

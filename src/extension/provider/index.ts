@@ -277,7 +277,6 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     }
 
     webviewContext.pendingReadyRender = undefined;
-    this.prepareWebviewForRender(webviewContext);
 
     webviewContext.pendingRender = setTimeout(() => {
       void this.renderWebview({
@@ -305,10 +304,14 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         return;
       }
 
+      const serialized = JSON.stringify(renderedData);
+      if (args.webviewContext.lastRenderedData === serialized) return;
+      this.prepareWebviewForRender(args.webviewContext);
       this.postUpdateWebviewMessage({
         webviewContext: args.webviewContext,
         renderedData,
       });
+      args.webviewContext.lastRenderedData = serialized;
     } catch {
       this.handleWebviewRenderFailure(args.webviewContext);
     }
@@ -401,6 +404,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       return;
     }
 
+    webviewContext.lastRenderedData = undefined;
     webviewContext.webviewReady = true;
 
     const pendingReadyRender = webviewContext.pendingReadyRender;
