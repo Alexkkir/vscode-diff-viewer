@@ -4,11 +4,15 @@ export function findTextRanges(root: HTMLElement, query: string, matchCase = fal
   const ranges: Range[] = [];
   const pattern = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), matchCase ? "gu" : "giu");
   for (const block of root.querySelectorAll<HTMLElement>(".d2h-code-line-ctn, .d2h-file-name")) {
-    if (block.closest("[hidden], .d2h-file-collapse")) continue;
-    // Collapsed files are excluded, like the native browser find widget.
+    // Folded context remains searchable, but collapsed files and other hidden
+    // content are excluded, like the native browser find widget.
     let hidden = false;
-    for (let parent: HTMLElement | null = block; parent && parent !== root; parent = parent.parentElement) {
-      if (getComputedStyle(parent).display === "none") {
+    for (let parent: HTMLElement | null = block; parent; parent = parent.parentElement) {
+      const foldedContext = parent.matches("tr.diff-context-hidden");
+      if (
+        parent.classList.contains("d2h-file-collapse") ||
+        (!foldedContext && (parent.hidden || getComputedStyle(parent).display === "none"))
+      ) {
         hidden = true;
         break;
       }
@@ -47,6 +51,8 @@ export class FindController {
   private ranges: Range[] = [];
   private index = 0;
 
+  constructor(private readonly options: { revealMatch?: (element: HTMLElement) => void } = {}) {}
+
   public open(): void {
     this.ensurePanel();
     this.panel!.hidden = false;
@@ -79,8 +85,10 @@ export class FindController {
   }
 
   private reveal(): void {
-    const node = this.ranges[this.index]?.startContainer;
-    node?.parentElement?.scrollIntoView({ block: "center", inline: "nearest" });
+    const element = this.ranges[this.index]?.startContainer.parentElement;
+    if (!element) return;
+    this.options.revealMatch?.(element);
+    element.scrollIntoView({ block: "center", inline: "nearest" });
   }
 
   private paint(): void {

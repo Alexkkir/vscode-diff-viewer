@@ -9,6 +9,7 @@ import { SkeletonElementIds } from "../../../../shared/css/elements";
 import { UpdateWebviewPayload } from "../../api";
 import { MessageToWebviewHandlerImpl } from "..";
 import { getSha1Hash } from "../../hash";
+import { ContextFoldingController } from "../context-folding";
 
 jest.mock("diff2html/lib/ui/js/diff2html-ui-slim.js", () => ({
   Diff2HtmlUI: jest
@@ -202,6 +203,115 @@ describe("MessageToWebviewHandlerImpl", () => {
     expect(loading.style.display).toBe("none");
     await pending;
     expect(loading.style.display).toBe("none");
+  });
+
+  it.each(["hashes", "context preparation"] as const)(
+    "keeps the newer payload when an older update finishes %s later",
+    async (phase) => {
+      let releaseOld!: () => void;
+      let markStarted!: () => void;
+      const blocked = new Promise<void>((resolve) => {
+        releaseOld = resolve;
+      });
+      const started = new Promise<void>((resolve) => {
+        markStarted = resolve;
+      });
+      const oldPayload = createUpdatePayload({
+        diffFiles: [createMockDiffFile({ oldName: "old.ts", newName: "old.ts" })],
+        accessiblePaths: ["old.ts"],
+        collapseAll: true,
+        performance: { isLargeDiff: true, warning: "Old warning", deferViewedStateHashing: false },
+      });
+      const config = createConfig();
+      config.diff2html.outputFormat = "line-by-line";
+      config.diff2html.colorScheme = ColorSchemeType.DARK;
+      const latestPayload = createUpdatePayload({
+        config,
+        diffFiles: [createMockDiffFile({ oldName: "latest.ts", newName: "latest.ts" })],
+        accessiblePaths: ["latest.ts"],
+      });
+      const originalPrepare = ContextFoldingController.prototype.prepare;
+      const prepareSpy = jest.spyOn(ContextFoldingController.prototype, "prepare");
+      try {
+        if (phase === "hashes") {
+          mockGetSha1Hash.mockImplementationOnce(async (value) => {
+            markStarted();
+            await blocked;
+            return `sha:${value}`;
+          });
+        } else {
+          prepareSpy.mockImplementation(async function (this: ContextFoldingController, files) {
+            if (files === oldPayload.diffFiles) {
+              markStarted();
+              await blocked;
+            }
+            await originalPrepare.call(this, files);
+          });
+        }
+        const older = handler.updateWebview(oldPayload);
+        await started;
+        await handler.updateWebview(latestPayload);
+        releaseOld();
+        await older;
+
+        expect(Diff2HtmlUI).toHaveBeenCalledTimes(1);
+        expect(Diff2HtmlUI).toHaveBeenCalledWith(expect.any(HTMLElement), latestPayload.diffFiles, {
+          ...config.diff2html,
+          highlight: false,
+        });
+        expect(document.querySelector(".d2h-file-name")?.textContent).toBe("latest.ts");
+        expect(document.getElementById(SkeletonElementIds.DiffContainer)?.style.display).toBe("block");
+        expect(document.getElementById(SkeletonElementIds.LargeDiffNoticeContainer)?.style.display).toBe("none");
+        const line = document.querySelector<HTMLElement>(".d2h-code-linenumber.d2h-ins")!;
+        line.click();
+        expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+          kind: "openFile",
+          payload: { path: "latest.ts", line: 24 },
+        });
+        expect(postMessageToExtensionFn).not.toHaveBeenCalledWith(
+          expect.objectContaining({ kind: "toggleFileViewed" }),
+        );
+      } finally {
+        releaseOld();
+        prepareSpy.mockRestore();
+      }
+    },
+  );
+
+  it("keeps initial Loading visible when a superseded update finishes before the active one", async () => {
+    let finishOld!: (hash: string) => void;
+    let finishLatest!: (hash: string) => void;
+    mockGetSha1Hash
+      .mockImplementationOnce(() => new Promise<string>((resolve) => (finishOld = resolve)))
+      .mockImplementationOnce(() => new Promise<string>((resolve) => (finishLatest = resolve)));
+    const oldPayload = createUpdatePayload({
+      diffFiles: [createMockDiffFile({ oldName: "old.ts", newName: "old.ts" })],
+    });
+    const latestPayload = createUpdatePayload({
+      diffFiles: [createMockDiffFile({ oldName: "latest.ts", newName: "latest.ts" })],
+    });
+    const older = handler.updateWebview(oldPayload);
+    const latest = handler.updateWebview(latestPayload);
+    const loading = document.getElementById(SkeletonElementIds.LoadingContainer)!;
+    finishOld("old-hash");
+    await older;
+    expect(Diff2HtmlUI).not.toHaveBeenCalled();
+    expect(loading.style.display).toBe("block");
+    handler.captureTestState({ requestId: "pending" });
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+      kind: "reportTestState",
+      payload: { requestId: "pending", state: expect.objectContaining({ isReady: false }) },
+    });
+    // A completed stale update must not mark the first render as finished.
+    loading.style.display = "none";
+    handler.prepare();
+    expect(loading.style.display).toBe("block");
+    finishLatest("latest-hash");
+    await latest;
+    expect(loading.style.display).toBe("none");
+    handler.prepare();
+    expect(loading.style.display).toBe("none");
+    expect(document.querySelector(".d2h-file-name")?.textContent).toBe("latest.ts");
   });
 
   it("renders file navigation buttons for renamed and regular files", async () => {

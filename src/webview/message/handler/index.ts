@@ -1,5 +1,6 @@
 import { SyntaxHighlightingController } from "./syntax-highlighting";
 import { FindController } from "./find";
+import { ContextFoldingController } from "./context-folding";
 import { ColorSchemeType, DiffFile } from "diff2html/lib/types";
 import { Diff2HtmlUI } from "diff2html/lib/ui/js/diff2html-ui-slim.js";
 import { AppConfig } from "../../../extension/configuration";
@@ -33,7 +34,18 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     setEnabled: (syntaxHighlighting) => this.persistUiState({ syntaxHighlighting }),
   });
   private hasRendered = false;
-  private readonly findController = new FindController();
+  private updateGeneration = 0;
+  private readonly contextFoldingController = new ContextFoldingController({
+    getState: () => this.currentUiState.contextExpansions ?? {},
+    setState: (contextExpansions) => this.persistUiState({ contextExpansions }),
+    onChange: () => {
+      this.horizontalScrollbarController.refresh();
+      this.findController.refresh();
+    },
+  });
+  private readonly findController = new FindController({
+    revealMatch: (element) => this.contextFoldingController.revealLine(element),
+  });
   private currentConfig: AppConfig | undefined = undefined;
   private accessiblePaths = new Set<string>();
   private currentDiffHashes: Record<string, string> = {};
@@ -80,19 +92,26 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       return;
     }
 
-    await this.withLoading(async () => {
-      if (payload.diffFiles.length === 0) {
-        showEmpty(true);
-      }
+    const generation = ++this.updateGeneration;
+    await this.withLoading(generation, async () => {
+      // Keep pending data separate from the rendered view while hashes are built.
+      const accessiblePaths = new Set(payload.accessiblePaths);
+      const currentDiffFilesByPath = buildDiffFileMap(payload.diffFiles, accessiblePaths);
+      const currentDiffHashes = await buildDiffHashes({
+        payload,
+        currentDiffFilesByPath,
+        accessiblePaths,
+      });
+      if (generation !== this.updateGeneration) return;
+
+      await this.contextFoldingController.prepare(payload.diffFiles);
+      if (generation !== this.updateGeneration) return;
 
       this.currentConfig = payload.config;
-      this.accessiblePaths = new Set(payload.accessiblePaths);
-      this.currentDiffFilesByPath = buildDiffFileMap(payload.diffFiles, this.accessiblePaths);
-      this.currentDiffHashes = await buildDiffHashes({
-        payload,
-        currentDiffFilesByPath: this.currentDiffFilesByPath,
-        accessiblePaths: this.accessiblePaths,
-      });
+      this.accessiblePaths = accessiblePaths;
+      this.currentDiffFilesByPath = currentDiffFilesByPath;
+      this.currentDiffHashes = currentDiffHashes;
+      showEmpty(payload.diffFiles.length === 0);
 
       const appTheme = this.currentConfig.diff2html.colorScheme === ColorSchemeType.DARK ? "dark" : "light";
       setupTheme(appTheme);
@@ -109,6 +128,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       });
       diff2html.draw();
       this.syntaxHighlightingController.render(diff2html, diffContainer, payload.syntax);
+      await this.contextFoldingController.render(diffContainer, payload.diffFiles);
+      if (generation !== this.updateGeneration) return;
 
       this.fileBindings = this.enhanceRenderedDiff(diffContainer, payload.diffFiles);
       this.registerDiffContainerHandlers(diffContainer);
@@ -121,7 +142,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
           this.setAllViewedStates(true);
         }
       } else {
-        await this.hideViewedFiles(payload.viewedState);
+        await this.hideViewedFiles(payload.viewedState, generation);
+        if (generation !== this.updateGeneration) return;
       }
 
       this.restoreSelection();
@@ -367,7 +389,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     return button;
   }
 
-  private async hideViewedFiles(viewedState: ViewedState): Promise<void> {
+  private async hideViewedFiles(viewedState: ViewedState, generation: number): Promise<void> {
     const togglesToRevisit: Array<{ toggle: HTMLInputElement; oldSha1: string }> = [];
     for (const binding of this.fileBindings) {
       if (binding.viewedToggle && viewedState[binding.filePath]) {
@@ -379,6 +401,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     for (const { toggle, oldSha1 } of togglesToRevisit) {
       const fileName = this.getDiffElementFileName(toggle);
       const diffHash = fileName ? await this.getOrCreateDiffHash(fileName) : null;
+      if (generation !== this.updateGeneration) return;
       if (diffHash !== oldSha1) {
         this.updateDiff2HtmlFileCollapsed(toggle, false);
         toggle.classList.add(CHANGED_SINCE_VIEWED);
@@ -432,7 +455,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   }
 
   private async getOrCreateDiffHash(fileName: string): Promise<string | null> {
-    const cachedHash = this.currentDiffHashes[fileName];
+    const hashes = this.currentDiffHashes;
+    const cachedHash = hashes[fileName];
     if (cachedHash) {
       return cachedHash;
     }
@@ -443,7 +467,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     }
 
     const hash = await getSha1Hash(JSON.stringify(diffFile));
-    this.currentDiffHashes[fileName] = hash;
+    // A redraw may replace the cache while this file is being hashed.
+    hashes[fileName] = hash;
     return hash;
   }
 
@@ -506,14 +531,14 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     return toggle.closest(Diff2HtmlCssClassElements.Label__ViewedToggle);
   }
 
-  private async withLoading(runnable: () => Promise<void>): Promise<void> {
+  private async withLoading(generation: number, runnable: () => Promise<void>): Promise<void> {
     if (!this.hasRendered) showLoading(true);
     showEmpty(false);
     try {
       await runnable();
-      this.hasRendered = true;
+      if (generation === this.updateGeneration) this.hasRendered = true;
     } finally {
-      showLoading(false);
+      if (generation === this.updateGeneration) showLoading(false);
     }
   }
 }

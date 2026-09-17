@@ -330,3 +330,41 @@ label.d2h-file-collapse.changed-since-last-view::after {
 #syntax-highlighting-toggle {
   accent-color: var(--vscode-focusBorder);
 }
+
+/* Full source stays in the DOM for syntax and search; only context rows fold. */
+tr.diff-context-hidden {
+  display: none !important;
+}
+.diff-context-gap > td {
+  padding: 0;
+  border-block: 1px solid var(--vscode-diffEditor-unchangedRegionShadow, transparent);
+  background: var(--vscode-diffEditor-unchangedRegionBackground, var(--vscode-editorGroupHeader-tabsBackground));
+  color: var(--vscode-diffEditor-unchangedRegionForeground, var(--vscode-descriptionForeground));
+}
+.diff-context-toolbar {
+  position: sticky;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: fit-content;
+  height: 32px;
+  padding: 0 12px;
+  white-space: nowrap;
+  font-family: var(--vscode-font-family);
+  font-size: 12px;
+}
+.diff-context-expand {
+  border: 0;
+  padding: 4px 8px;
+  color: var(--vscode-textLink-foreground);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.diff-context-expand:hover {
+  background: var(--vscode-toolbar-hoverBackground);
+}
+.diff-context-expand:focus-visible {
+  outline: 1px solid var(--vscode-focusBorder);
+}

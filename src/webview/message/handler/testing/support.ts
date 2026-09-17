@@ -64,6 +64,17 @@ export class WebviewHandlerTestSupport {
     }
 
     switch (action.kind) {
+      case "expandContext": {
+        const gap = Array.from(binding.fileContainer.querySelectorAll<HTMLElement>(".diff-context-gap")).find(
+          (row) =>
+            row.dataset.contextId === action.gapId &&
+            row.querySelector(`[data-context-direction="${action.direction}"]`),
+        );
+        const button = gap?.querySelector<HTMLButtonElement>(`[data-context-direction="${action.direction}"]`);
+        if (!button) throw new Error(`No context expansion button for ${action.gapId}/${action.direction}`);
+        button.click();
+        return;
+      }
       case "clickFileName": {
         const fileNameLink = binding.fileContainer.querySelector<HTMLElement>(Diff2HtmlCssClassElements.A__FileName);
         if (!fileNameLink) {
@@ -127,14 +138,30 @@ export class WebviewHandlerTestSupport {
       .filter(({ viewedToggle }) => viewedToggle?.checked)
       .map(({ filePath }) => filePath);
     const largeDiffNotice = document.getElementById(SkeletonElementIds.LargeDiffNoticeMessage)?.textContent?.trim();
-    const codeLineTexts = Array.from(diffContainer?.querySelectorAll<HTMLElement>(".d2h-code-line") ?? [])
+    const codeLineTexts = Array.from(
+      diffContainer?.querySelectorAll<HTMLElement>(".d2h-code-line, .d2h-code-side-line") ?? [],
+    )
       .map((element) => element.textContent?.trim())
       .flatMap((text) => (text ? [text] : []))
-      .slice(0, 500);
+      .slice(0, 2000);
     const inlineHighlightCount =
       diffContainer?.querySelectorAll(".d2h-code-line .d2h-change, .d2h-code-side-line .d2h-change").length ?? 0;
 
     return {
+      contextGaps: Array.from(diffContainer?.querySelectorAll<HTMLElement>(".diff-context-gap") ?? []).map((row) => ({
+        id: row.dataset.contextId ?? "",
+        hiddenLines: Number(row.dataset.hiddenLines),
+        buttons: Array.from(row.querySelectorAll("button"), (button) => button.textContent ?? ""),
+      })),
+      hiddenContextRows: diffContainer?.querySelectorAll("tr.diff-context-hidden").length ?? 0,
+      visibleCodeLineTexts: Array.from(diffContainer?.querySelectorAll<HTMLElement>(".d2h-code-line-ctn") ?? [])
+        .filter((line) => !line.closest("[hidden]"))
+        .slice(0, 2000)
+        .map((line) => line.textContent ?? ""),
+      loadingVisible: (() => {
+        const loading = document.getElementById(SkeletonElementIds.LoadingContainer);
+        return Boolean(loading && getComputedStyle(loading).display !== "none");
+      })(),
       findOpen: Boolean(
         document.getElementById("diff-find-widget") && !document.getElementById("diff-find-widget")!.hidden,
       ),

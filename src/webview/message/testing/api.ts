@@ -1,6 +1,10 @@
 import type { AppConfig } from "../../../extension/configuration";
 
 export interface WebviewTestState {
+  contextGaps?: Array<{ id: string; hiddenLines: number; buttons: string[] }>;
+  hiddenContextRows?: number;
+  visibleCodeLineTexts?: string[];
+  loadingVisible?: boolean;
   syntaxTokens?: Array<{ text: string; color: string; baseColor: string }>;
   textMateTokenCount?: number;
   isReady: boolean;
@@ -25,6 +29,7 @@ export interface WebviewTestState {
 }
 
 export type WebviewTestAction =
+  | { kind: "expandContext"; path: string; gapId: string; direction: "start" | "end" }
   | { kind: "find"; query: string }
   | { kind: "findKey"; key: string; shiftKey?: boolean }
   | { kind: "clickFileName"; path: string }

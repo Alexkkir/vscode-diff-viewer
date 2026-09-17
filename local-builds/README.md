@@ -1,3 +1,14 @@
+# Latest local build: 1.8.4
+
+Install `diff-viewer-1.8.4-expand-context.vsix`, then run **Developer: Reload Window**.
+Large-context patches (for example `arc diff -U 1000 HEAD > diff.diff && code diff.diff`) now initially show changes with 50 unchanged lines on each side. Excess leading, trailing and intervening context is folded; overlapping context remains visible. Added/deleted lines are never folded.
+Each gap has directional Expand buttons: reveal up to 20 lines below the preceding change or above the following change. The last step shows its actual remaining count. Both panes stay aligned. Expansion updates existing rows in place and preserves syntax markup without a Loading screen or webview reload.
+Search includes folded context and reveals the selected hidden match. Expansion is stored for the unchanged file content and survives layout/theme redraws; rewritten content gets fresh default folds. Late asynchronous renders cannot overwrite newer diff payloads.
+Only lines already present in the patch can be expanded; missing content outside the original hunks is not fabricated or fetched. The full patch remains available to syntax highlighting. Binary/combined diffs and unchanged-only blocks are left unfolded.
+Regression coverage: `src/webview/message/handler/__tests__/context-ranges.test.ts`, `context-folding.test.ts`, `find.test.ts`, and `integration/desktop/context-folding.cjs`.
+Validation: 345 unit tests, lint, TypeScript, formatting and production build passed. Desktop VS Code checks covered both layouts, expansion counts, search/reveal, retained state, external rewrites, search/terminal maximization and semantic colors. Chromium checks verified paired row alignment and stable scroll position, with screenshots saved alongside local artifacts. Run `node integration/browser/context-folding.cjs [artifact-directory]` after building to reproduce visual checks. VSIX integrity and bundle equality verified.
+Build using the commands below with output version 1.8.4. All previous fixes remain included.
+
 # Latest local build: 1.8.3
 
 Install `diff-viewer-1.8.3-semantic-colors.vsix`, then run **Developer: Reload Window**.

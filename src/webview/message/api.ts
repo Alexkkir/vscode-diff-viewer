@@ -1,3 +1,4 @@
+import type { ContextExpansionState } from "./handler/context-folding";
 import type { FileSyntax } from "../../shared/syntax";
 import { DiffFile } from "diff2html/lib/types";
 import type { AppConfig } from "../../extension/configuration";
@@ -11,6 +12,7 @@ export type WebviewAction = ReviewAction | ExtensionAction | "find";
 export interface WebviewUiState {
   scrollTop: number;
   syntaxHighlighting?: boolean;
+  contextExpansions?: ContextExpansionState;
   selectedPath?: string;
 }
 
