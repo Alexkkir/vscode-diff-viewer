@@ -30,9 +30,24 @@ ins {
   cursor: default;
 }
 
-/* show file names as clickable */
 .d2h-file-name {
+  cursor: default;
+}
+
+.d2h-file-name.diff-file-link {
+  color: var(--vscode-textLink-foreground, #3794ff);
   cursor: pointer;
+}
+
+.d2h-file-name.diff-file-link:hover,
+.d2h-file-name.diff-file-link:focus-visible {
+  color: var(--vscode-textLink-activeForeground, var(--vscode-textLink-foreground, #3794ff));
+  text-decoration: underline;
+}
+
+.d2h-file-name.diff-file-link:focus-visible {
+  outline: 1px solid var(--vscode-focusBorder, #007fd4);
+  outline-offset: 2px;
 }
 
 .d2h-diff-table {

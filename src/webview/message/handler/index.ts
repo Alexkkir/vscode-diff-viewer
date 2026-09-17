@@ -28,6 +28,8 @@ import {
 } from "./types";
 import { setupTheme, showEmpty, showLoading, updateFooter, updateHighlightTheme, updateLargeDiffNotice } from "./ui";
 
+const FILE_NAME_LINK_CLASS = "diff-file-link";
+
 export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl implements MessageToWebviewHandler {
   private readonly syntaxHighlightingController = new SyntaxHighlightingController({
     getEnabled: () => this.currentUiState.syntaxHighlighting !== false,
@@ -193,6 +195,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     }
 
     diffContainer.addEventListener("click", this.onDiffClickedHandler.bind(this));
+    diffContainer.addEventListener("keydown", this.onDiffKeyDownHandler.bind(this));
     diffContainer.addEventListener("change", this.onDiffContainerChangedHandler.bind(this));
 
     this.diffContainerHandlersRegistered = true;
@@ -243,9 +246,24 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     this.maybeOpenFile(diffElement);
   }
 
+  private onDiffKeyDownHandler(event: KeyboardEvent): void {
+    if (event.key !== "Enter" || event.repeat || !(event.target instanceof HTMLElement)) {
+      return;
+    }
+
+    const fileLink = event.target.closest<HTMLElement>(`.${FILE_NAME_LINK_CLASS}`);
+    if (!fileLink) {
+      return;
+    }
+
+    event.preventDefault();
+    this.selectDiffFile(this.getDiffElementFileName(fileLink));
+    this.maybeOpenFile(fileLink);
+  }
+
   private maybeOpenFile(diffElement: HTMLElement): void {
     const fileName = this.getDiffElementFileName(diffElement);
-    if (!fileName) {
+    if (!fileName || !this.accessiblePaths.has(fileName)) {
       return;
     }
 
@@ -331,6 +349,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
 
       const viewModel = buildDiffFileViewModel(diffFile, this.accessiblePaths);
       fileContainer.dataset.diffPath = viewModel.primaryPath;
+      this.enhanceFileNameLink(fileContainer, viewModel);
       this.appendFileNavigationActions(fileContainer, viewModel);
       return viewModel.primaryPath
         ? [
@@ -346,6 +365,19 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
           ]
         : [];
     });
+  }
+
+  private enhanceFileNameLink(fileContainer: HTMLElement, viewModel: DiffFileViewModel): void {
+    const fileName = fileContainer.querySelector<HTMLElement>(Diff2HtmlCssClassElements.A__FileName);
+    if (!fileName || !this.accessiblePaths.has(viewModel.primaryPath)) {
+      return;
+    }
+
+    fileName.classList.add(FILE_NAME_LINK_CLASS);
+    fileName.setAttribute("role", "link");
+    fileName.tabIndex = 0;
+    fileName.title = viewModel.primaryPath;
+    fileName.setAttribute("aria-label", `Open file: ${viewModel.primaryPath}`);
   }
 
   private appendFileNavigationActions(fileContainer: HTMLElement, viewModel: DiffFileViewModel): void {

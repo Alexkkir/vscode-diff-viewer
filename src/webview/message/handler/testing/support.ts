@@ -77,7 +77,7 @@ export class WebviewHandlerTestSupport {
       }
       case "clickFileName": {
         const fileNameLink = binding.fileContainer.querySelector<HTMLElement>(Diff2HtmlCssClassElements.A__FileName);
-        if (!fileNameLink) {
+        if (!fileNameLink?.classList.contains("diff-file-link")) {
           throw new Error(`No file name link found for ${action.path}.`);
         }
         fileNameLink.click();
@@ -148,6 +148,9 @@ export class WebviewHandlerTestSupport {
       diffContainer?.querySelectorAll(".d2h-code-line .d2h-change, .d2h-code-side-line .d2h-change").length ?? 0;
 
     return {
+      clickableFilePaths: fileBindings
+        .filter((binding) => binding.fileContainer.querySelector(".d2h-file-name.diff-file-link"))
+        .map((binding) => binding.filePath),
       contextGaps: Array.from(diffContainer?.querySelectorAll<HTMLElement>(".diff-context-gap") ?? []).map((row) => ({
         id: row.dataset.contextId ?? "",
         hiddenLines: Number(row.dataset.hiddenLines),

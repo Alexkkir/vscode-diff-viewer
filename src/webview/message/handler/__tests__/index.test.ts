@@ -67,7 +67,7 @@ jest.mock("diff2html/lib/ui/js/diff2html-ui-slim.js", () => ({
             return `
             <div class="d2h-file-wrapper">
               <div class="d2h-file-header">
-                <a class="d2h-file-name">${diffFile.newName ?? diffFile.oldName ?? ""}</a>
+                <span class="d2h-file-name"><span>${diffFile.newName ?? diffFile.oldName ?? ""}</span></span>
                 <label class="d2h-file-collapse">
                   <input class="d2h-file-collapse-input" type="checkbox" />
                 </label>
@@ -670,6 +670,76 @@ describe("MessageToWebviewHandlerImpl", () => {
       kind: "openFile",
       payload: { path: "src/file.ts", line: 12 },
     });
+  });
+
+  it("makes available filenames links that open from nested text and the keyboard", async () => {
+    await handler.updateWebview(
+      createUpdatePayload({
+        diffFiles: [createMockDiffFile({ oldName: "src/old name.ts", newName: "src/new name.ts" })],
+        accessiblePaths: ["src/new name.ts"],
+      }),
+    );
+
+    const fileLink = document.querySelector<HTMLElement>(".d2h-file-name")!;
+    expect(fileLink.classList.contains("diff-file-link")).toBe(true);
+    expect(fileLink.getAttribute("role")).toBe("link");
+    expect(fileLink.tabIndex).toBe(0);
+    expect(fileLink.title).toBe("src/new name.ts");
+    expect(fileLink.getAttribute("aria-label")).toBe("Open file: src/new name.ts");
+    expect(fileLink.innerHTML).toBe("<span>src/new name.ts</span>");
+
+    fileLink.querySelector<HTMLElement>("span")!.click();
+    const enter = new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true });
+    fileLink.dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(true);
+    expect(postMessageToExtensionFn).toHaveBeenCalledTimes(2);
+    expect(postMessageToExtensionFn).toHaveBeenLastCalledWith({
+      kind: "openFile",
+      payload: { path: "src/new name.ts", line: undefined },
+    });
+
+    fileLink.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
+    fileLink.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", repeat: true, bubbles: true }));
+    expect(postMessageToExtensionFn).toHaveBeenCalledTimes(2);
+  });
+
+  it("leaves unavailable filenames inert while keeping an available old-file action", async () => {
+    await handler.updateWebview(
+      createUpdatePayload({
+        diffFiles: [createMockDiffFile({ oldName: "src/old.ts", newName: "src/missing.ts" })],
+        accessiblePaths: ["src/old.ts"],
+      }),
+    );
+
+    const fileName = document.querySelector<HTMLElement>(".d2h-file-name")!;
+    expect(fileName.classList.contains("diff-file-link")).toBe(false);
+    expect(fileName.hasAttribute("role")).toBe(false);
+    expect(fileName.hasAttribute("tabindex")).toBe(false);
+    expect(fileName.hasAttribute("title")).toBe(false);
+    fileName.querySelector<HTMLElement>("span")!.click();
+    fileName.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    (document.querySelectorAll(".d2h-code-side-linenumber")[1] as HTMLElement).click();
+    expect(postMessageToExtensionFn).not.toHaveBeenCalled();
+
+    document.querySelector<HTMLButtonElement>(".diff-viewer-file-action-button")!.click();
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+      kind: "openFile",
+      payload: { path: "src/old.ts", line: undefined },
+    });
+  });
+
+  it("removes filename link behavior when the next update no longer has an accessible path", async () => {
+    const diffFiles = [createMockDiffFile({ oldName: "src/file.ts", newName: "src/file.ts" })];
+    await handler.updateWebview(createUpdatePayload({ diffFiles, accessiblePaths: ["src/file.ts"] }));
+    expect(document.querySelector(".diff-file-link")).not.toBeNull();
+
+    await handler.updateWebview(createUpdatePayload({ diffFiles, accessiblePaths: [] }));
+    const fileName = document.querySelector<HTMLElement>(".d2h-file-name")!;
+    expect(fileName.classList.contains("diff-file-link")).toBe(false);
+    expect(fileName.hasAttribute("tabindex")).toBe(false);
+    fileName.click();
+    fileName.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    expect(postMessageToExtensionFn).not.toHaveBeenCalled();
   });
 
   it("opens right-side line-by-line numbers and ignores deleted or info rows", async () => {

@@ -3,6 +3,7 @@ import { clearAccessiblePathsCache, collectAccessiblePaths } from "../paths";
 
 jest.mock("vscode", () => ({
   workspace: {
+    getConfiguration: jest.fn(() => ({ get: (_key: string, fallback: unknown) => fallback })),
     fs: {
       stat: jest.fn(),
     },
@@ -47,6 +48,22 @@ describe("provider/paths", () => {
 
     expect(result).toEqual(["a/src/file.ts", "b/src/file.ts", "b/src/added.ts"]);
     expect((webviewContext as { accessiblePathsCache?: string[] }).accessiblePathsCache).toEqual(result);
+  });
+
+  it("rechecks paths when Arc mode changes without touching the diff", async () => {
+    let arcMode = true;
+    (vscode.workspace.getConfiguration as jest.Mock).mockImplementation(() => ({ get: () => arcMode }));
+    const args = {
+      webviewContext: { document: { uri: { path: "/workspace/test.diff", scheme: "file" } } } as never,
+      diffFiles: [{ oldName: "src/file.ts", newName: "src/file.ts (working tree)" }] as never,
+    };
+    expect(await collectAccessiblePaths(args)).toEqual(["src/file.ts"]);
+    const before = (vscode.workspace.fs.stat as jest.Mock).mock.calls.length;
+    await collectAccessiblePaths(args);
+    expect(vscode.workspace.fs.stat).toHaveBeenCalledTimes(before);
+    arcMode = false;
+    await collectAccessiblePaths(args);
+    expect((vscode.workspace.fs.stat as jest.Mock).mock.calls.length).toBeGreaterThan(before);
   });
 
   it("clears the accessible path cache", () => {

@@ -1,3 +1,11 @@
+# Latest local build: 1.8.5
+
+Install `diff-viewer-1.8.5-arc-mode.vsix`, then run **Developer: Reload Window**.
+New checkbox **DiffViewer: Arc Mode** (`diffviewer.arcMode`, enabled by default, resource scoped). A relative path from an Arc diff is resolved against the nearest containing directory named `arcadia` or a numbered mount such as `5arcadia`, using the diff file's URI. It works from deeply nested folders and preserves remote URI scheme/authority. A source absent in that mount is not silently replaced by another workspace/mount. Diffs outside those directories retain normal workspace resolution; disabling the setting restores that behavior everywhere.
+Arc revision labels and rename presentation are removed from filesystem paths. Available file headers are styled keyboard-accessible links; click or Enter opens their source, and new-side line numbers navigate to the corresponding line. Explicit old/new actions remain available where their files exist. The same mount selection is used for syntax source context. Setting changes invalidate accessible-path caching and refresh links immediately.
+Validation: 401 unit tests, lint, TypeScript, formatting and production build passed. Desktop VS Code tests verified two mounts with duplicate filenames in both layouts, line selection, missing-file isolation, setting toggles without touching the diff, context folding, external rewrites and semantic colors. Remote/deep URI cases are covered by unit tests. Regression script: `integration/desktop/arc-mode.cjs`.
+Build using the commands below with output version 1.8.5. All previous fixes remain included.
+
 # Latest local build: 1.8.4
 
 Install `diff-viewer-1.8.4-expand-context.vsix`, then run **Developer: Reload Window**.

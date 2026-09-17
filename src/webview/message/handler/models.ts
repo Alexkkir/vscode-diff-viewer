@@ -1,17 +1,10 @@
 import { DiffFile } from "diff2html/lib/types";
-import { extractNewFileNameFromDiffName } from "../../../shared/extract";
+import { normalizeDiffFilePath } from "../../../shared/extract";
 import { UpdateWebviewPayload } from "../api";
 import { getSha1Hash } from "../hash";
 import { DiffFileHashMap, DiffFileViewModel } from "./types";
 
-export function normalizeDiffFilePath(path?: string): string | undefined {
-  if (!path || path === "/dev/null") {
-    return;
-  }
-
-  const normalizedPath = extractNewFileNameFromDiffName(path);
-  return normalizedPath === "/dev/null" ? undefined : normalizedPath;
-}
+export { normalizeDiffFilePath } from "../../../shared/extract";
 
 export function buildDiffFileViewModel(diffFile: DiffFile, accessiblePaths: ReadonlySet<string>): DiffFileViewModel {
   const oldPath = normalizeDiffFilePath(diffFile.oldName);

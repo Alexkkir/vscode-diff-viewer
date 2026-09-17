@@ -159,6 +159,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
           return;
         }
 
+        if (e.affectsConfiguration("diffviewer.arcMode")) clearAccessiblePathsCache(args.webviewContext);
         this.updateWebview(args.webviewContext);
       }),
       vscode.workspace.onDidChangeWorkspaceFolders(() => {

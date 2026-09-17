@@ -1,5 +1,6 @@
+import { isArcModeEnabled } from "../arc-paths";
 import { parse } from "diff2html";
-import { extractNewFileNameFromDiffName } from "../../shared/extract";
+import { normalizeDiffFilePath } from "../../shared/extract";
 import { resolveAccessibleUri } from "../path-resolution";
 import { WebviewContext } from "./types";
 
@@ -20,9 +21,10 @@ export async function collectAccessiblePaths(args: {
     }
   }
 
-  const cacheKey = Array.from(candidatePaths)
-    .sort((a, b) => a.localeCompare(b))
-    .join("\n");
+  const cacheKey = JSON.stringify([
+    isArcModeEnabled(args.webviewContext.document.uri),
+    Array.from(candidatePaths).sort((a, b) => a.localeCompare(b)),
+  ]);
   if (args.webviewContext.accessiblePathsCacheKey === cacheKey && args.webviewContext.accessiblePathsCache) {
     return args.webviewContext.accessiblePathsCache;
   }
@@ -46,13 +48,4 @@ export async function collectAccessiblePaths(args: {
 export function clearAccessiblePathsCache(webviewContext: WebviewContext): void {
   webviewContext.accessiblePathsCacheKey = undefined;
   webviewContext.accessiblePathsCache = undefined;
-}
-
-function normalizeDiffFilePath(path?: string): string | undefined {
-  if (!path || path === "/dev/null") {
-    return;
-  }
-
-  const normalizedPath = extractNewFileNameFromDiffName(path);
-  return normalizedPath === "/dev/null" ? undefined : normalizedPath;
 }

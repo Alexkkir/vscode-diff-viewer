@@ -1,9 +1,19 @@
+import { getArcadiaRoot, getArcFileUri, isArcModeEnabled } from "./arc-paths";
+import { normalizeDiffFilePath } from "../shared/extract";
 import * as vscode from "vscode";
 
 export async function resolveAccessibleUri(args: {
   diffDocument: vscode.TextDocument;
   path: string;
 }): Promise<vscode.Uri | undefined> {
+  const path = normalizeDiffFilePath(args.path);
+  if (!path) return undefined;
+  if (!isAbsolutePath(path) && isArcModeEnabled(args.diffDocument.uri) && getArcadiaRoot(args.diffDocument.uri)) {
+    const uri = getArcFileUri(args.diffDocument.uri, path);
+    // The containing mount is authoritative, even when this file is missing there.
+    return uri && (await exists(uri)) ? uri : undefined;
+  }
+  args = { ...args, path };
   return (
     (await getUriFromAbsolutePathIfExists(args.path)) ||
     (await getUriFromPathInWorkspaceIfExists({

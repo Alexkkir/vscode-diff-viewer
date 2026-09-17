@@ -10,6 +10,7 @@ jest.mock(
       executeCommand: jest.fn(),
     },
     workspace: {
+      getConfiguration: jest.fn(() => ({ get: (_key: string, fallback: unknown) => fallback })),
       getWorkspaceFolder: jest.fn(),
       fs: {
         stat: jest.fn(),

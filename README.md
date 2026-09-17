@@ -40,6 +40,12 @@ Diff Viewer renders `.diff` and `.patch` files inside VS Code with [diff2html](h
 
 If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, enable `diffviewer.globalScrollbar`. Viewed state is stored per diff document. If a file's diff changes later, the extension expands it again and marks it as changed since the last view. File header actions are only shown for paths the extension can currently resolve.
 
+### Arc mounts
+
+`DiffViewer: Arc Mode` (`diffviewer.arcMode`) is enabled by default. For a diff stored anywhere inside `arcadia` or a numbered directory such as `5arcadia`, root-relative filenames are resolved inside that containing mount. For example, `/home/me/5arcadia/ml/project/review/diff.diff` links `ml/project/demo.py` to `/home/me/5arcadia/ml/project/demo.py`. Remote URI schemes and hosts are preserved.
+
+The filename in each available file header is a link (mouse click or Enter); revision labels such as `(working tree)` are removed when locating its source. A missing file is not substituted from another Arcadia. If the diff is outside an Arcadia directory, normal workspace path resolution applies. Turning Arc mode off restores normal workspace path resolution everywhere.
+
 ### Find in a diff
 
 Press `Ctrl+F` (`Cmd+F` on macOS) or use the search button in the editor title bar. Search highlights literal matches in visible code and file names, including text split across syntax-highlight spans. Use `Enter` / `Shift+Enter` for the next / previous match, `Aa` to match case, and `Escape` to close. Expand collapsed files to include their code in the search.
@@ -56,18 +62,19 @@ Press `Ctrl+F` (`Cmd+F` on macOS) or use the search button in the editor title b
 
 ## Settings ⚙️
 
-| Setting                                      | Default        | Description                                                |
-| -------------------------------------------- | -------------- | ---------------------------------------------------------- |
-| `diffviewer.colorScheme`                     | `auto`         | Renderer theme used in the webview.                        |
-| `diffviewer.outputFormat`                    | `line-by-line` | Layout used to render the diff.                            |
-| `diffviewer.globalScrollbar`                 | `false`        | Show a persistent footer scrollbar for wide diffs.         |
-| `diffviewer.drawFileList`                    | `true`         | Show the file summary list above the diff.                 |
-| `diffviewer.matching`                        | `none`         | Inline matching mode: `none`, `words`, or `lines`.         |
-| `diffviewer.matchWordsThreshold`             | `0.25`         | Similarity threshold used for `words` matching.            |
-| `diffviewer.matchingMaxComparisons`          | `2500`         | Upper bound for line matching work inside a changed block. |
-| `diffviewer.maxLineSizeInBlockForComparison` | `200`          | Maximum line size considered for block comparisons.        |
-| `diffviewer.maxLineLengthHighlight`          | `10000`        | Maximum line size eligible for inline highlight.           |
-| `diffviewer.renderNothingWhenEmpty`          | `false`        | Skip rendering files with no visible changes.              |
+| Setting                                      | Default        | Description                                                  |
+| -------------------------------------------- | -------------- | ------------------------------------------------------------ |
+| `diffviewer.arcMode`                         | `true`         | Resolve Arc links relative to the diff’s containing Arcadia. |
+| `diffviewer.colorScheme`                     | `auto`         | Renderer theme used in the webview.                          |
+| `diffviewer.outputFormat`                    | `line-by-line` | Layout used to render the diff.                              |
+| `diffviewer.globalScrollbar`                 | `false`        | Show a persistent footer scrollbar for wide diffs.           |
+| `diffviewer.drawFileList`                    | `true`         | Show the file summary list above the diff.                   |
+| `diffviewer.matching`                        | `none`         | Inline matching mode: `none`, `words`, or `lines`.           |
+| `diffviewer.matchWordsThreshold`             | `0.25`         | Similarity threshold used for `words` matching.              |
+| `diffviewer.matchingMaxComparisons`          | `2500`         | Upper bound for line matching work inside a changed block.   |
+| `diffviewer.maxLineSizeInBlockForComparison` | `200`          | Maximum line size considered for block comparisons.          |
+| `diffviewer.maxLineLengthHighlight`          | `10000`        | Maximum line size eligible for inline highlight.             |
+| `diffviewer.renderNothingWhenEmpty`          | `false`        | Skip rendering files with no visible changes.                |
 
 ## Limitations 📌
 

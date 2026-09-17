@@ -1,6 +1,7 @@
 import type { AppConfig } from "../../../extension/configuration";
 
 export interface WebviewTestState {
+  clickableFilePaths?: string[];
   contextGaps?: Array<{ id: string; hiddenLines: number; buttons: string[] }>;
   hiddenContextRows?: number;
   visibleCodeLineTexts?: string[];

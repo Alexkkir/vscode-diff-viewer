@@ -2,7 +2,7 @@
   "name": "vscode-diff-viewer",
   "displayName": "Diff Viewer (Local syntax toggle)",
   "description": "Visualize git diff files in VS Code",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "license": "MIT",
   "publisher": "caponetto",
   "homepage": "https://github.com/caponetto/vscode-diff-viewer",
@@ -109,6 +109,12 @@
       {
         "title": "DiffViewer",
         "properties": {
+          "diffviewer.arcMode": {
+            "type": "boolean",
+            "scope": "resource",
+            "default": true,
+            "description": "Resolve Arc diff file links relative to the arcadia or numbered Arcadia directory containing the diff file (for example 5arcadia), including remote mounts."
+          },
           "diffviewer.hideTerminalOnOpen": {
             "type": "boolean",
             "default": false,

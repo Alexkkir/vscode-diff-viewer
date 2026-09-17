@@ -16,6 +16,7 @@ describe("MessageToExtensionHandlerImpl", () => {
     mockDiffDocument = {
       uri: {
         fsPath: "/workspace/test.diff",
+        path: "/workspace/test.diff",
         scheme: "file",
         with: jest.fn(),
       },
@@ -171,6 +172,7 @@ describe("MessageToExtensionHandlerImpl", () => {
       (mockDiffDocument.uri.with as jest.Mock).mockReturnValue({
         scheme: "vscode-vfs",
         fsPath: "/workspace/test.diff",
+        path: "/workspace/test.diff",
       });
 
       await handler.openFile(payload);
