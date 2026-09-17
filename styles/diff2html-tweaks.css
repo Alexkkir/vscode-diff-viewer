@@ -39,22 +39,122 @@ ins {
   font-family: var(--vscode-editor-font-family);
 }
 
-.d2h-dark-color-scheme .d2h-ins {
-  background-color: #153f27;
+/* Native workbench colors also update when VS Code changes theme. */
+:root {
+  --d2h-color: var(--vscode-editor-foreground, #d4d4d4);
+  --d2h-bg-color: var(--vscode-editor-background, #1e1e1e);
+  --d2h-border-color: var(--vscode-panel-border, #454545);
+  --d2h-line-border-color: var(--vscode-editor-background, #1e1e1e);
+  --d2h-dim-color: var(--vscode-editorLineNumber-foreground, #858585);
+  --d2h-file-header-bg-color: var(--vscode-editorGroupHeader-tabsBackground, #252526);
+  --d2h-file-header-border-color: var(--vscode-panel-border, #454545);
+  --d2h-empty-placeholder-bg-color: var(--vscode-diffEditor-diagonalFill, #80808020);
+  --d2h-empty-placeholder-border-color: transparent;
+  --d2h-selected-color: var(--vscode-editor-selectionBackground, #264f78);
+  --d2h-ins-bg-color: var(
+    --vscode-diffEditor-insertedLineBackground,
+    var(--vscode-diffEditor-insertedTextBackground, #9ccc2c20)
+  );
+  --d2h-del-bg-color: var(
+    --vscode-diffEditor-removedLineBackground,
+    var(--vscode-diffEditor-removedTextBackground, #ff000020)
+  );
+  --d2h-ins-highlight-bg-color: var(--vscode-diffEditor-insertedTextBackground, #9ccc2c40);
+  --d2h-del-highlight-bg-color: var(--vscode-diffEditor-removedTextBackground, #ff000040);
+  --d2h-change-ins-color: var(--vscode-diffEditor-insertedTextBackground, #9ccc2c40);
+  --d2h-change-del-color: var(--vscode-diffEditor-removedTextBackground, #ff000040);
+  --d2h-info-bg-color: var(--vscode-diffEditor-unchangedRegionBackground, var(--vscode-editor-background, #1e1e1e));
+  --d2h-info-border-color: var(--vscode-panel-border, #454545);
+  --d2h-dark-color: var(--vscode-editor-foreground, #d4d4d4);
+  --d2h-dark-bg-color: var(--vscode-editor-background, #1e1e1e);
+  --d2h-dark-border-color: var(--vscode-panel-border, #454545);
+  --d2h-dark-line-border-color: var(--vscode-editor-background, #1e1e1e);
+  --d2h-dark-dim-color: var(--vscode-editorLineNumber-foreground, #858585);
+  --d2h-dark-file-header-bg-color: var(--vscode-editorGroupHeader-tabsBackground, #252526);
+  --d2h-dark-file-header-border-color: var(--vscode-panel-border, #454545);
+  --d2h-dark-empty-placeholder-bg-color: var(--vscode-diffEditor-diagonalFill, #80808020);
+  --d2h-dark-empty-placeholder-border-color: transparent;
+  --d2h-dark-selected-color: var(--vscode-editor-selectionBackground, #264f78);
+  --d2h-dark-ins-bg-color: var(
+    --vscode-diffEditor-insertedLineBackground,
+    var(--vscode-diffEditor-insertedTextBackground, #9ccc2c20)
+  );
+  --d2h-dark-del-bg-color: var(
+    --vscode-diffEditor-removedLineBackground,
+    var(--vscode-diffEditor-removedTextBackground, #ff000020)
+  );
+  --d2h-dark-ins-highlight-bg-color: var(--vscode-diffEditor-insertedTextBackground, #9ccc2c40);
+  --d2h-dark-del-highlight-bg-color: var(--vscode-diffEditor-removedTextBackground, #ff000040);
+  --d2h-dark-change-ins-color: var(--vscode-diffEditor-insertedTextBackground, #9ccc2c40);
+  --d2h-dark-change-del-color: var(--vscode-diffEditor-removedTextBackground, #ff000040);
+  --d2h-dark-info-bg-color: var(
+    --vscode-diffEditor-unchangedRegionBackground,
+    var(--vscode-editor-background, #1e1e1e)
+  );
+  --d2h-dark-info-border-color: var(--vscode-panel-border, #454545);
 }
 
-.d2h-dark-color-scheme .d2h-del {
-  background-color: #3a1d20;
+.d2h-diff-table {
+  font-size: var(--vscode-editor-font-size);
+  font-weight: var(--vscode-editor-font-weight);
+  line-height: 1.5;
 }
-
-.d2h-dark-color-scheme .d2h-info {
-  background-color: #162844;
+.d2h-file-header {
+  font-family: var(--vscode-font-family);
 }
-
-.d2h-dark-color-scheme .d2h-file-diff .d2h-ins.d2h-change {
-  background-color: #1c512a;
+.d2h-wrapper .d2h-code-linenumber,
+.d2h-wrapper .d2h-code-side-linenumber {
+  color: var(--vscode-editorLineNumber-foreground);
 }
-
-.d2h-dark-color-scheme .d2h-file-diff .d2h-del.d2h-change {
-  background-color: #543f1b;
+.d2h-code-line-ctn.hljs {
+  color: var(--vscode-editor-foreground);
+}
+/* TextMate token colors are not exposed as webview CSS variables.
+   Use a VS Code-like syntax palette without language services/diagnostics. */
+body {
+  --syntax-keyword: #af00db;
+  --syntax-string: #a31515;
+  --syntax-function: #795e26;
+  --syntax-type: #267f99;
+  --syntax-number: #098658;
+  --syntax-variable: #001080;
+  --syntax-comment: #008000;
+}
+body.vscode-dark,
+body.vscode-high-contrast {
+  --syntax-keyword: #c586c0;
+  --syntax-string: #ce9178;
+  --syntax-function: #dcdcaa;
+  --syntax-type: #4ec9b0;
+  --syntax-number: #b5cea8;
+  --syntax-variable: #9cdcfe;
+  --syntax-comment: #6a9955;
+}
+.d2h-code-line-ctn .hljs-keyword,
+.d2h-code-line-ctn .hljs-doctag {
+  color: var(--syntax-keyword);
+}
+.d2h-code-line-ctn .hljs-string,
+.d2h-code-line-ctn .hljs-regexp {
+  color: var(--syntax-string);
+}
+.d2h-code-line-ctn .hljs-title,
+.d2h-code-line-ctn .hljs-built_in {
+  color: var(--syntax-function);
+}
+.d2h-code-line-ctn .hljs-type,
+.d2h-code-line-ctn .hljs-title.class_ {
+  color: var(--syntax-type);
+}
+.d2h-code-line-ctn .hljs-number,
+.d2h-code-line-ctn .hljs-literal {
+  color: var(--syntax-number);
+}
+.d2h-code-line-ctn .hljs-variable,
+.d2h-code-line-ctn .hljs-attr,
+.d2h-code-line-ctn .hljs-params {
+  color: var(--syntax-variable);
+}
+.d2h-code-line-ctn .hljs-comment {
+  color: var(--syntax-comment);
 }

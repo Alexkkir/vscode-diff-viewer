@@ -1,3 +1,11 @@
+# Latest local build: 1.7.9
+
+Install `diff-viewer-1.7.9-vscode-style.vsix`, then run **Developer: Reload Window**.
+Background, foreground, font family/size/weight, line numbers, headers and inserted/deleted line colors use VS Code webview theme variables. Syntax token colors use an approximate VS Code Dark+/Light+ palette; this is not the editor's exact TextMate or semantic highlighting. No diagnostics are enabled.
+Validation: 255 unit tests, lint, TypeScript, production build, formatting, desktop syntax colors/diagnostics, and Chromium computed background colors passed.
+Build using the commands below with output version 1.7.9.
+Theme API: https://code.visualstudio.com/api/extension-guides/webview#theming-webview-content
+
 # Latest local build: 1.7.8
 
 Install `diff-viewer-1.7.8-no-loading-flash.vsix`, then run **Developer: Reload Window**.

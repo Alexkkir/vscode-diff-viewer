@@ -2,7 +2,7 @@
   "name": "vscode-diff-viewer",
   "displayName": "Diff Viewer (Local syntax toggle)",
   "description": "Visualize git diff files in VS Code",
-  "version": "1.7.8",
+  "version": "1.7.9",
   "license": "MIT",
   "publisher": "caponetto",
   "homepage": "https://github.com/caponetto/vscode-diff-viewer",
