@@ -1,3 +1,5 @@
+import { readSyntaxSources } from "./syntax-source-reader";
+import { pythonHunkPrefix } from "./syntax-context";
 import * as vscode from "vscode";
 import { parse as parseJson } from "jsonc-parser";
 import { Registry, parseRawGrammar, INITIAL, IRawTheme, StateStack } from "vscode-textmate";
@@ -29,7 +31,10 @@ async function themeRules(uri: vscode.Uri, seen = new Set<string>()): Promise<IR
 
 // Uses installed TextMate grammars and token theme rules only. No language server
 // or diagnostics are requested, and incomplete diff hunks remain valid input.
-async function highlightDiffUncached(files: DiffFile[]): Promise<Array<FileSyntax | null>> {
+async function highlightDiffUncached(
+  files: DiffFile[],
+  sources: Awaited<ReturnType<typeof readSyntaxSources>>,
+): Promise<Array<FileSyntax | null>> {
   const name = vscode.workspace.getConfiguration("workbench").get<string>("colorTheme");
   const grammars = new Map<string, vscode.Uri>();
   const languages = new Map<string, string>();
@@ -70,7 +75,7 @@ async function highlightDiffUncached(files: DiffFile[]): Promise<Array<FileSynta
   });
   try {
     const result: Array<FileSyntax | null> = [];
-    for (const file of files) {
+    for (const [fileIndex, file] of files.entries()) {
       const suffix = "." + file.language.replace(/[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i, "").toLowerCase();
       const scope = languages.get(extensions.get(suffix) ?? "");
       const grammar = scope ? await registry.loadGrammar(scope).catch(() => null) : null;
@@ -81,27 +86,54 @@ async function highlightDiffUncached(files: DiffFile[]): Promise<Array<FileSynta
       const highlighted: FileSyntax = { old: {}, new: {} };
       for (const side of ["old", "new"] as const) {
         let state: StateStack = INITIAL;
-        let previous = -1;
-        for (const block of file.blocks)
-          for (const line of block.lines) {
-            const number = side === "old" ? line.oldNumber : line.newNumber;
-            if (number === undefined) continue;
-            if (number !== previous + 1) state = INITIAL;
-            const text = line.content.slice(1);
-            const tokenized = grammar.tokenizeLine2(text, state, 50);
-            state = tokenized.ruleStack;
-            previous = number;
-            const colors = registry.getColorMap();
-            const tokens = tokenized.tokens;
-            highlighted[side][number] = [];
-            for (let i = 0; i < tokens.length; i += 2)
-              highlighted[side][number].push({
-                start: tokens[i],
-                end: i + 2 < tokens.length ? tokens[i + 2] : text.length,
-                color: colors[(tokens[i + 1] >>> 15) & 511],
-                fontStyle: (tokens[i + 1] >>> 11) & 15,
-              });
+        const emit = (text: string, number: number, visible: boolean) => {
+          const tokenized = grammar.tokenizeLine2(text, state, 50);
+          state = tokenized.ruleStack;
+          if (!visible) return;
+          const colors = registry.getColorMap();
+          const tokens = tokenized.tokens;
+          highlighted[side][number] = [];
+          for (let i = 0; i < tokens.length; i += 2)
+            highlighted[side][number].push({
+              start: tokens[i],
+              end: i + 2 < tokens.length ? tokens[i + 2] : text.length,
+              color: colors[(tokens[i + 1] >>> 15) & 511],
+              fontStyle: (tokens[i + 1] >>> 11) & 15,
+            });
+        };
+        const fullSource = sources[fileIndex]?.[side];
+        if (fullSource) {
+          const visibleLines = new Set(
+            file.blocks.flatMap((block) =>
+              block.lines
+                .map((line) => (side === "old" ? line.oldNumber : line.newNumber))
+                .filter((number): number is number => number !== undefined),
+            ),
+          );
+          const last = Math.max(0, ...visibleLines);
+          for (let index = 0; index < last; index++) emit(fullSource[index], index + 1, visibleLines.has(index + 1));
+        } else {
+          let previous = -1;
+          for (const block of file.blocks) {
+            const lines = block.lines.filter(
+              (line) => (side === "old" ? line.oldNumber : line.newNumber) !== undefined,
+            );
+            const first = lines[0] && (side === "old" ? lines[0].oldNumber : lines[0].newNumber);
+            if (first !== previous + 1) {
+              state = INITIAL;
+              const prefix =
+                first && first > 1 && scope === "source.python"
+                  ? pythonHunkPrefix(lines.map((line) => line.content.slice(1)))
+                  : undefined;
+              if (prefix) state = grammar.tokenizeLine2(prefix, INITIAL).ruleStack;
+            }
+            for (const line of lines) {
+              const number = (side === "old" ? line.oldNumber : line.newNumber)!;
+              emit(line.content.slice(1), number, true);
+              previous = number;
+            }
           }
+        }
       }
       result.push(highlighted);
     }
@@ -113,16 +145,18 @@ async function highlightDiffUncached(files: DiffFile[]): Promise<Array<FileSynta
 
 let cachedKey = "";
 let cachedResult: Promise<Array<FileSyntax | null>> | undefined;
-export function highlightDiff(files: DiffFile[]): Promise<Array<FileSyntax | null>> {
+export async function highlightDiff(files: DiffFile[], diffUri?: vscode.Uri): Promise<Array<FileSyntax | null>> {
+  const sources = await readSyntaxSources(files, diffUri);
   const key = JSON.stringify([
     files,
+    sources,
     vscode.workspace.getConfiguration("workbench").get("colorTheme"),
     vscode.workspace.getConfiguration("editor").get("tokenColorCustomizations"),
     vscode.extensions.all.map((e) => [e.id, e.packageJSON.version]),
   ]);
   if (key !== cachedKey || !cachedResult) {
     cachedKey = key;
-    cachedResult = highlightDiffUncached(files).catch((error) => {
+    cachedResult = highlightDiffUncached(files, sources).catch((error) => {
       cachedResult = undefined;
       throw error;
     });

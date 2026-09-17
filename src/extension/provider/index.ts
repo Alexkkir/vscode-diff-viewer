@@ -361,7 +361,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         diffFiles,
       }),
       renderPlan,
-      syntax: await highlightDiff(diffFiles).catch(() => undefined),
+      syntax: await highlightDiff(diffFiles, args.webviewContext.document.uri).catch(() => undefined),
     };
   }
 

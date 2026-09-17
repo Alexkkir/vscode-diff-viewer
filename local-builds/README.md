@@ -1,3 +1,13 @@
+# Latest local build: 1.8.2
+
+Install `diff-viewer-1.8.2-fstring-context.vsix`, then run **Developer: Reload Window**.
+Fixes reversed string/code coloring when a Python diff hunk starts inside a multiline f-string. If a matching working-tree source is available beside the diff or in its workspace/ancestor path, its unchanged context is used and the old side is reconstructed by reversing the validated hunks. A mismatched source is ignored. Reads use the diff URI scheme (including remote containers), with bounded file sizes.
+For standalone Python hunks, a narrow recovery recognizes a first bare triple-quote delimiter followed only by argument/list closing punctuation. Completely ambiguous fragments still cannot be reconstructed exactly without their source.
+The token cache includes recovered source context. Source files are only read; they are never modified or added to this repository.
+Validation: 270 unit tests, lint, TypeScript, formatting and production build passed. Desktop checks verified f-string text/interpolation and following Python code with matching/missing/stale source in both layouts, normal Python theme colors, and external diff rewrites. Source reconstruction additionally passed 250 generated Git patches.
+Regression script: `integration/desktop/textmate-fstrings.cjs`.
+Build using the commands below with output version 1.8.2.
+
 # Latest local build: 1.8.1
 
 Install `diff-viewer-1.8.1-diagonal-gaps.vsix`, then run **Developer: Reload Window**.
