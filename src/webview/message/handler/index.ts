@@ -1,3 +1,4 @@
+import { SyntaxHighlightingController } from "./syntax-highlighting";
 import { FindController } from "./find";
 import { ColorSchemeType, DiffFile } from "diff2html/lib/types";
 import { Diff2HtmlUI } from "diff2html/lib/ui/js/diff2html-ui-slim.js";
@@ -27,6 +28,10 @@ import {
 import { setupTheme, showEmpty, showLoading, updateFooter, updateHighlightTheme, updateLargeDiffNotice } from "./ui";
 
 export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl implements MessageToWebviewHandler {
+  private readonly syntaxHighlightingController = new SyntaxHighlightingController({
+    getEnabled: () => this.currentUiState.syntaxHighlighting !== false,
+    setEnabled: (syntaxHighlighting) => this.persistUiState({ syntaxHighlighting }),
+  });
   private readonly findController = new FindController();
   private currentConfig: AppConfig | undefined = undefined;
   private accessiblePaths = new Set<string>();
@@ -96,8 +101,12 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         diffContainer.style.display = "none";
       }
 
-      const diff2html = new Diff2HtmlUI(diffContainer, payload.diffFiles, this.currentConfig.diff2html);
+      const diff2html = new Diff2HtmlUI(diffContainer, payload.diffFiles, {
+        ...this.currentConfig.diff2html,
+        highlight: false,
+      });
       diff2html.draw();
+      this.syntaxHighlightingController.render(diff2html, diffContainer);
 
       this.fileBindings = this.enhanceRenderedDiff(diffContainer, payload.diffFiles);
       this.registerDiffContainerHandlers(diffContainer);

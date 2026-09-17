@@ -9,6 +9,7 @@ export type WebviewAction = ReviewAction | ExtensionAction | "find";
 
 export interface WebviewUiState {
   scrollTop: number;
+  syntaxHighlighting?: boolean;
   selectedPath?: string;
 }
 

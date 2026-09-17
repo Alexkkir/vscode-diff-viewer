@@ -140,6 +140,13 @@ export class WebviewHandlerTestSupport {
       ),
       findCount: document.querySelector("#diff-find-widget span")?.textContent ?? undefined,
       findHighlights: globalThis.CSS?.highlights?.get("diff-find")?.size,
+      syntaxTokens: Array.from(document.querySelectorAll<HTMLElement>(".d2h-code-line-ctn [class*=hljs-]"))
+        .slice(0, 30)
+        .map((el) => ({
+          text: el.textContent ?? "",
+          color: getComputedStyle(el).color,
+          baseColor: getComputedStyle(el.closest(".d2h-code-line-ctn")!).color,
+        })),
       isReady: Boolean(currentConfig),
       shellGeneration: Number(document.body.dataset.shellGeneration ?? "0"),
       outputFormat: currentConfig?.diff2html.outputFormat,

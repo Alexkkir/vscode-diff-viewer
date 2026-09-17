@@ -16,6 +16,10 @@ jest.mock("../../message/handler");
 jest.mock("../../viewed-state");
 jest.mock("../../skeleton");
 jest.mock("../../configuration");
+jest.mock("../document", () => ({
+  readDiffText: (document: vscode.TextDocument) => document.getText(),
+  watchDiffFile: jest.fn(() => ({ dispose: jest.fn() })),
+}));
 jest.mock("node:path");
 
 // Mock vscode module
@@ -23,6 +27,7 @@ jest.mock("vscode", () => ({
   window: {
     registerCustomEditorProvider: jest.fn(),
     showWarningMessage: jest.fn(),
+    onDidChangeWindowState: jest.fn(),
     onDidChangeActiveColorTheme: jest.fn(),
     tabGroups: {
       all: [],
@@ -255,6 +260,7 @@ describe("DiffViewerProvider", () => {
       expect(registeredCommandIds).toEqual([
         "diffviewer.showLineByLine",
         "diffviewer.showSideBySide",
+        "diffviewer.diagnostics",
         "diffviewer.find",
         "diffviewer.expandAll",
         "diffviewer.collapseAll",

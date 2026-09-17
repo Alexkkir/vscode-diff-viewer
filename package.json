@@ -1,8 +1,8 @@
 {
   "name": "vscode-diff-viewer",
-  "displayName": "Diff Viewer",
+  "displayName": "Diff Viewer (Local syntax toggle)",
   "description": "Visualize git diff files in VS Code",
-  "version": "1.7.0",
+  "version": "1.7.6",
   "license": "MIT",
   "publisher": "caponetto",
   "homepage": "https://github.com/caponetto/vscode-diff-viewer",
@@ -42,6 +42,10 @@
   },
   "contributes": {
     "commands": [
+      {
+        "command": "diffviewer.diagnostics",
+        "title": "Diff Viewer: Show diagnostics"
+      },
       {
         "command": "diffviewer.showLineByLine",
         "title": "Show diff line by line",

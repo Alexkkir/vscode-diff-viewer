@@ -1,3 +1,4 @@
+import { diffReadDiagnostics, readDiffText, watchDiffFile } from "./document";
 import { parse } from "diff2html";
 import * as vscode from "vscode";
 import { isMessageToExtension, MessageToExtensionHandler, MessageToWebview } from "../../shared/message";
@@ -41,6 +42,21 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       }),
       vscode.commands.registerCommand("diffviewer.showLineByLine", () => setOutputFormatConfig("line-by-line")),
       vscode.commands.registerCommand("diffviewer.showSideBySide", () => setOutputFormatConfig("side-by-side")),
+      vscode.commands.registerCommand("diffviewer.diagnostics", async () => {
+        const context = provider.getTargetWebviewContext();
+        if (!context) return;
+        const report = {
+          extensionVersion: args.extensionContext.extension.packageJSON.version,
+          extensionUri: args.extensionContext.extensionUri.toString(),
+          remoteName: vscode.env.remoteName,
+          read: await diffReadDiagnostics(context.document),
+        };
+        const document = await vscode.workspace.openTextDocument({
+          language: "json",
+          content: JSON.stringify(report, null, 2),
+        });
+        await vscode.window.showTextDocument(document, { preview: true });
+      }),
       vscode.commands.registerCommand("diffviewer.find", () => provider.performWebviewAction("find")),
       vscode.commands.registerCommand("diffviewer.expandAll", () => provider.performWebviewAction("expandAll")),
       vscode.commands.registerCommand("diffviewer.collapseAll", () => provider.performWebviewAction("collapseAll")),
@@ -102,6 +118,14 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
 
   private registerEventHandlers(args: { webviewContext: WebviewContext; messageHandler: MessageToExtensionHandler }) {
     const disposables = vscode.Disposable.from(
+      watchDiffFile(
+        args.webviewContext.document,
+        () => {
+          clearAccessiblePathsCache(args.webviewContext);
+          this.updateWebview(args.webviewContext);
+        },
+        () => args.webviewContext.panel.visible,
+      ),
       vscode.workspace.onDidChangeTextDocument((e) => {
         if (e.document.uri.fsPath !== args.webviewContext.document.uri.fsPath) {
           return;
@@ -143,6 +167,12 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         clearAccessiblePathsCache(args.webviewContext);
         this.updateWebview(args.webviewContext);
       }),
+      vscode.window.onDidChangeWindowState((event) => {
+        if (event.focused && args.webviewContext.panel.visible) {
+          clearAccessiblePathsCache(args.webviewContext);
+          this.updateWebview(args.webviewContext);
+        }
+      }),
       vscode.window.onDidChangeActiveColorTheme(() => {
         if (!isAutoColorScheme() || !args.webviewContext.panel.visible || !this.hasThemeChanged(args.webviewContext)) {
           return;
@@ -153,6 +183,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       args.webviewContext.panel.onDidChangeViewState((event: vscode.WebviewPanelOnDidChangeViewStateEvent) => {
         if (event.webviewPanel.active) {
           this.activeWebviewContext = args.webviewContext;
+          clearAccessiblePathsCache(args.webviewContext);
+          this.updateWebview(args.webviewContext);
+          return;
         }
 
         if (!event.webviewPanel.visible || !isAutoColorScheme() || !this.hasThemeChanged(args.webviewContext)) {
@@ -287,7 +320,8 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     config: ReturnType<typeof extractConfig>;
     collapseAll: boolean;
   }): Promise<RenderedWebviewData | undefined> {
-    const text = args.webviewContext.document.getText();
+    const text = await readDiffText(args.webviewContext.document);
+    if (!isActiveRenderRequest(args)) return;
     const diffFiles = parse(text, args.config.diff2html);
     const renderPlan = createRenderPlan({
       requestedConfig: args.config,

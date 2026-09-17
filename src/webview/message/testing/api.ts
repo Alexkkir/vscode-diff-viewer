@@ -1,6 +1,7 @@
 import type { AppConfig } from "../../../extension/configuration";
 
 export interface WebviewTestState {
+  syntaxTokens?: Array<{ text: string; color: string; baseColor: string }>;
   isReady: boolean;
   findOpen?: boolean;
   findCount?: string;

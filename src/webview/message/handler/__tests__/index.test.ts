@@ -14,6 +14,7 @@ jest.mock("diff2html/lib/ui/js/diff2html-ui-slim.js", () => ({
   Diff2HtmlUI: jest
     .fn()
     .mockImplementation((container: HTMLElement, diffFiles: DiffFile[], config: AppConfig["diff2html"]) => ({
+      highlightCode: jest.fn(),
       draw: jest.fn(() => {
         container.innerHTML = diffFiles
           .map((diffFile) => {

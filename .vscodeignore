@@ -9,3 +9,7 @@ src/**
 tsconfig.json
 webpack.config.js
 smoke/**
+
+coverage/**
+
+local-builds/**
