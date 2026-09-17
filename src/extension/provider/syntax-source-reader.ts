@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { DiffFile } from "diff2html/lib/types";
 import { reconstructSyntaxSources } from "./syntax-source";
 
-type Sources = ReturnType<typeof reconstructSyntaxSources>;
+type Sources = (NonNullable<ReturnType<typeof reconstructSyntaxSources>> & { uri: vscode.Uri }) | undefined;
 
 export async function readSyntaxSources(files: DiffFile[], diffUri?: vscode.Uri): Promise<Sources[]> {
   if (!diffUri) return files.map(() => undefined);
@@ -34,7 +34,8 @@ export async function readSyntaxSources(files: DiffFile[], diffUri?: vscode.Uri)
           if (!(stat.type & vscode.FileType.File) || stat.size > Math.min(budget, 2 * 1024 * 1024)) continue;
           const bytes = await vscode.workspace.fs.readFile(uri);
           budget -= bytes.byteLength;
-          source = reconstructSyntaxSources(file, new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+          const reconstructed = reconstructSyntaxSources(file, new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+          source = reconstructed ? { ...reconstructed, uri } : undefined;
           if (source) break;
           if (budget <= 0) break;
         } catch {

@@ -152,7 +152,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         if (
           !e.affectsConfiguration(APP_CONFIG_SECTION) &&
           !e.affectsConfiguration("workbench.colorTheme") &&
-          !e.affectsConfiguration("editor.tokenColorCustomizations")
+          !e.affectsConfiguration("editor.tokenColorCustomizations") &&
+          !e.affectsConfiguration("editor.semanticTokenColorCustomizations") &&
+          !e.affectsConfiguration("editor.semanticHighlighting")
         ) {
           return;
         }

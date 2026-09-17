@@ -143,7 +143,7 @@ export class WebviewHandlerTestSupport {
       syntaxTokens: Array.from(
         document.querySelectorAll<HTMLElement>(".d2h-code-line-ctn [class*=hljs-], .diff-textmate-token"),
       )
-        .slice(0, 30)
+        .slice(0, 100)
         .map((el) => ({
           text: el.textContent ?? "",
           color: getComputedStyle(el).color,

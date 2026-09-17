@@ -1,3 +1,13 @@
+# Latest local build: 1.8.3
+
+Install `diff-viewer-1.8.3-semantic-colors.vsix`, then run **Developer: Reload Window**.
+Adds semantic foreground colors from VS Code language providers on exactly matching current-source documents, using the selected theme, standard TextMate fallback scopes and semantic color customizations. Requests are bounded and cached briefly; dirty, changed or mismatched source documents cannot supply stale token offsets. Remote URIs are preserved. Only token colors are sent to the view, with no diagnostic underlines.
+Python module constants declared with ALL_CAPS assignments also receive the theme's readonly-variable color without a language server, including references inside f-string expressions. Unknown placeholders such as `__PROMPT_COLUMN__`, string content and comments retain their lexical colors. This fallback only recognizes declarations present in the available source/hunk; it does not infer arbitrary uppercase names.
+Current-source semantic tokens are applied to the new side and unchanged context on the old side; removed lines use lexical highlighting and the conservative constant fallback. Unchanged old-side references use the current classification, which may differ from their historical types; this does not reconstruct historical language-server analysis. Semantic font styles and extension-specific semantic scope mappings are not reproduced.
+The existing Syntax highlighting checkbox and `editor.semanticHighlighting.enabled` remain respected. All previous refresh, search, terminal, theme and f-string-context fixes are retained.
+Validation: 305 unit tests, lint, TypeScript, formatting and the production build passed. Desktop VS Code checks passed for semantic colors and their settings in both layouts, standalone constants and f-string expressions, previous multiline f-string cases, external diff rewriting, search and three terminal maximization cycles, and syntax diagnostics. VSIX contents were verified against the compiled bundles.
+Regression scripts: `integration/desktop/semantic-colors.cjs` and `integration/desktop/textmate-fstrings.cjs`. Build using the commands below with output version 1.8.3; no extra runtime downloads are needed.
+
 # Latest local build: 1.8.2
 
 Install `diff-viewer-1.8.2-fstring-context.vsix`, then run **Developer: Reload Window**.
