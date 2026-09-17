@@ -1,3 +1,9 @@
+# Latest local build: 1.7.8
+
+Install `diff-viewer-1.7.8-no-loading-flash.vsix`, then run **Developer: Reload Window**.
+The Loading overlay now appears only before the first successful render. Subsequent prepare messages and asynchronous refreshes leave the existing diff visible. Background file/focus checks remain enabled.
+255 unit tests passed, including a regression asserting Loading stays hidden during prepare and asynchronous refresh. Production build, lint and TypeScript passed. Build using the commands below with output version 1.7.8.
+
 # Latest local build: 1.7.7
 
 Install `diff-viewer-1.7.7-refresh-dedup.vsix`, then run **Developer: Reload Window**.

@@ -188,6 +188,22 @@ describe("MessageToWebviewHandlerImpl", () => {
     });
   });
 
+  it("keeps Loading hidden during preparation and async refresh after the first render", async () => {
+    const payload = createUpdatePayload({
+      diffFiles: [createMockDiffFile({ oldName: "demo.py", newName: "demo.py" })],
+      accessiblePaths: ["demo.py"],
+    });
+    await handler.updateWebview(payload);
+    const loading = document.getElementById("loading-container")!;
+    expect(loading.style.display).toBe("none");
+    handler.prepare();
+    expect(loading.style.display).toBe("none");
+    const pending = handler.updateWebview(payload);
+    expect(loading.style.display).toBe("none");
+    await pending;
+    expect(loading.style.display).toBe("none");
+  });
+
   it("renders file navigation buttons for renamed and regular files", async () => {
     await handler.updateWebview(
       createUpdatePayload({

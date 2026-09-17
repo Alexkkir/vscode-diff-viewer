@@ -32,6 +32,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     getEnabled: () => this.currentUiState.syntaxHighlighting !== false,
     setEnabled: (syntaxHighlighting) => this.persistUiState({ syntaxHighlighting }),
   });
+  private hasRendered = false;
   private readonly findController = new FindController();
   private currentConfig: AppConfig | undefined = undefined;
   private accessiblePaths = new Set<string>();
@@ -68,6 +69,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   }
 
   public prepare(): void {
+    if (this.hasRendered) return;
     showLoading(true);
     showEmpty(false);
   }
@@ -505,11 +507,13 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   }
 
   private async withLoading(runnable: () => Promise<void>): Promise<void> {
-    showLoading(true);
+    if (!this.hasRendered) showLoading(true);
     showEmpty(false);
-
-    await runnable();
-
-    showLoading(false);
+    try {
+      await runnable();
+      this.hasRendered = true;
+    } finally {
+      showLoading(false);
+    }
   }
 }
