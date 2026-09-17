@@ -1,4 +1,4 @@
-import { highlightDiff } from "./textmate";
+import { highlightDiffProgressively } from "./textmate";
 import { diffReadDiagnostics, readDiffText, watchDiffFile } from "./document";
 import { parse } from "diff2html";
 import * as vscode from "vscode";
@@ -14,6 +14,21 @@ import { createRenderPlan, isActiveRenderRequest } from "./rendering";
 import { ensureWebviewShell } from "./shell";
 import { DiffViewerProviderTestSupport } from "./testing/support";
 import { DiffViewerProviderArgs, RenderedWebviewData, WebviewContext } from "./types";
+
+function needsWriteStabilization(files: ReturnType<typeof parse> | undefined): boolean {
+  if (!files?.length) return true;
+  return files.some((file) => {
+    if (file.isBinary) return false;
+    if (!file.blocks.some((block) => block.lines.length)) return true;
+    return file.blocks.some((block) => {
+      const counts = /^@@ -\d+(?:,(\d+))? \+\d+(?:,(\d+))? @@/.exec(block.header);
+      if (!counts) return false; // Combined/custom headers keep their existing behavior.
+      const oldLines = block.lines.filter((line) => line.oldNumber !== undefined).length;
+      const newLines = block.lines.filter((line) => line.newNumber !== undefined).length;
+      return oldLines < Number(counts[1] ?? 1) || newLines < Number(counts[2] ?? 1);
+    });
+  });
+}
 
 export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
   private static readonly VIEW_TYPE = "diffViewer";
@@ -299,7 +314,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         config,
         collapseAll,
       });
-    }, 100);
+    }, 20);
   }
 
   private async renderWebview(args: {
@@ -313,21 +328,39 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     }
 
     try {
-      const renderedData = await this.createRenderedWebviewData(args);
-      if (!renderedData || !isActiveRenderRequest(args)) {
+      const result = await this.createRenderedWebviewData(args);
+      if (!result || !isActiveRenderRequest(args)) {
         return;
       }
 
+      const { renderedData, enriched } = result;
       const serialized = JSON.stringify(renderedData);
-      if (args.webviewContext.lastRenderedData === serialized) return;
-      this.prepareWebviewForRender(args.webviewContext);
-      this.postUpdateWebviewMessage({
-        webviewContext: args.webviewContext,
-        renderedData,
-      });
-      args.webviewContext.lastRenderedData = serialized;
+      const context = args.webviewContext;
+      if (context.lastRenderedData !== serialized) {
+        this.prepareWebviewForRender(context);
+        context.lastRenderedId = args.requestId;
+        context.lastRenderedSyntax = JSON.stringify(renderedData.syntax);
+        this.postUpdateWebviewMessage({ webviewContext: context, renderedData });
+        context.lastRenderedData = serialized;
+      }
+      // Slow language servers enrich the existing view; they never hold up content
+      // or replace a newer diff, and no full redraw is needed just to change colors.
+      void enriched
+        ?.then((syntax) => {
+          if (!isActiveRenderRequest(args) || context.lastRenderedId === undefined) return;
+          const serializedSyntax = JSON.stringify(syntax);
+          if (serializedSyntax === context.lastRenderedSyntax) return;
+          context.lastRenderedSyntax = serializedSyntax;
+          this.postMessageToWebviewWrapper({
+            webview: context.panel.webview,
+            message: { kind: "updateSyntax", payload: { renderId: context.lastRenderedId, syntax } },
+          });
+        })
+        .catch(() => {
+          /* Keep the lexical colors if semantic enrichment fails. */
+        });
     } catch {
-      this.handleWebviewRenderFailure(args.webviewContext);
+      if (isActiveRenderRequest(args)) this.handleWebviewRenderFailure(args.webviewContext);
     }
   }
 
@@ -336,10 +369,33 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     requestId: number;
     config: ReturnType<typeof extractConfig>;
     collapseAll: boolean;
-  }): Promise<RenderedWebviewData | undefined> {
-    const text = await readDiffText(args.webviewContext.document);
+  }): Promise<
+    | {
+        renderedData: RenderedWebviewData;
+        enriched?: Promise<NonNullable<RenderedWebviewData["syntax"]>>;
+      }
+    | undefined
+  > {
+    let text = await readDiffText(args.webviewContext.document);
     if (!isActiveRenderRequest(args)) return;
-    const diffFiles = parse(text, args.config.diff2html);
+    let diffFiles: ReturnType<typeof parse> | undefined;
+    try {
+      diffFiles = parse(text, args.config.diff2html);
+    } catch (error) {
+      if (args.webviewContext.lastRenderedData === undefined) throw error;
+    }
+    if (!isActiveRenderRequest(args)) return;
+    if (args.webviewContext.lastRenderedData !== undefined && needsWriteStabilization(diffFiles)) {
+      // Shell redirection truncates the file before the diff command writes its
+      // result. Briefly retain the previous view only for suspicious snapshots;
+      // complete diffs stay fast, while an intentionally empty file still clears.
+      await new Promise<void>((resolve) => setTimeout(resolve, 200));
+      if (!isActiveRenderRequest(args)) return;
+      text = await readDiffText(args.webviewContext.document);
+      if (!isActiveRenderRequest(args)) return;
+      diffFiles = parse(text, args.config.diff2html);
+    }
+    if (!diffFiles) return;
     const renderPlan = createRenderPlan({
       requestedConfig: args.config,
       text,
@@ -356,15 +412,22 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       return;
     }
 
-    return {
-      diffFiles,
-      viewedState: args.webviewContext.viewedStateStore.getViewedState(),
-      accessiblePaths: await collectAccessiblePaths({
+    const [accessiblePaths, highlighting] = await Promise.all([
+      collectAccessiblePaths({
         webviewContext: args.webviewContext,
         diffFiles,
       }),
-      renderPlan,
-      syntax: await highlightDiff(diffFiles, args.webviewContext.document.uri).catch(() => undefined),
+      highlightDiffProgressively(diffFiles, args.webviewContext.document.uri).catch(() => undefined),
+    ]);
+    return {
+      renderedData: {
+        diffFiles,
+        viewedState: args.webviewContext.viewedStateStore.getViewedState(),
+        accessiblePaths,
+        renderPlan,
+        syntax: highlighting?.syntax,
+      },
+      enriched: highlighting?.enriched,
     };
   }
 
@@ -374,6 +437,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       message: {
         kind: "updateWebview",
         payload: {
+          renderId: args.webviewContext.lastRenderedId,
           config: args.renderedData.renderPlan.config,
           diffFiles: args.renderedData.diffFiles,
           syntax: args.renderedData.syntax,
@@ -421,6 +485,8 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     }
 
     webviewContext.lastRenderedData = undefined;
+    webviewContext.lastRenderedId = undefined;
+    webviewContext.lastRenderedSyntax = undefined;
     webviewContext.webviewReady = true;
 
     const pendingReadyRender = webviewContext.pendingReadyRender;

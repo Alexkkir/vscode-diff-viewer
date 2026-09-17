@@ -1,0 +1,41 @@
+{
+  "mode": "progressive",
+  "measurements": [
+    {
+      "format": "line-by-line",
+      "operation": "open",
+      "lines": 1600,
+      "semanticDelayMs": 1000,
+      "contentMs": 434,
+      "enrichedMs": 1423,
+      "contentBeforeSemanticResult": true
+    },
+    {
+      "format": "line-by-line",
+      "operation": "rewrite",
+      "lines": 1600,
+      "semanticDelayMs": 1000,
+      "contentMs": 276,
+      "enrichedMs": 1277,
+      "contentBeforeSemanticResult": true
+    },
+    {
+      "format": "side-by-side",
+      "operation": "open",
+      "lines": 1600,
+      "semanticDelayMs": 1000,
+      "contentMs": 284,
+      "enrichedMs": 1264,
+      "contentBeforeSemanticResult": true
+    },
+    {
+      "format": "side-by-side",
+      "operation": "rewrite",
+      "lines": 1600,
+      "semanticDelayMs": 1000,
+      "contentMs": 283,
+      "enrichedMs": 1262,
+      "contentBeforeSemanticResult": true
+    }
+  ]
+}

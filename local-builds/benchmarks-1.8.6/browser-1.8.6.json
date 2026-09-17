@@ -1,0 +1,58 @@
+[
+  {
+    "count": 1600,
+    "revision": 0,
+    "milliseconds": 74,
+    "native": 809,
+    "hiddenRows": 2998
+  },
+  {
+    "count": 1600,
+    "revision": 1,
+    "milliseconds": 59,
+    "native": 809,
+    "hiddenRows": 2998
+  },
+  {
+    "count": 1600,
+    "revision": 2,
+    "milliseconds": 56,
+    "native": 809,
+    "hiddenRows": 2998
+  },
+  {
+    "count": 1600,
+    "revision": 3,
+    "milliseconds": 59,
+    "native": 809,
+    "hiddenRows": 2998
+  },
+  {
+    "count": 5000,
+    "revision": 0,
+    "milliseconds": 186,
+    "native": 809,
+    "hiddenRows": 9798
+  },
+  {
+    "count": 5000,
+    "revision": 1,
+    "milliseconds": 166,
+    "native": 809,
+    "hiddenRows": 9798
+  },
+  {
+    "count": 5000,
+    "revision": 2,
+    "milliseconds": 165,
+    "native": 809,
+    "hiddenRows": 9798
+  },
+  {
+    "count": 5000,
+    "revision": 3,
+    "milliseconds": 163,
+    "native": 809,
+    "hiddenRows": 9798
+  }
+]

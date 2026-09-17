@@ -46,6 +46,12 @@ If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, ena
 
 The filename in each available file header is a link (mouse click or Enter); revision labels such as `(working tree)` are removed when locating its source. A missing file is not substituted from another Arcadia. If the diff is outside an Arcadia directory, normal workspace path resolution applies. Turning Arc mode off restores normal workspace path resolution everywhere.
 
+### Large diffs and refresh
+
+External file changes refresh the existing view without a Loading overlay. Where remote filesystem notifications are unavailable, visible diff editors check file metadata every 250 ms; a full content check every two seconds covers providers with unchanged/coarse timestamps. Unsaved editor changes take priority over disk content.
+
+Native lexical colors appear with the diff. Language-server colors arrive separately without rebuilding the view or changing expanded context. Folded context retains its full text and tokenization state; its DOM receives syntax colors when revealed, including through Find.
+
 ### Find in a diff
 
 Press `Ctrl+F` (`Cmd+F` on macOS) or use the search button in the editor title bar. Search highlights literal matches in visible code and file names, including text split across syntax-highlight spans. Use `Enter` / `Shift+Enter` for the next / previous match, `Aa` to match case, and `Escape` to close. Expand collapsed files to include their code in the search.

@@ -10,6 +10,7 @@ import { UpdateWebviewPayload } from "../../api";
 import { MessageToWebviewHandlerImpl } from "..";
 import { getSha1Hash } from "../../hash";
 import { ContextFoldingController } from "../context-folding";
+import { SyntaxHighlightingController } from "../syntax-highlighting";
 
 jest.mock("diff2html/lib/ui/js/diff2html-ui-slim.js", () => ({
   Diff2HtmlUI: jest
@@ -187,6 +188,43 @@ describe("MessageToWebviewHandlerImpl", () => {
         setState,
       },
     });
+  });
+
+  it("applies semantic enrichment in place only for the currently displayed diff", async () => {
+    const update = jest.spyOn(SyntaxHighlightingController.prototype, "updateNative");
+    try {
+      await handler.updateWebview(createUpdatePayload({ renderId: 10 }));
+      const container = document.getElementById(SkeletonElementIds.DiffContainer)!;
+      const marker = document.createElement("span");
+      container.append(marker);
+      const draws = jest.mocked(Diff2HtmlUI).mock.calls.length;
+      handler.updateSyntax({ renderId: 9, syntax: [null] });
+      expect(update).not.toHaveBeenCalled();
+      handler.updateSyntax({ renderId: 10, syntax: [null] });
+      expect(update).toHaveBeenCalledWith([null]);
+      expect(marker.isConnected).toBe(true);
+      expect(jest.mocked(Diff2HtmlUI).mock.calls).toHaveLength(draws);
+      expect(document.getElementById(SkeletonElementIds.LoadingContainer)!.style.display).toBe("none");
+    } finally {
+      update.mockRestore();
+    }
+  });
+
+  it("queues early semantic colors until their diff is ready and discards superseded colors", async () => {
+    const update = jest.spyOn(SyntaxHighlightingController.prototype, "updateNative");
+    try {
+      const first = handler.updateWebview(createUpdatePayload({ renderId: 10 }));
+      handler.updateSyntax({ renderId: 10, syntax: [null] });
+      expect(update).not.toHaveBeenCalled();
+      const latest = handler.updateWebview(createUpdatePayload({ renderId: 11 }));
+      handler.updateSyntax({ renderId: 10, syntax: [null] });
+      handler.updateSyntax({ renderId: 11, syntax: [] });
+      await Promise.all([first, latest]);
+      expect(update).toHaveBeenCalledTimes(1);
+      expect(update).toHaveBeenCalledWith([]);
+    } finally {
+      update.mockRestore();
+    }
   });
 
   it("keeps Loading hidden during preparation and async refresh after the first render", async () => {

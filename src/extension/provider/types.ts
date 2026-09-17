@@ -20,6 +20,8 @@ export interface WebviewContext {
   shellGeneration: number;
   webviewReady: boolean;
   lastRenderedData?: string;
+  lastRenderedId?: number;
+  lastRenderedSyntax?: string;
   pendingReadyRender?: {
     collapseAll: boolean;
   };

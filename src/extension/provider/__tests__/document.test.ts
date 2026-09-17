@@ -36,6 +36,7 @@ describe("external diff changes", () => {
       .mocked(vscode.workspace.getConfiguration)
       .mockReturnValue({ get: () => "utf8" } as unknown as vscode.WorkspaceConfiguration);
     jest.mocked(vscode.workspace.fs.readFile).mockResolvedValue(new TextEncoder().encode("new disk text"));
+    jest.mocked(vscode.workspace.fs.stat).mockResolvedValue({ type: 1, ctime: 1, mtime: 1, size: 13 });
   });
   afterEach(() => {
     jest.clearAllTimers();
@@ -75,6 +76,72 @@ describe("external diff changes", () => {
   it("recognizes a UTF-16 BOM", async () => {
     jest.mocked(vscode.workspace.fs.readFile).mockResolvedValue(new Uint8Array([255, 254, 104, 0, 105, 0]));
     expect(await readDiffText(document)).toBe("hi");
+  });
+  function subscribe(onChange: () => void, isVisible?: () => boolean) {
+    const uri = { toString: () => "vscode-remote://container/changes.diff" };
+    Object.assign(document, { uri: { with: () => uri } });
+    jest.mocked(vscode.workspace.createFileSystemWatcher).mockReturnValue({
+      onDidChange: jest.fn(() => ({ dispose: jest.fn() })),
+      onDidCreate: jest.fn(() => ({ dispose: jest.fn() })),
+      dispose: jest.fn(),
+    } as unknown as vscode.FileSystemWatcher);
+    return watchDiffFile(document, onChange, isVisible);
+  }
+  it("detects a same-size remote rewrite within 250ms without a filesystem event", async () => {
+    const changed = jest.fn();
+    const subscription = subscribe(changed);
+    await jest.advanceTimersByTimeAsync(0);
+    jest.mocked(vscode.workspace.fs.readFile).mockResolvedValue(new TextEncoder().encode("new disk data"));
+    jest.mocked(vscode.workspace.fs.stat).mockResolvedValue({ type: 1, ctime: 1, mtime: 2, size: 13 });
+    await jest.advanceTimersByTimeAsync(249);
+    expect(changed).not.toHaveBeenCalled();
+    await jest.advanceTimersByTimeAsync(1);
+    expect(changed).toHaveBeenCalledTimes(1);
+    await jest.advanceTimersByTimeAsync(250);
+    expect(changed).toHaveBeenCalledTimes(1);
+    expect(vscode.workspace.fs.readFile).toHaveBeenCalledTimes(2);
+    subscription.dispose();
+  });
+  it("checks unchanged metadata cheaply and verifies bytes every two seconds", async () => {
+    const changed = jest.fn();
+    const subscription = subscribe(changed);
+    await jest.advanceTimersByTimeAsync(0);
+    // Equal size and timestamps do not prove equal content on remote mounts.
+    jest.mocked(vscode.workspace.fs.readFile).mockResolvedValue(new TextEncoder().encode("new disk data"));
+    await jest.advanceTimersByTimeAsync(1999);
+    expect(vscode.workspace.fs.stat).toHaveBeenCalledTimes(8);
+    expect(vscode.workspace.fs.readFile).toHaveBeenCalledTimes(1);
+    expect(changed).not.toHaveBeenCalled();
+    await jest.advanceTimersByTimeAsync(1);
+    expect(vscode.workspace.fs.readFile).toHaveBeenCalledTimes(2);
+    expect(changed).toHaveBeenCalledTimes(1);
+    subscription.dispose();
+  });
+  it("still verifies content when the filesystem provider cannot stat", async () => {
+    jest.mocked(vscode.workspace.fs.stat).mockRejectedValue(new Error("not supported"));
+    const changed = jest.fn();
+    const subscription = subscribe(changed);
+    await jest.advanceTimersByTimeAsync(0);
+    jest.mocked(vscode.workspace.fs.readFile).mockResolvedValue(new TextEncoder().encode("updated text"));
+    await jest.advanceTimersByTimeAsync(2000);
+    expect(changed).toHaveBeenCalledTimes(1);
+    subscription.dispose();
+  });
+  it("does not notify if the buffer becomes dirty during a poll", async () => {
+    const changed = jest.fn();
+    const subscription = subscribe(changed);
+    await jest.advanceTimersByTimeAsync(0);
+    jest.mocked(vscode.workspace.fs.stat).mockResolvedValue({ type: 1, ctime: 1, mtime: 2, size: 13 });
+    jest.mocked(vscode.workspace.fs.readFile).mockImplementation(async () => {
+      Object.assign(document, { isDirty: true });
+      return new TextEncoder().encode("updated text");
+    });
+    await jest.advanceTimersByTimeAsync(250);
+    expect(changed).not.toHaveBeenCalled();
+    jest.mocked(vscode.workspace.fs.readFile).mockClear();
+    await jest.advanceTimersByTimeAsync(2000);
+    expect(vscode.workspace.fs.readFile).not.toHaveBeenCalled();
+    subscription.dispose();
   });
   it("detects missed filesystem events, pauses when hidden, and stops after disposal", async () => {
     const uri = { toString: () => "vscode-remote://container/changes.diff" };

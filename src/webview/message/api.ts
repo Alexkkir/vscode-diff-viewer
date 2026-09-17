@@ -23,6 +23,7 @@ export interface WebviewPerformanceHints {
 }
 
 export interface UpdateWebviewPayload {
+  renderId?: number;
   config: AppConfig;
   diffFiles: DiffFile[];
   syntax?: Array<FileSyntax | null>;
@@ -32,9 +33,15 @@ export interface UpdateWebviewPayload {
   performance: WebviewPerformanceHints;
 }
 
+export interface UpdateSyntaxPayload {
+  renderId: number;
+  syntax: Array<FileSyntax | null>;
+}
+
 export interface MessageToWebviewRenderApi {
   prepare: () => void;
   updateWebview: (payload: UpdateWebviewPayload) => Promise<void>;
+  updateSyntax: (payload: UpdateSyntaxPayload) => void;
   performWebviewAction: (payload: { action: WebviewAction }) => void;
 }
 
@@ -43,6 +50,7 @@ export interface MessageToWebviewApi extends MessageToWebviewRenderApi, MessageT
 export const MESSAGE_TO_WEBVIEW_RENDER_KINDS = [
   "prepare",
   "updateWebview",
+  "updateSyntax",
   "performWebviewAction",
 ] as const satisfies readonly (keyof MessageToWebviewRenderApi)[];
 

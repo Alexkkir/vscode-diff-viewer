@@ -13,6 +13,7 @@ export interface WebviewTestState {
   findCount?: string;
   findHighlights?: number;
   shellGeneration: number;
+  renderGeneration?: number;
   outputFormat?: AppConfig["diff2html"]["outputFormat"];
   colorScheme?: AppConfig["diff2html"]["colorScheme"];
   fileCount: number;

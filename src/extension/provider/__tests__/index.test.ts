@@ -1,4 +1,5 @@
-jest.mock("../textmate", () => ({ highlightDiff: jest.fn(async () => undefined) }));
+jest.mock("../textmate", () => ({ highlightDiffProgressively: jest.fn(async () => undefined) }));
+import { highlightDiffProgressively } from "../textmate";
 import { parse } from "diff2html";
 import { ColorSchemeType } from "diff2html/lib/types";
 import { basename } from "node:path";
@@ -703,6 +704,7 @@ describe("DiffViewerProvider", () => {
       expect(mockWebview.postMessage).toHaveBeenCalledWith({
         kind: "updateWebview",
         payload: {
+          renderId: expect.any(Number),
           config: expect.any(Object),
           diffFiles: expect.any(Array),
           accessiblePaths: expect.any(Array),
@@ -824,6 +826,197 @@ describe("DiffViewerProvider", () => {
 
     afterEach(() => {
       jest.useRealTimers();
+    });
+
+    const readyContext = () => ({
+      document: mockTextDocument,
+      panel: mockWebviewPanel,
+      viewedStateStore: mockViewedStateStore,
+      isDisposed: false,
+      renderRequestId: 0,
+      shellInitialized: true,
+      shellGeneration: 1,
+      webviewReady: true,
+    });
+
+    it.each([
+      ["empty", ""],
+      ["unparseable", "command is still writing"],
+      ["header only", "diff --git a/file1.txt b/file1.txt\n--- a/file1.txt\n+++ b/file1.txt\n"],
+      ["partial hunk", "--- a/file1.txt\n+++ b/file1.txt\n@@ -1,3 +1,3 @@\n line1\n-line2\n+partial"],
+      ["parse failure", "throw during parse"],
+    ])("keeps the previous diff while a transient %s snapshot finishes writing", async (_label, incomplete) => {
+      const actualParse = jest.requireActual<typeof import("diff2html")>("diff2html").parse;
+      mockParse.mockImplementation((text, config) => {
+        if (text === "throw during parse") throw new Error("incomplete patch");
+        return actualParse(text, config);
+      });
+      const context = readyContext();
+      const update = () => Reflect.get(provider, "updateWebview").call(provider, context);
+      update();
+      await jest.advanceTimersByTimeAsync(20);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
+      jest.mocked(mockWebview.postMessage).mockClear();
+
+      jest.mocked(mockTextDocument.getText).mockReturnValue(incomplete);
+      update();
+      await jest.advanceTimersByTimeAsync(100);
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(mockWebviewPanel.dispose).not.toHaveBeenCalled();
+      const complete = mockDiffContent.replace("line2modified", "finished-version");
+      jest.mocked(mockTextDocument.getText).mockReturnValue(complete);
+      // Recover even when the final file-system notification was missed.
+      await jest.advanceTimersByTimeAsync(120);
+      expect(mockParse).toHaveBeenLastCalledWith(complete, expect.any(Object));
+      expect(
+        jest.mocked(mockWebview.postMessage).mock.calls.filter(([message]) => message.kind === "updateWebview"),
+      ).toHaveLength(1);
+      expect(mockWebviewPanel.dispose).not.toHaveBeenCalled();
+      expect(vscode.window.showWarningMessage).not.toHaveBeenCalled();
+    });
+
+    it("shows an intentionally empty updated diff after the bounded stabilization delay", async () => {
+      mockParse.mockImplementation(jest.requireActual<typeof import("diff2html")>("diff2html").parse);
+      const context = readyContext();
+      const update = () => Reflect.get(provider, "updateWebview").call(provider, context);
+      update();
+      await jest.advanceTimersByTimeAsync(20);
+      jest.mocked(mockWebview.postMessage).mockClear();
+
+      jest.mocked(mockTextDocument.getText).mockReturnValue("");
+      update();
+      await jest.advanceTimersByTimeAsync(219);
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      await jest.advanceTimersByTimeAsync(1);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith({
+        kind: "updateWebview",
+        payload: expect.objectContaining({ diffFiles: [] }),
+      });
+      expect(mockWebviewPanel.dispose).not.toHaveBeenCalled();
+      expect(jest.getTimerCount()).toBe(0);
+    });
+
+    it("renders a newer complete diff immediately and discards the pending empty retry", async () => {
+      mockParse.mockImplementation(jest.requireActual<typeof import("diff2html")>("diff2html").parse);
+      const context = readyContext();
+      const update = () => Reflect.get(provider, "updateWebview").call(provider, context);
+      update();
+      await jest.advanceTimersByTimeAsync(20);
+      jest.mocked(mockWebview.postMessage).mockClear();
+
+      jest.mocked(mockTextDocument.getText).mockReturnValue("");
+      update();
+      await jest.advanceTimersByTimeAsync(80);
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      jest.mocked(mockTextDocument.getText).mockReturnValue(mockDiffContent.replace("line2modified", "latest-version"));
+      update();
+      await jest.advanceTimersByTimeAsync(20);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
+      jest.mocked(mockWebview.postMessage).mockClear();
+      jest.mocked(mockTextDocument.getText).mockClear();
+      await jest.advanceTimersByTimeAsync(200);
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(mockTextDocument.getText).not.toHaveBeenCalled();
+      expect(mockWebviewPanel.dispose).not.toHaveBeenCalled();
+    });
+
+    it("does not reread or reopen an editor disposed during snapshot stabilization", async () => {
+      mockParse.mockImplementation(jest.requireActual<typeof import("diff2html")>("diff2html").parse);
+      const context = readyContext();
+      const update = () => Reflect.get(provider, "updateWebview").call(provider, context);
+      update();
+      await jest.advanceTimersByTimeAsync(20);
+      jest.mocked(mockWebview.postMessage).mockClear();
+      jest.mocked(mockTextDocument.getText).mockReturnValue("");
+      update();
+      await jest.advanceTimersByTimeAsync(20);
+      context.isDisposed = true;
+      jest.mocked(mockTextDocument.getText).mockClear();
+      await jest.advanceTimersByTimeAsync(200);
+      expect(mockTextDocument.getText).not.toHaveBeenCalled();
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(vscode.commands.executeCommand).not.toHaveBeenCalled();
+    });
+
+    it("renders within the short debounce without waiting for semantic colors", async () => {
+      let finish!: (syntax: []) => void;
+      jest.mocked(highlightDiffProgressively).mockResolvedValueOnce({
+        syntax: [],
+        enriched: new Promise<[]>((resolve) => {
+          finish = resolve;
+        }),
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (provider as any).updateWebview(readyContext());
+      await jest.advanceTimersByTimeAsync(20);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
+      jest.mocked(mockWebview.postMessage).mockClear();
+      finish([]);
+      await jest.runAllTimersAsync();
+      // Identical semantic results must not even recolor, let alone redraw.
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+    });
+
+    it("enriches only the current render without prepare or redraw", async () => {
+      let finish!: (syntax: [null]) => void;
+      jest.mocked(highlightDiffProgressively).mockResolvedValueOnce({
+        syntax: [],
+        enriched: new Promise<[null]>((resolve) => {
+          finish = resolve;
+        }),
+      });
+      const context = readyContext();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (provider as any).updateWebview(context);
+      await jest.runAllTimersAsync();
+      jest.mocked(mockWebview.postMessage).mockClear();
+      finish([null]);
+      await jest.runAllTimersAsync();
+      expect(mockWebview.postMessage).toHaveBeenCalledTimes(1);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith({
+        kind: "updateSyntax",
+        payload: { renderId: context.renderRequestId, syntax: [null] },
+      });
+    });
+
+    it("discards stale semantic results after a newer update or disposal", async () => {
+      for (const dispose of [false, true]) {
+        let finish!: (syntax: [null]) => void;
+        jest.mocked(highlightDiffProgressively).mockResolvedValueOnce({
+          syntax: [],
+          enriched: new Promise<[null]>((resolve) => {
+            finish = resolve;
+          }),
+        });
+        const context = readyContext();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (provider as any).updateWebview(context);
+        await jest.runAllTimersAsync();
+        if (dispose) context.isDisposed = true;
+        else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (provider as any).updateWebview(context);
+        }
+        await jest.runAllTimersAsync();
+        jest.mocked(mockWebview.postMessage).mockClear();
+        finish([null]);
+        await jest.runAllTimersAsync();
+        expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      }
+    });
+
+    it("does not reset enriched colors or redraw when unchanged notifications repeat", async () => {
+      const highlighting = { syntax: [], enriched: Promise.resolve([null]) };
+      jest.mocked(highlightDiffProgressively).mockResolvedValueOnce(highlighting).mockResolvedValueOnce(highlighting);
+      const context = readyContext();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (provider as any).updateWebview(context);
+      await jest.runAllTimersAsync();
+      jest.mocked(mockWebview.postMessage).mockClear();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (provider as any).updateWebview(context);
+      await jest.runAllTimersAsync();
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
     });
 
     it("should build the shell and defer rendering until the webview is ready", () => {

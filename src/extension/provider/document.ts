@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 const reads = new WeakMap<vscode.TextDocument, { source: string; error?: string }>();
-const fingerprints = new WeakMap<vscode.TextDocument, Promise<string>>();
+const lastReadTexts = new WeakMap<vscode.TextDocument, string>();
 
 async function fingerprint(text: string): Promise<string> {
   const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -10,13 +10,14 @@ async function fingerprint(text: string): Promise<string> {
 
 function recordRead(document: vscode.TextDocument, text: string, source: string, error?: string): string {
   reads.set(document, { source, error });
-  fingerprints.set(document, fingerprint(text));
+  lastReadTexts.set(document, text);
   return text;
 }
 
 export async function diffReadDiagnostics(document: vscode.TextDocument): Promise<object> {
   const lastRead = reads.get(document);
-  const lastReadSha256 = await fingerprints.get(document);
+  const lastReadText = lastReadTexts.get(document);
+  const lastReadSha256 = lastReadText === undefined ? undefined : await fingerprint(lastReadText);
   let disk;
   try {
     const stat = await vscode.workspace.fs.stat(document.uri);
@@ -79,16 +80,33 @@ export function watchDiffFile(
   let disposed = false;
   let busy = false;
   let previous: Uint8Array | undefined;
+  let previousMetadata: string | undefined;
+  let lastContentCheck = 0;
   const poll = async () => {
     if (disposed || busy || !isVisible() || document.isDirty) return;
     busy = true;
     try {
+      let metadata: string | undefined;
+      try {
+        const stat = await vscode.workspace.fs.stat(uri);
+        metadata = `${stat.type}:${stat.ctime}:${stat.mtime}:${stat.size}`;
+      } catch {
+        // Some virtual providers cannot stat a file. Keep the content fallback.
+      }
+      if (disposed || !isVisible() || document.isDirty) return;
+      // Watch notifications are unreliable on some remote mounts. Cheap metadata
+      // checks catch ordinary writes quickly without transferring the whole diff
+      // four times a second. Periodic byte comparisons also cover providers with
+      // coarse timestamps and same-size writes whose metadata does not change.
+      if (previous && metadata === previousMetadata && Date.now() - lastContentCheck < 2000) return;
       const bytes = await vscode.workspace.fs.readFile(uri);
-      if (disposed) return;
+      if (disposed || !isVisible() || document.isDirty) return;
       const differs =
         previous !== undefined &&
         (bytes.length !== previous.length || bytes.some((value, index) => value !== previous![index]));
       previous = bytes.slice();
+      previousMetadata = metadata;
+      lastContentCheck = Date.now();
       if (differs) onChange();
     } catch {
       // Keep watching through atomic replacement or a temporary disconnect.
@@ -97,7 +115,7 @@ export function watchDiffFile(
     }
   };
   void poll();
-  const timer = setInterval(() => void poll(), 2000);
+  const timer = setInterval(() => void poll(), 250);
   return vscode.Disposable.from(
     watcher,
     watcher.onDidChange(changed),

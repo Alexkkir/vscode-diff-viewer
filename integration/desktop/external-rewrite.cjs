@@ -20,7 +20,7 @@ exports.run = async function () {
       try {
         state = await vscode.commands.executeCommand("diffviewer._captureActiveTestState");
       } catch {}
-      if (state?.codeLineTexts.some((line) => line.includes(label))) return;
+      if (state?.codeLineTexts.some((line) => line.includes(label))) return state;
       await wait(100);
     }
     console.log(
@@ -38,10 +38,26 @@ exports.run = async function () {
   try {
     fs.writeFileSync(filename, patch("first-version"));
     await vscode.commands.executeCommand("vscode.openWith", uri, "diffViewer");
-    await expectRendered("first-version");
-    fs.writeFileSync(filename, patch("second-version"));
+    const first = await expectRendered("first-version");
+    // Match shell redirection: truncate before the command starts producing data.
+    const output = fs.openSync(filename, "w");
+    try {
+      await wait(80);
+      const duringTruncate = await vscode.commands.executeCommand("diffviewer._captureActiveTestState");
+      assert.equal(duringTruncate.fileCount, 1, "Truncation must not briefly clear the previous diff");
+      assert.equal(duringTruncate.renderGeneration, first.renderGeneration, "Truncation must not redraw the view");
+      assert.ok(duringTruncate.codeLineTexts.some((line) => line.includes("first-version")));
+      assert.equal(duringTruncate.loadingVisible, false);
+      fs.writeSync(output, patch("second-version"));
+    } finally {
+      fs.closeSync(output);
+    }
     await vscode.commands.executeCommand("vscode.openWith", uri, "diffViewer");
-    await expectRendered("second-version");
+    const second = await expectRendered("second-version");
+    assert.equal(second.renderGeneration, first.renderGeneration + 1, "A completed rewrite must redraw only once");
+    await wait(300);
+    const settled = await vscode.commands.executeCommand("diffviewer._captureActiveTestState");
+    assert.equal(settled.renderGeneration, second.renderGeneration, "Delayed truncate retries must not redraw again");
     const replacement = path.join(dir, "replacement.tmp");
     fs.writeFileSync(replacement, patch("atomic-version"));
     fs.renameSync(replacement, filename);

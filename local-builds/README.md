@@ -1,3 +1,17 @@
+# Latest local build: 1.8.6
+
+Install `diff-viewer-1.8.6-fast-refresh.vsix`, then run **Developer: Reload Window**.
+
+Large diffs render without waiting for language-server semantic tokens. Lexical TextMate colors, multiline context and the Python constant fallback appear first; validated semantic colors update the existing rows later, preserving expanded context, search, scroll and the syntax toggle. Loaded grammars are reused and exact lexical snapshots have a bounded cache. Native-token rows no longer pass through highlight.js too, and hidden context receives DOM syntax spans only when revealed. Full text and tokenization state remain available to Find and Expand.
+
+File notifications are coalesced for 20 ms. The visible-editor fallback checks metadata every 250 ms instead of reading all bytes every two seconds; a two-second content check still covers unchanged/coarse metadata. Source link checks and syntax preparation run concurrently; content hashes for diagnostics are computed only on request. A briefly empty/incomplete overwrite keeps the old view during a bounded stabilization check, avoiding an extra render for shell redirection. Intentional empty diffs still update.
+
+Measured locally on synthetic 1600-line Python diffs with a deliberately slow 1000 ms semantic provider: opening 1532–1662 ms → 284–434 ms; rewriting 2090–2505 ms → 276–283 ms. The new text appeared before the provider responded, and enrichment did not increment the DOM render generation. These controlled measurements are not a guarantee for every remote filesystem. Frontend-only Chromium measurements: 1600 lines initial 171 → 74 ms and refresh 148–159 → 56–59 ms; 5000 lines initial 475 → 186 ms and refresh 427–435 → 163–166 ms. Raw results are in `benchmarks-1.8.6/`.
+
+Validation: 435 unit tests, lint, TypeScript, formatting and production build passed. Desktop checks passed for semantic colors, f-strings, context folding, Arc mode, external rewrites, find/terminal maximization and diagnostics. Chromium checks passed for lazy syntax, hidden-text search, expansion and scroll anchoring.
+
+Regression scripts: `integration/browser/performance.cjs` (run with Node after a production build) and `integration/desktop/refresh-performance.cjs` (run via `@vscode/test-electron` with an isolated VS Code profile). Set `DIFF_VIEWER_PERF_BASELINE=1` to permit the old blocking behavior when testing an extracted 1.8.5 VSIX; `DIFF_VIEWER_PERF_REPORT` chooses the JSON report path. Existing desktop scripts cover external rewrites, f-strings, semantic colors, context folding, Arc links, find/terminal behavior and read diagnostics. Build using the commands below with output version 1.8.6. All previous features remain included.
+
 # Latest local build: 1.8.5
 
 Install `diff-viewer-1.8.5-arc-mode.vsix`, then run **Developer: Reload Window**.

@@ -11,7 +11,7 @@ import { MessageToExtension, MessageToWebviewHandler } from "../../../shared/mes
 import { GenericMessageHandlerImpl } from "../../../shared/message-handler";
 import { Diff2HtmlCssClasses } from "../../css/classes";
 import { Diff2HtmlCssClassElements } from "../../css/elements";
-import { UpdateWebviewPayload, WebviewAction, WebviewUiState } from "../api";
+import { UpdateSyntaxPayload, UpdateWebviewPayload, WebviewAction, WebviewUiState } from "../api";
 import { getSha1Hash } from "../hash";
 import { buildDiffFileMap, buildDiffFileViewModel, buildDiffHashes } from "./models";
 import { HorizontalScrollbarController } from "./scrollbar";
@@ -37,10 +37,14 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   });
   private hasRendered = false;
   private updateGeneration = 0;
+  private currentRenderId: number | undefined;
+  private rendering = false;
+  private pendingSyntax: UpdateSyntaxPayload | undefined;
   private readonly contextFoldingController = new ContextFoldingController({
     getState: () => this.currentUiState.contextExpansions ?? {},
     setState: (contextExpansions) => this.persistUiState({ contextExpansions }),
     onChange: () => {
+      this.syntaxHighlightingController.refreshVisible();
       this.horizontalScrollbarController.refresh();
       this.findController.refresh();
     },
@@ -76,6 +80,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     this.testSupport = new WebviewHandlerTestSupport({
       postMessageToExtensionFn: this.args.postMessageToExtensionFn,
       getCurrentConfig: () => this.currentConfig,
+      getRenderGeneration: () => this.updateGeneration,
       getFileBindings: () => this.fileBindings,
       getSelectedPath: () => this.currentUiState.selectedPath,
       getClickedLineNumber: (element) => this.getClickedLineNumber(element),
@@ -95,6 +100,9 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     }
 
     const generation = ++this.updateGeneration;
+    this.currentRenderId = payload.renderId;
+    this.rendering = true;
+    this.pendingSyntax = undefined;
     await this.withLoading(generation, async () => {
       // Keep pending data separate from the rendered view while hashes are built.
       const accessiblePaths = new Set(payload.accessiblePaths);
@@ -129,10 +137,10 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         highlight: false,
       });
       diff2html.draw();
-      this.syntaxHighlightingController.render(diff2html, diffContainer, payload.syntax);
       await this.contextFoldingController.render(diffContainer, payload.diffFiles);
       if (generation !== this.updateGeneration) return;
 
+      this.syntaxHighlightingController.render(diffContainer, payload.syntax);
       this.fileBindings = this.enhanceRenderedDiff(diffContainer, payload.diffFiles);
       this.registerDiffContainerHandlers(diffContainer);
       this.horizontalScrollbarController.ensureWindowHandlersRegistered();
@@ -156,6 +164,21 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       this.horizontalScrollbarController.scheduleRefresh();
       this.findController.refresh();
     });
+    if (generation === this.updateGeneration) {
+      this.rendering = false;
+      if (this.pendingSyntax) this.updateSyntax(this.pendingSyntax);
+    }
+  }
+
+  public updateSyntax(payload: UpdateSyntaxPayload): void {
+    if (payload.renderId !== this.currentRenderId) return;
+    if (this.rendering) {
+      this.pendingSyntax = payload;
+      return;
+    }
+    this.pendingSyntax = undefined;
+    this.syntaxHighlightingController.updateNative(payload.syntax);
+    this.findController.refresh();
   }
 
   public performWebviewAction(payload: { action: WebviewAction }): void {

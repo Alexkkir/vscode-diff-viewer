@@ -10,6 +10,7 @@ export class WebviewHandlerTestSupport {
     private readonly args: {
       postMessageToExtensionFn: (message: MessageToExtension) => void;
       getCurrentConfig: () => AppConfig | undefined;
+      getRenderGeneration?: () => number;
       getFileBindings: () => FileDomBinding[];
       getSelectedPath: () => string | undefined;
       getClickedLineNumber: (element: HTMLElement) => number | undefined;
@@ -182,6 +183,7 @@ export class WebviewHandlerTestSupport {
       textMateTokenCount: document.querySelectorAll(".diff-textmate-token").length,
       isReady: Boolean(currentConfig),
       shellGeneration: Number(document.body.dataset.shellGeneration ?? "0"),
+      renderGeneration: this.args.getRenderGeneration?.() ?? 0,
       outputFormat: currentConfig?.diff2html.outputFormat,
       colorScheme: currentConfig?.diff2html.colorScheme,
       fileCount: fileBindings.length,
