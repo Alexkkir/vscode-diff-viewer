@@ -2,7 +2,7 @@
   "name": "vscode-diff-viewer",
   "displayName": "Diff Viewer (Local syntax toggle)",
   "description": "Visualize git diff files in VS Code",
-  "version": "1.7.9",
+  "version": "1.8.0",
   "license": "MIT",
   "publisher": "caponetto",
   "homepage": "https://github.com/caponetto/vscode-diff-viewer",
@@ -109,6 +109,11 @@
       {
         "title": "DiffViewer",
         "properties": {
+          "diffviewer.hideTerminalOnOpen": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide the bottom panel when opening a file in Diff Viewer, including via code file.diff."
+          },
           "diffviewer.colorScheme": {
             "type": "string",
             "scope": "resource",
@@ -267,7 +272,10 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "diff2html": "^3.4.56"
+    "diff2html": "^3.4.56",
+    "jsonc-parser": "^3.3.1",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.3.2"
   },
   "devDependencies": {
     "@jest/types": "^29.6.3",

@@ -1,3 +1,4 @@
+jest.mock("../textmate", () => ({ highlightDiff: jest.fn(async () => undefined) }));
 import { parse } from "diff2html";
 import { ColorSchemeType } from "diff2html/lib/types";
 import { basename } from "node:path";
@@ -39,6 +40,7 @@ jest.mock("vscode", () => ({
     executeCommand: jest.fn(),
   },
   workspace: {
+    getConfiguration: jest.fn(() => ({ get: () => false })),
     onDidChangeTextDocument: jest.fn(),
     onDidChangeConfiguration: jest.fn(),
     onDidChangeWorkspaceFolders: jest.fn(),
@@ -604,6 +606,14 @@ describe("DiffViewerProvider", () => {
       expect(htmlSetter).not.toHaveBeenCalled();
       expect(mockWebview.postMessage).not.toHaveBeenCalled();
       expect(mockWebviewPanel.dispose).not.toHaveBeenCalled();
+    });
+
+    it("hides the panel on open only when the opt-in setting is enabled", async () => {
+      jest
+        .mocked(vscode.workspace.getConfiguration)
+        .mockReturnValueOnce({ get: () => true } as unknown as vscode.WorkspaceConfiguration);
+      await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
+      expect(vscode.commands.executeCommand).toHaveBeenCalledWith("workbench.action.closePanel");
     });
 
     it("should create ViewedStateStore with correct parameters", async () => {

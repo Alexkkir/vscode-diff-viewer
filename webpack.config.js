@@ -29,6 +29,7 @@ module.exports = async (_env, argv) => {
     module: {
       rules: [
         ...sourceMapsLoader,
+        { test: /\.wasm$/, type: "asset/inline" },
         {
           test: /\.tsx?$/,
           use: [

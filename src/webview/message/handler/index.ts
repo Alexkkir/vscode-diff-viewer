@@ -108,7 +108,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         highlight: false,
       });
       diff2html.draw();
-      this.syntaxHighlightingController.render(diff2html, diffContainer);
+      this.syntaxHighlightingController.render(diff2html, diffContainer, payload.syntax);
 
       this.fileBindings = this.enhanceRenderedDiff(diffContainer, payload.diffFiles);
       this.registerDiffContainerHandlers(diffContainer);

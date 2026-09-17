@@ -1,3 +1,4 @@
+import type { FileSyntax } from "../../shared/syntax";
 import { DiffFile } from "diff2html/lib/types";
 import type { AppConfig } from "../../extension/configuration";
 import { ViewedState } from "../../extension/viewed-state";
@@ -22,6 +23,7 @@ export interface WebviewPerformanceHints {
 export interface UpdateWebviewPayload {
   config: AppConfig;
   diffFiles: DiffFile[];
+  syntax?: Array<FileSyntax | null>;
   accessiblePaths: string[];
   viewedState: ViewedState;
   collapseAll: boolean;

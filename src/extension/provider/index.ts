@@ -1,3 +1,4 @@
+import { highlightDiff } from "./textmate";
 import { diffReadDiagnostics, readDiffText, watchDiffFile } from "./document";
 import { parse } from "diff2html";
 import * as vscode from "vscode";
@@ -112,6 +113,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       this.activeWebviewContext = webviewContext;
     }
 
+    if (vscode.workspace.getConfiguration(APP_CONFIG_SECTION).get<boolean>("hideTerminalOnOpen", false)) {
+      await vscode.commands.executeCommand("workbench.action.closePanel");
+    }
     this.registerEventHandlers({ webviewContext, messageHandler: messageReceivedHandler });
     this.updateWebview(webviewContext, collapseAll);
   }
@@ -145,7 +149,11 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         }
       }),
       vscode.workspace.onDidChangeConfiguration((e) => {
-        if (!e.affectsConfiguration(APP_CONFIG_SECTION)) {
+        if (
+          !e.affectsConfiguration(APP_CONFIG_SECTION) &&
+          !e.affectsConfiguration("workbench.colorTheme") &&
+          !e.affectsConfiguration("editor.tokenColorCustomizations")
+        ) {
           return;
         }
 
@@ -183,6 +191,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       args.webviewContext.panel.onDidChangeViewState((event: vscode.WebviewPanelOnDidChangeViewStateEvent) => {
         if (event.webviewPanel.active) {
           this.activeWebviewContext = args.webviewContext;
+          if (vscode.workspace.getConfiguration(APP_CONFIG_SECTION).get<boolean>("hideTerminalOnOpen", false)) {
+            void vscode.commands.executeCommand("workbench.action.closePanel");
+          }
           clearAccessiblePathsCache(args.webviewContext);
           this.updateWebview(args.webviewContext);
           return;
@@ -350,6 +361,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         diffFiles,
       }),
       renderPlan,
+      syntax: await highlightDiff(diffFiles).catch(() => undefined),
     };
   }
 
@@ -361,6 +373,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         payload: {
           config: args.renderedData.renderPlan.config,
           diffFiles: args.renderedData.diffFiles,
+          syntax: args.renderedData.syntax,
           accessiblePaths: args.renderedData.accessiblePaths,
           viewedState: args.renderedData.viewedState,
           collapseAll: args.renderedData.renderPlan.collapseAll,

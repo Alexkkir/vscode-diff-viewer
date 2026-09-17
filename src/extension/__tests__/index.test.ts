@@ -1,3 +1,4 @@
+jest.mock("../provider/textmate", () => ({ highlightDiff: jest.fn(async () => undefined) }));
 import * as vscode from "vscode";
 import { activate, deactivate } from "../index";
 import { DiffViewerProvider } from "../provider";

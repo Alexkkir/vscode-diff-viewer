@@ -21,6 +21,7 @@ exports.run = async function () {
       } catch {}
       if (state?.syntaxTokens?.some((t) => t.color !== t.baseColor)) break;
     }
+    assert.ok(state.textMateTokenCount > 0, "Native TextMate tokens must be used");
     console.log("SYNTAX COLORS", JSON.stringify(state?.syntaxTokens));
     assert.ok(
       state?.syntaxTokens?.some((t) => t.color !== t.baseColor),
@@ -28,7 +29,7 @@ exports.run = async function () {
     );
     await vscode.commands.executeCommand("diffviewer.diagnostics");
     const report = JSON.parse(vscode.window.activeTextEditor.document.getText());
-    assert.equal(report.extensionVersion, "1.7.9");
+    assert.equal(report.extensionVersion, "1.8.0");
     assert.equal(report.read.lastRead.source, "disk");
     assert.equal(report.read.lastReadSha256, report.read.disk.utf8Sha256);
     console.log("Read diagnostics passed");

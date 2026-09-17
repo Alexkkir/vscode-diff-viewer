@@ -1,3 +1,16 @@
+# Latest local build: 1.8.0
+
+Install `diff-viewer-1.8.0-native-syntax.vsix`, then run **Developer: Reload Window**.
+
+- Uses installed VS Code TextMate grammars and the selected theme's token colors, including inherited theme files and custom textMateRules. Tokenization keeps separate old/new multiline states within contiguous diff hunks. Unknown languages/themes fall back to highlight.js.
+- Syntax highlighting remains toggleable. Inline diff markup and source text are preserved. Language servers, diagnostic squiggles, semantic highlighting and bracket-pair coloring are not included; these can still differ from the full editor. Missing preceding hunk context may affect multiline grammar state.
+- New setting `diffviewer.hideTerminalOnOpen` (default false): hides the bottom panel on opening/activating Diff Viewer, including a file opened via `code file.diff`. It is not restricted to CLI opens and does not terminate terminal processes.
+- All previous refresh and no-loading-flash fixes remain included.
+
+Validation: 258 unit tests, lint, TypeScript, formatting and production build passed. Desktop tests verified actual Dark+ Python token colors in both layouts, installed TextMate tokens, external rewrites, and search/terminal maximization with the setting off. The opt-in closePanel command is covered by a unit test.
+Reproduce the Python color test with `integration/desktop/textmate-python.cjs` via @vscode/test-electron and an isolated VS Code profile.
+Build using the commands below with output version 1.8.0. WASM is bundled into extension.js; no extra runtime downloads are required.
+
 # Latest local build: 1.7.9
 
 Install `diff-viewer-1.7.9-vscode-style.vsix`, then run **Developer: Reload Window**.

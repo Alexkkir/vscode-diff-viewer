@@ -1,3 +1,4 @@
+import type { FileSyntax } from "../../shared/syntax";
 import { parse } from "diff2html";
 import { ColorSchemeType } from "diff2html/lib/types";
 import * as vscode from "vscode";
@@ -39,6 +40,7 @@ export interface WebviewRenderPlan {
 }
 
 export interface RenderedWebviewData {
+  syntax?: Array<FileSyntax | null>;
   diffFiles: ReturnType<typeof parse>;
   viewedState: ReturnType<ViewedStateStore["getViewedState"]>;
   accessiblePaths: string[];

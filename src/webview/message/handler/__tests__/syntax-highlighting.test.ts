@@ -50,6 +50,42 @@ describe("syntax highlighting toggle", () => {
     expect(root.querySelector(".hljs-code")?.textContent).toBe("`code`");
     expect(root.textContent).toBe(original);
   });
+  it.each(["line-by-line", "side-by-side"] as const)(
+    "applies native theme tokens in %s and preserves toggle restoration",
+    (outputFormat) => {
+      const root = document.getElementById("diff-container")!;
+      const renderer = new Diff2HtmlUI(root, diff, { highlight: false, outputFormat });
+      renderer.draw();
+      const original = root.textContent;
+      let enabled = true;
+      const controller = new SyntaxHighlightingController({
+        getEnabled: () => enabled,
+        setEnabled: (value) => {
+          enabled = value;
+        },
+      });
+      controller.render(renderer, root, [
+        {
+          old: {},
+          new: {
+            2: [
+              { start: 0, end: 3, color: "#569cd6", fontStyle: 0 },
+              { start: 3, end: 14, color: "#dcdcaa", fontStyle: 0 },
+            ],
+          },
+        },
+      ]);
+      const native = root.querySelector<HTMLElement>(".diff-textmate-token")!;
+      expect(native.textContent).toBe("def");
+      expect(native.style.color).toBe("rgb(86, 156, 214)");
+      expect(root.textContent).toBe(original);
+      const toggle = document.getElementById("syntax-highlighting-toggle") as HTMLInputElement;
+      toggle.checked = false;
+      toggle.dispatchEvent(new Event("change"));
+      expect(root.querySelector(".diff-textmate-token")).toBeNull();
+      expect(root.textContent).toBe(original);
+    },
+  );
   it("keeps highlighting disabled after rendering updated diff contents", () => {
     const root = document.getElementById("diff-container")!;
     const controller = new SyntaxHighlightingController({ getEnabled: () => false, setEnabled: jest.fn() });
