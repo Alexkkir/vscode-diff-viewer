@@ -48,7 +48,7 @@ ins {
   --d2h-dim-color: var(--vscode-editorLineNumber-foreground, #858585);
   --d2h-file-header-bg-color: var(--vscode-editorGroupHeader-tabsBackground, #252526);
   --d2h-file-header-border-color: var(--vscode-panel-border, #454545);
-  --d2h-empty-placeholder-bg-color: var(--vscode-diffEditor-diagonalFill, #80808020);
+  --d2h-empty-placeholder-bg-color: var(--vscode-editor-background, #1e1e1e);
   --d2h-empty-placeholder-border-color: transparent;
   --d2h-selected-color: var(--vscode-editor-selectionBackground, #264f78);
   --d2h-ins-bg-color: var(
@@ -72,7 +72,7 @@ ins {
   --d2h-dark-dim-color: var(--vscode-editorLineNumber-foreground, #858585);
   --d2h-dark-file-header-bg-color: var(--vscode-editorGroupHeader-tabsBackground, #252526);
   --d2h-dark-file-header-border-color: var(--vscode-panel-border, #454545);
-  --d2h-dark-empty-placeholder-bg-color: var(--vscode-diffEditor-diagonalFill, #80808020);
+  --d2h-dark-empty-placeholder-bg-color: var(--vscode-editor-background, #1e1e1e);
   --d2h-dark-empty-placeholder-border-color: transparent;
   --d2h-dark-selected-color: var(--vscode-editor-selectionBackground, #264f78);
   --d2h-dark-ins-bg-color: var(
@@ -157,4 +157,25 @@ body.vscode-high-contrast {
 }
 .d2h-code-line-ctn .hljs-comment {
   color: var(--syntax-comment);
+}
+
+/* Missing counterpart rows use the same 8px diagonal pattern as VS Code.
+ * Actual blank source lines and the line-number gutter remain unstriped. */
+.d2h-wrapper .d2h-files-diff td.d2h-emptyplaceholder:not(.d2h-code-side-linenumber) {
+  background-image: linear-gradient(
+    -45deg,
+    var(--vscode-diffEditor-diagonalFill, #80808055) 12.5%,
+    transparent 12.5%,
+    transparent 50%,
+    var(--vscode-diffEditor-diagonalFill, #80808055) 50%,
+    var(--vscode-diffEditor-diagonalFill, #80808055) 62.5%,
+    transparent 62.5%,
+    transparent 100%
+  );
+  background-size: 8px 8px;
+  /* Align stripes across adjacent placeholder cells of arbitrary row height. */
+  background-attachment: fixed;
+}
+.d2h-wrapper .d2h-files-diff .d2h-code-side-line.d2h-code-side-emptyplaceholder {
+  background-color: transparent;
 }

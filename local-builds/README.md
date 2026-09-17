@@ -1,3 +1,10 @@
+# Latest local build: 1.8.1
+
+Install `diff-viewer-1.8.1-diagonal-gaps.vsix`, then run **Developer: Reload Window**.
+Missing counterpart rows in side-by-side diffs now use the native VS Code 8px diagonal fill pattern and `diffEditor.diagonalFill` theme color. Real blank source lines and line-number gutters stay unstriped. Stripes align across adjacent rows.
+Validation: production build/lint and VSIX integrity passed. Chromium checks and visual inspection verified dark/light themes, gaps on either side, plain gutters and real empty lines. All 1.8.0 behavior is retained.
+Build using the commands below with output version 1.8.1.
+
 # Latest local build: 1.8.0
 
 Install `diff-viewer-1.8.0-native-syntax.vsix`, then run **Developer: Reload Window**.
