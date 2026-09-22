@@ -10,3 +10,4 @@ b2cd9f3c6cd0f6b07c2010334d3ffcf0c895aa4e830eb6f34e2ce94e868f1827  diff-viewer-1.
 376a688eada4b3a33fce794fd37a398c4d42960b5a92fa0c85bde0f15b1f0a62  diff-viewer-1.8.5-arc-mode.vsix
 e86d0c35b85afe0b6597527a77e221b612593ca2751aae5371e561b3047fe479  diff-viewer-1.8.6-fast-refresh.vsix
 30da7a5fe826bf0a1d0f4fca70f2ef172c4f80ffbad8633abf023329f88e49f7  diff-viewer-1.8.7-hide-terminal.vsix
+47cefc74cf8f48ac21f9eb03899fb05da9c203195cf6e55b1b609689e246ef54  diff-viewer-1.8.8-hide-terminal-default.vsix

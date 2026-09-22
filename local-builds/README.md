@@ -1,3 +1,10 @@
+# Latest local build: 1.8.8
+
+Install `diff-viewer-1.8.8-hide-terminal-default.vsix`, then run **Developer: Reload Window**.
+**DiffViewer: Hide Terminal On Open** (`diffviewer.hideTerminalOnOpen`) is now enabled by default, both in the settings manifest and the runtime fallback. Explicit user/workspace values remain honored, including false. All 1.8.7 behavior and prior fixes are retained.
+
+Build using the commands below with output version 1.8.8. Validation: existing unit tests, lint, TypeScript, formatting and production build; VSIX manifest and compiled contents checked.
+
 # Latest local build: 1.8.7
 
 Install `diff-viewer-1.8.7-hide-terminal.vsix`, then run **Developer: Reload Window**. Enable **DiffViewer: Hide Terminal On Open** (`diffviewer.hideTerminalOnOpen`) if it is not already enabled; the default remains false.

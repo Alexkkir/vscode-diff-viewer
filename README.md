@@ -42,7 +42,7 @@ If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, ena
 
 ### Hide the terminal on opening a diff
 
-Enable **DiffViewer: Hide Terminal On Open** (`diffviewer.hideTerminalOnOpen`) to fully hide the bottom panel when Diff Viewer receives focus, including reopening the current diff with `code diff.diff` from a maximized terminal. Terminal sessions keep running. You can open and maximize the terminal again normally; background diff updates do not hide it. This setting is off by default.
+**DiffViewer: Hide Terminal On Open** (`diffviewer.hideTerminalOnOpen`) is enabled by default to fully hide the bottom panel when Diff Viewer receives focus, including reopening the current diff with `code diff.diff` from a maximized terminal. Terminal sessions keep running. You can open and maximize the terminal again normally; background diff updates do not hide it. You can turn this setting off to keep the panel visible.
 
 ### Arc mounts
 

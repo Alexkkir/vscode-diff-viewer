@@ -290,7 +290,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     if (
       vscode.workspace
         .getConfiguration(APP_CONFIG_SECTION, context.document.uri)
-        .get<boolean>("hideTerminalOnOpen", false)
+        .get<boolean>("hideTerminalOnOpen", true)
     ) {
       await vscode.commands.executeCommand("workbench.action.closePanel");
     }
