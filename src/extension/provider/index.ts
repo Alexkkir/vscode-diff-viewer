@@ -128,9 +128,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       this.activeWebviewContext = webviewContext;
     }
 
-    if (vscode.workspace.getConfiguration(APP_CONFIG_SECTION).get<boolean>("hideTerminalOnOpen", false)) {
-      await vscode.commands.executeCommand("workbench.action.closePanel");
-    }
+    await this.hidePanelForEditor(webviewContext);
     this.registerEventHandlers({ webviewContext, messageHandler: messageReceivedHandler });
     this.updateWebview(webviewContext, collapseAll);
   }
@@ -209,9 +207,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       args.webviewContext.panel.onDidChangeViewState((event: vscode.WebviewPanelOnDidChangeViewStateEvent) => {
         if (event.webviewPanel.active) {
           this.activeWebviewContext = args.webviewContext;
-          if (vscode.workspace.getConfiguration(APP_CONFIG_SECTION).get<boolean>("hideTerminalOnOpen", false)) {
-            void vscode.commands.executeCommand("workbench.action.closePanel");
-          }
+          void this.hidePanelForEditor(args.webviewContext);
           clearAccessiblePathsCache(args.webviewContext);
           this.updateWebview(args.webviewContext);
           return;
@@ -275,6 +271,11 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       onReadyReceived: (payload) => {
         this.onWebviewReady(args.webviewContext, payload);
       },
+      onFocusReceived: (payload) => {
+        if (payload.shellGeneration === args.webviewContext.shellGeneration) {
+          void this.hidePanelForEditor(args.webviewContext);
+        }
+      },
       onTestStateReported: (payload) => {
         this.testSupport.onTestStateReported(args.webviewContext, payload);
       },
@@ -282,6 +283,17 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         this.testSupport.onTestActionResultReported(args.webviewContext, payload);
       },
     });
+  }
+
+  private async hidePanelForEditor(context: WebviewContext): Promise<void> {
+    if (context.isDisposed || !context.panel.active || !context.panel.visible) return;
+    if (
+      vscode.workspace
+        .getConfiguration(APP_CONFIG_SECTION, context.document.uri)
+        .get<boolean>("hideTerminalOnOpen", false)
+    ) {
+      await vscode.commands.executeCommand("workbench.action.closePanel");
+    }
   }
 
   private updateWebview(webviewContext: WebviewContext, collapseAll = false): void {

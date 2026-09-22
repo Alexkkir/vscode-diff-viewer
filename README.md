@@ -40,6 +40,10 @@ Diff Viewer renders `.diff` and `.patch` files inside VS Code with [diff2html](h
 
 If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, enable `diffviewer.globalScrollbar`. Viewed state is stored per diff document. If a file's diff changes later, the extension expands it again and marks it as changed since the last view. File header actions are only shown for paths the extension can currently resolve.
 
+### Hide the terminal on opening a diff
+
+Enable **DiffViewer: Hide Terminal On Open** (`diffviewer.hideTerminalOnOpen`) to fully hide the bottom panel when Diff Viewer receives focus, including reopening the current diff with `code diff.diff` from a maximized terminal. Terminal sessions keep running. You can open and maximize the terminal again normally; background diff updates do not hide it. This setting is off by default.
+
 ### Arc mounts
 
 `DiffViewer: Arc Mode` (`diffviewer.arcMode`) is enabled by default. For a diff stored anywhere inside `arcadia` or a numbered directory such as `5arcadia`, root-relative filenames are resolved inside that containing mount. For example, `/home/me/5arcadia/ml/project/review/diff.diff` links `ml/project/demo.py` to `/home/me/5arcadia/ml/project/demo.py`. Remote URI schemes and hosts are preserved.

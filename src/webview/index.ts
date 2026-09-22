@@ -49,3 +49,26 @@ globalThis.addEventListener("keydown", (event: KeyboardEvent) => {
     messageReceivedHandler.performWebviewAction({ action: "find" });
   }
 });
+
+// Reopening an already-active custom editor with `code file.diff` need not
+// change its WebviewPanel state. Actual iframe focus happens after VS Code has
+// restored the editor from a maximized terminal, so hide the panel at that point.
+let focusFrame: number | undefined;
+const notifyFocus = () => {
+  if (focusFrame !== undefined) cancelAnimationFrame(focusFrame);
+  focusFrame = requestAnimationFrame(() => {
+    focusFrame = undefined;
+    if (document.hasFocus()) {
+      postMessageToExtensionWrapper({
+        kind: "focused",
+        payload: { shellGeneration: Number.isFinite(shellGeneration) ? shellGeneration : 0 },
+      });
+    }
+  });
+};
+globalThis.addEventListener("focus", notifyFocus);
+globalThis.addEventListener("blur", () => {
+  if (focusFrame !== undefined) cancelAnimationFrame(focusFrame);
+  focusFrame = undefined;
+});
+if (document.hasFocus()) notifyFocus();

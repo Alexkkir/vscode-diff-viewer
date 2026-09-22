@@ -39,6 +39,59 @@ describe("webview/index", () => {
     });
   });
 
+  it("reports each real editor focus after a frame, including an already-open diff", () => {
+    const hasFocus = jest.spyOn(document, "hasFocus").mockReturnValue(false);
+    let frame!: FrameRequestCallback;
+    const request = jest.spyOn(globalThis, "requestAnimationFrame").mockImplementation((callback) => {
+      frame = callback;
+      return 1;
+    });
+    const cancel = jest.spyOn(globalThis, "cancelAnimationFrame").mockImplementation(() => {});
+    try {
+      jest.isolateModules(() => require("../index"));
+      const focus = addEventListener.mock.calls.find(([type]) => type === "focus")![1];
+      const blur = addEventListener.mock.calls.find(([type]) => type === "blur")![1];
+      postMessage.mockClear();
+      hasFocus.mockReturnValue(true);
+      focus();
+      expect(postMessage).not.toHaveBeenCalled();
+      frame(0);
+      expect(postMessage).toHaveBeenCalledWith({ kind: "focused", payload: { shellGeneration: 7 } });
+      postMessage.mockClear();
+      focus();
+      hasFocus.mockReturnValue(false);
+      blur();
+      expect(cancel).toHaveBeenCalledWith(1);
+      frame(0);
+      expect(postMessage).not.toHaveBeenCalled();
+      hasFocus.mockReturnValue(true);
+      focus();
+      frame(0);
+      expect(postMessage).toHaveBeenCalledTimes(1);
+    } finally {
+      hasFocus.mockRestore();
+      request.mockRestore();
+      cancel.mockRestore();
+    }
+  });
+
+  it("reports focus that arrived before the webview script initialized", () => {
+    const hasFocus = jest.spyOn(document, "hasFocus").mockReturnValue(true);
+    let frame!: FrameRequestCallback;
+    const request = jest.spyOn(globalThis, "requestAnimationFrame").mockImplementation((callback) => {
+      frame = callback;
+      return 1;
+    });
+    try {
+      jest.isolateModules(() => require("../index"));
+      frame(0);
+      expect(postMessage).toHaveBeenCalledWith({ kind: "focused", payload: { shellGeneration: 7 } });
+    } finally {
+      hasFocus.mockRestore();
+      request.mockRestore();
+    }
+  });
+
   it("wires the webview API into the message handler", async () => {
     getState.mockReturnValue({ scrollTop: 10 });
 

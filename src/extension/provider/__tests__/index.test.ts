@@ -617,6 +617,40 @@ describe("DiffViewerProvider", () => {
       expect(vscode.commands.executeCommand).toHaveBeenCalledWith("workbench.action.closePanel");
     });
 
+    it("hides the panel on repeated webview focus without reopening or redrawing the diff", async () => {
+      await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
+      const callbacks = jest.mocked(MessageToExtensionHandlerImpl).mock.calls.at(-1)![0];
+      const config = jest.mocked(vscode.workspace.getConfiguration);
+      config.mockReturnValue({ get: () => true } as unknown as vscode.WorkspaceConfiguration);
+      jest.mocked(mockWebview.postMessage).mockClear();
+      for (let i = 0; i < 3; i++) callbacks.onFocusReceived?.({ shellGeneration: 1 });
+      expect(vscode.commands.executeCommand).toHaveBeenCalledTimes(3);
+      expect(vscode.commands.executeCommand).toHaveBeenCalledWith("workbench.action.closePanel");
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(config).toHaveBeenCalledWith("diffviewer", mockTextDocument.uri);
+      config.mockReturnValue({ get: () => false } as unknown as vscode.WorkspaceConfiguration);
+    });
+
+    it("ignores old, hidden, inactive and disposed webview focus or a disabled setting", async () => {
+      await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
+      const callbacks = jest.mocked(MessageToExtensionHandlerImpl).mock.calls.at(-1)![0];
+      callbacks.onFocusReceived?.({ shellGeneration: 1 }); // Setting off.
+      const config = jest.mocked(vscode.workspace.getConfiguration);
+      config.mockReturnValue({ get: () => true } as unknown as vscode.WorkspaceConfiguration);
+      callbacks.onFocusReceived?.({ shellGeneration: 0 });
+      Object.assign(mockWebviewPanel, { visible: false });
+      callbacks.onFocusReceived?.({ shellGeneration: 1 });
+      Object.assign(mockWebviewPanel, { visible: true, active: false });
+      callbacks.onFocusReceived?.({ shellGeneration: 1 });
+      Object.assign(mockWebviewPanel, { active: true });
+      // Mark the context disposed without depending on the event-disposable mocks.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (provider as any).activeWebviewContext.isDisposed = true;
+      callbacks.onFocusReceived?.({ shellGeneration: 1 });
+      expect(vscode.commands.executeCommand).not.toHaveBeenCalled();
+      config.mockReturnValue({ get: () => false } as unknown as vscode.WorkspaceConfiguration);
+    });
+
     it("should create ViewedStateStore with correct parameters", async () => {
       await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
 
@@ -634,6 +668,7 @@ describe("DiffViewerProvider", () => {
         viewedStateStore: expect.any(Object),
         onWebviewActionRequested: expect.any(Function),
         onReadyReceived: expect.any(Function),
+        onFocusReceived: expect.any(Function),
         onTestStateReported: expect.any(Function),
         onTestActionResultReported: expect.any(Function),
       });

@@ -29,7 +29,7 @@ exports.run = async function () {
     );
     await vscode.commands.executeCommand("diffviewer.diagnostics");
     const report = JSON.parse(vscode.window.activeTextEditor.document.getText());
-    assert.equal(report.extensionVersion, "1.8.6");
+    assert.equal(report.extensionVersion, "1.8.7");
     assert.equal(report.read.lastRead.source, "disk");
     assert.equal(report.read.lastReadSha256, report.read.disk.utf8Sha256);
     console.log("Read diagnostics passed");

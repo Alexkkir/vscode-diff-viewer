@@ -1,0 +1,107 @@
+{
+  "vscode": "1.138.0",
+  "states": [
+    {
+      "label": "shown",
+      "visible": true,
+      "width": 852,
+      "height": 266.6640625
+    },
+    {
+      "label": "maximized",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "manually-maximized-stable",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "same-file-cli",
+      "visible": false,
+      "width": 0,
+      "height": 0
+    },
+    {
+      "label": "shown",
+      "visible": true,
+      "width": 852,
+      "height": 267
+    },
+    {
+      "label": "maximized",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "manually-maximized-stable",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "background-rewrite",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "rewrite-and-cli",
+      "visible": false,
+      "width": 0,
+      "height": 0
+    },
+    {
+      "label": "shown",
+      "visible": true,
+      "width": 852,
+      "height": 267
+    },
+    {
+      "label": "maximized",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "manually-maximized-stable",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "first-open-cli",
+      "visible": false,
+      "width": 0,
+      "height": 0
+    },
+    {
+      "label": "shown",
+      "visible": true,
+      "width": 852,
+      "height": 267
+    },
+    {
+      "label": "maximized",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "manually-maximized-stable",
+      "visible": true,
+      "width": 852,
+      "height": 743
+    },
+    {
+      "label": "disabled-cli",
+      "visible": true,
+      "width": 852,
+      "height": 267
+    }
+  ]
+}

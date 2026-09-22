@@ -16,6 +16,7 @@ export class MessageToExtensionHandlerImpl extends GenericMessageHandlerImpl imp
       viewedStateStore: ViewedStateStore;
       onWebviewActionRequested: (action: WebviewAction) => void;
       onReadyReceived?: (payload: { shellGeneration: number }) => void;
+      onFocusReceived?: (payload: { shellGeneration: number }) => void;
     } & MessageToExtensionReportCallbacks,
   ) {
     super();
@@ -27,6 +28,10 @@ export class MessageToExtensionHandlerImpl extends GenericMessageHandlerImpl imp
 
   public ready(payload: { shellGeneration: number }): void {
     this.args.onReadyReceived?.(payload);
+  }
+
+  public focused(payload: { shellGeneration: number }): void {
+    this.args.onFocusReceived?.(payload);
   }
 
   public async openFile(payload: { path: string; line?: number }): Promise<void> {

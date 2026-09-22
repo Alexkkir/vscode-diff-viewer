@@ -67,6 +67,18 @@ describe("MessageToExtensionHandlerImpl", () => {
     });
   });
 
+  it("forwards focus notifications to the owning editor callback", () => {
+    const onFocusReceived = jest.fn();
+    handler = new MessageToExtensionHandlerImpl({
+      diffDocument: mockDiffDocument,
+      viewedStateStore: mockViewedStateStore,
+      onWebviewActionRequested: jest.fn(),
+      onFocusReceived,
+    });
+    handler.focused({ shellGeneration: 3 });
+    expect(onFocusReceived).toHaveBeenCalledWith({ shellGeneration: 3 });
+  });
+
   describe("openFile", () => {
     const mockUri = { fsPath: "/workspace/test.ts" } as vscode.Uri;
 

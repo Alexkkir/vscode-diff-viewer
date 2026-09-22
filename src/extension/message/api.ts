@@ -3,6 +3,7 @@ import { MESSAGE_TO_EXTENSION_REPORT_KINDS, MessageToExtensionReportApi } from "
 
 export interface MessageToExtensionCommandApi {
   ready: (payload: { shellGeneration: number }) => void;
+  focused: (payload: { shellGeneration: number }) => void;
   openFile: (payload: { path: string; line?: number }) => Promise<void>;
   toggleFileViewed: (payload: { path: string; viewedSha1: string | null }) => void;
   requestWebviewAction: (payload: { action: WebviewAction }) => void;
@@ -12,6 +13,7 @@ export interface MessageToExtensionApi extends MessageToExtensionCommandApi, Mes
 
 export const MESSAGE_TO_EXTENSION_COMMAND_KINDS = [
   "ready",
+  "focused",
   "openFile",
   "toggleFileViewed",
   "requestWebviewAction",

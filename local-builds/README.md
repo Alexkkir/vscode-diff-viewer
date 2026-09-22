@@ -1,3 +1,15 @@
+# Latest local build: 1.8.7
+
+Install `diff-viewer-1.8.7-hide-terminal.vsix`, then run **Developer: Reload Window**. Enable **DiffViewer: Hide Terminal On Open** (`diffviewer.hideTerminalOnOpen`) if it is not already enabled; the default remains false.
+
+Fixes reopening an already-active diff with `code diff.diff` from the integrated terminal. That operation can restore a maximized panel without changing the custom editor's active state, so the previous activation-only handler missed it. The webview now reports actual focus after a frame, and the extension executes Hide Panel after VS Code restores the editor. Pending focus is canceled on blur; outdated/disposed/hidden/inactive webviews are ignored. No content redraw or polling is introduced. The same setting also applies to manually focusing Diff Viewer, as its description now explains.
+
+Validation: 440 unit tests, lint, TypeScript, formatting and production build passed. A real CLI test in isolated VS Code 1.138 reproduced the old maximized 743px → visible 267px behavior. With this fix, both unchanged-file and shell-redirection/reopen cases end with an invisible 0px panel. First opens also hide it. Manual terminal opening/maximization, background file refresh and disabling the setting preserve normal behavior; sessions are not terminated. Desktop search/maximize, external rewrite, refresh-performance and syntax/diagnostics regressions passed. `terminal-panel-1.8.7.json` records the measured panel states.
+
+Regression source: `integration/desktop/hide-terminal-on-open.cjs`. It uses Playwright/CDP against an isolated VS Code workbench (Playwright must be available in the test environment). Run via `@vscode/test-electron` with `extensionTestsPath` pointing at that script; set `DIFF_VIEWER_TEST_CDP_PORT=9333` and `DIFF_VIEWER_TEST_USER_DATA_DIR=/private/tmp/diff-viewer-hide-panel-profile`, and pass matching `--remote-debugging-port=9333` / `--user-data-dir=/private/tmp/diff-viewer-hide-panel-profile` launch arguments plus a separate extensions directory and `--disable-extensions`. The integrated terminal launches the actual VS Code CLI with that isolated user-data path, leaving the normal user profile unchanged.
+
+Build using the commands below with output version 1.8.7. All 1.8.6 performance, context, syntax and Arc features remain included.
+
 # Latest local build: 1.8.6
 
 Install `diff-viewer-1.8.6-fast-refresh.vsix`, then run **Developer: Reload Window**.
