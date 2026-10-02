@@ -1,3 +1,15 @@
+# Latest local build: 1.8.9
+
+Install `diff-viewer-1.8.9-diff-alignment.vsix`, then run **Developer: Reload Window**.
+
+Changed-line matching now considers the ordered block as a whole, so a moved URL does not displace related decorator, class and docstring lines. This applies when `diffviewer.matching` is `lines` or `words`; `none` and configured comparison limits remain respected. Exact context inside each available hunk is also realigned, preferring earlier coherent copies of repeated code. A surviving constructor can remain context while later removed classes appear as deletions, even when Arc originally paired their duplicate lines incorrectly. Source projections and original line numbers are preserved; omitted hunk gaps are not filled. Work budgets retain the original hunk when a comparison would be too expensive.
+
+Missing final-newline markers are preserved on the correct side and rendered outside source text, with paired row heights kept aligned. Arc revision labels are removed from real file headers, fixing false RENAMED badges while preserving actual renames and header-like source text. All prior syntax, folding, refresh, Arc links and terminal behavior remains included.
+
+Validation: 510 unit tests, lint, TypeScript, formatting and production build passed. Chromium verified 18 scenarios in both layouts, including the combined removed-neighbor/renamed-class/repeated-constructor case, exact source projections and paired row geometry. Isolated VS Code regressions covered Arc links, context folding, external rewrites, semantic colors, diagnostics and refresh performance. Updated alignment on synthetic 10,000-line hunks takes approximately 0.5–4.3 ms locally; these are controlled parser measurements, not a remote filesystem guarantee.
+
+Regression sources: `src/shared/__tests__/diff.test.ts`, `hunk-alignment.test.ts`, `hunk-alignment-renderer.test.ts`, frontend alignment/EOF tests, and `integration/browser/{line-alignment,no-newline}.cjs`. Fixtures use synthetic code. Run the browser scripts with Node after a production build; an optional first argument chooses the screenshot/report directory. Build using the commands below with output version 1.8.9.
+
 # Latest local build: 1.8.8
 
 Install `diff-viewer-1.8.8-hide-terminal-default.vsix`, then run **Developer: Reload Window**.

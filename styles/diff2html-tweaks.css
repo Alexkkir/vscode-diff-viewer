@@ -194,3 +194,18 @@ body.vscode-high-contrast {
 .d2h-wrapper .d2h-files-diff .d2h-code-side-line.d2h-code-side-emptyplaceholder {
   background-color: transparent;
 }
+
+/* EOF annotations are outside source text and share their row's folding state.
+ * Paired blank annotations reserve exactly the same space on the other side. */
+.diff-no-newline {
+  color: var(--vscode-descriptionForeground, var(--d2h-dim-color));
+  background-color: var(--vscode-editor-background, var(--d2h-bg-color));
+  padding: 0 8em;
+  height: 1.5em;
+  line-height: 1.5em;
+  white-space: nowrap;
+  user-select: none;
+}
+.d2h-file-side-diff .diff-no-newline {
+  padding: 0 4.5em;
+}

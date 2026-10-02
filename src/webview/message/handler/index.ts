@@ -1,8 +1,9 @@
+import { renderNoNewlineMarkers } from "./no-newline";
 import { SyntaxHighlightingController } from "./syntax-highlighting";
 import { FindController } from "./find";
 import { ContextFoldingController } from "./context-folding";
 import { ColorSchemeType, DiffFile } from "diff2html/lib/types";
-import { Diff2HtmlUI } from "diff2html/lib/ui/js/diff2html-ui-slim.js";
+import { AlignedDiff2HtmlUI as Diff2HtmlUI } from "./aligned-diff-renderer";
 import { AppConfig } from "../../../extension/configuration";
 import { ViewedState } from "../../../extension/viewed-state";
 import { SkeletonElementIds } from "../../../shared/css/elements";
@@ -137,6 +138,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         highlight: false,
       });
       diff2html.draw();
+      renderNoNewlineMarkers(diffContainer, payload.diffFiles);
       await this.contextFoldingController.render(diffContainer, payload.diffFiles);
       if (generation !== this.updateGeneration) return;
 

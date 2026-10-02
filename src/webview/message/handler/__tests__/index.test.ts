@@ -3,7 +3,7 @@
  */
 
 import { ColorSchemeType, DiffFile } from "diff2html/lib/types";
-import { Diff2HtmlUI } from "diff2html/lib/ui/js/diff2html-ui-slim.js";
+import { AlignedDiff2HtmlUI as Diff2HtmlUI } from "../aligned-diff-renderer";
 import { AppConfig } from "../../../../extension/configuration";
 import { SkeletonElementIds } from "../../../../shared/css/elements";
 import { UpdateWebviewPayload } from "../../api";
@@ -12,8 +12,8 @@ import { getSha1Hash } from "../../hash";
 import { ContextFoldingController } from "../context-folding";
 import { SyntaxHighlightingController } from "../syntax-highlighting";
 
-jest.mock("diff2html/lib/ui/js/diff2html-ui-slim.js", () => ({
-  Diff2HtmlUI: jest
+jest.mock("../aligned-diff-renderer", () => ({
+  AlignedDiff2HtmlUI: jest
     .fn()
     .mockImplementation((container: HTMLElement, diffFiles: DiffFile[], config: AppConfig["diff2html"]) => ({
       highlightCode: jest.fn(),

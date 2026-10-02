@@ -1,6 +1,7 @@
 import { highlightDiffProgressively } from "./textmate";
 import { diffReadDiagnostics, readDiffText, watchDiffFile } from "./document";
-import { parse } from "diff2html";
+import { parseDiff } from "../../shared/diff";
+import { realignDiffHunks } from "../../shared/hunk-alignment";
 import * as vscode from "vscode";
 import { isMessageToExtension, MessageToExtensionHandler, MessageToWebview } from "../../shared/message";
 import { getPathBaseName } from "../../shared/path";
@@ -15,7 +16,7 @@ import { ensureWebviewShell } from "./shell";
 import { DiffViewerProviderTestSupport } from "./testing/support";
 import { DiffViewerProviderArgs, RenderedWebviewData, WebviewContext } from "./types";
 
-function needsWriteStabilization(files: ReturnType<typeof parse> | undefined): boolean {
+function needsWriteStabilization(files: ReturnType<typeof parseDiff> | undefined): boolean {
   if (!files?.length) return true;
   return files.some((file) => {
     if (file.isBinary) return false;
@@ -390,9 +391,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
   > {
     let text = await readDiffText(args.webviewContext.document);
     if (!isActiveRenderRequest(args)) return;
-    let diffFiles: ReturnType<typeof parse> | undefined;
+    let diffFiles: ReturnType<typeof parseDiff> | undefined;
     try {
-      diffFiles = parse(text, args.config.diff2html);
+      diffFiles = parseDiff(text, args.config.diff2html);
     } catch (error) {
       if (args.webviewContext.lastRenderedData === undefined) throw error;
     }
@@ -405,9 +406,10 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       if (!isActiveRenderRequest(args)) return;
       text = await readDiffText(args.webviewContext.document);
       if (!isActiveRenderRequest(args)) return;
-      diffFiles = parse(text, args.config.diff2html);
+      diffFiles = parseDiff(text, args.config.diff2html);
     }
     if (!diffFiles) return;
+    diffFiles = realignDiffHunks(diffFiles);
     const renderPlan = createRenderPlan({
       requestedConfig: args.config,
       text,

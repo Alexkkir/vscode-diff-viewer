@@ -50,6 +50,12 @@ If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, ena
 
 The filename in each available file header is a link (mouse click or Enter); revision labels such as `(working tree)` are removed when locating its source. A missing file is not substituted from another Arcadia. If the diff is outside an Arcadia directory, normal workspace path resolution applies. Turning Arc mode off restores normal workspace path resolution everywhere.
 
+### Patch alignment and end-of-file changes
+
+Related changed lines are matched in order as a whole when `diffviewer.matching` is `lines` or `words`, so a moved comment or URL does not displace an otherwise matching decorator and class. Within each available hunk, exact context is realigned to prefer the first coherent copy of repeated code. This avoids showing a surviving constructor as deleted just because the patch matched it to a later removed class. Work is bounded; missing context is never fetched or invented, and the original patch file remains unchanged.
+
+A missing final newline is shown as `\ No newline at end of file` beside the affected old/new source line. Arc revision labels are excluded from displayed filenames, preventing ordinary edits from appearing as renames.
+
 ### Large diffs and refresh
 
 External file changes refresh the existing view without a Loading overlay. Where remote filesystem notifications are unavailable, visible diff editors check file metadata every 250 ms; a full content check every two seconds covers providers with unchanged/coarse timestamps. Unsaved editor changes take priority over disk content.

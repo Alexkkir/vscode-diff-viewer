@@ -1,6 +1,6 @@
 import type { ContextExpansionState } from "./handler/context-folding";
 import type { FileSyntax } from "../../shared/syntax";
-import { DiffFile } from "diff2html/lib/types";
+import type { DiffFileWithMetadata } from "../../shared/diff";
 import type { AppConfig } from "../../extension/configuration";
 import { ViewedState } from "../../extension/viewed-state";
 import { MESSAGE_TO_WEBVIEW_TEST_KINDS, MessageToWebviewTestApi } from "./testing/api";
@@ -25,7 +25,7 @@ export interface WebviewPerformanceHints {
 export interface UpdateWebviewPayload {
   renderId?: number;
   config: AppConfig;
-  diffFiles: DiffFile[];
+  diffFiles: DiffFileWithMetadata[];
   syntax?: Array<FileSyntax | null>;
   accessiblePaths: string[];
   viewedState: ViewedState;
