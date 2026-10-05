@@ -209,6 +209,54 @@ describe("realignDiffHunks", () => {
     expect(file.blocks[0].lines).toEqual([{ type: LineType.CONTEXT, content: " last", oldNumber: 9, newNumber: 12 }]);
   });
 
+  it.each(["", " ", "\t"])("preserves an unchanged whitespace separator between changed lines (%j)", (blank) => {
+    const before = parseDiff(replacement(["a", blank, "b"], ["c", blank, "d"]));
+    const [file] = realignDiffHunks(before);
+    expect(file).toMatchObject({ addedLines: 2, deletedLines: 2 });
+    expect(file.blocks[0].lines.find((line) => line.oldNumber === 2)).toMatchObject({
+      type: LineType.CONTEXT,
+      newNumber: 2,
+      content: ` ${blank}`,
+    });
+  });
+
+  it.each([
+    [["first", "last"], ["first", "", "last"], 1, 0],
+    [["first", "", "last"], ["first", "last"], 0, 1],
+    [["first", " ", "last"], ["first", "\t", "last"], 1, 1],
+  ] as const)("preserves actual whitespace-only edits", (old, next, addedLines, deletedLines) => {
+    const before = parseDiff(replacement([...old], [...next]));
+    const [file] = realignDiffHunks(before);
+    expect(file).toMatchObject({ addedLines, deletedLines });
+    expect(projection(file.blocks[0], "old")).toEqual(projection(before[0].blocks[0], "old"));
+    expect(projection(file.blocks[0], "new")).toEqual(projection(before[0].blocks[0], "new"));
+  });
+
+  it.each(["", " ", "\t"])("keeps a missing EOF newline on a whitespace-only last line (%j)", (blank) => {
+    const before = parseDiff(patch(["@@ -1 +1 @@", `-${blank}`, "\\ No newline at end of file", `+${blank}`]));
+    const [file] = realignDiffHunks(before);
+    expect(file).toMatchObject({ noNewline: { old: 1 }, addedLines: 1, deletedLines: 1 });
+    expect(file.blocks[0].lines.map((line) => line.type)).toEqual([LineType.DELETE, LineType.INSERT]);
+  });
+
+  it("does not use a blank-only insertion to select a later duplicate body via the subsequence shortcut", () => {
+    const body = ["    def __init__(self):", "        self.value = 1"];
+    const old = ["class Worker:", ...body, "", "class Test:", ...body];
+    const next = ["class Worker:", "", ...body];
+    const [file] = realignDiffHunks(parseDiff(replacement(old, next)));
+    expect(file.blocks[0].lines.find((line) => line.oldNumber === 2)).toMatchObject({
+      type: LineType.CONTEXT,
+      newNumber: 3,
+    });
+    expect(file.blocks[0].lines.find((line) => line.oldNumber === 3)).toMatchObject({
+      type: LineType.CONTEXT,
+      newNumber: 4,
+    });
+    expect(
+      file.blocks[0].lines.filter((line) => (line.oldNumber ?? 0) >= 4).every((line) => line.newNumber === undefined),
+    ).toBe(true);
+  });
+
   it("handles 6000 mostly unique lines without quadratic allocation", () => {
     const old = Array.from({ length: 6000 }, (_, index) => `value_${index} = ${index}`);
     const next = [...old.slice(0, 3000), '"""Added documentation"""', ...old.slice(3000)];

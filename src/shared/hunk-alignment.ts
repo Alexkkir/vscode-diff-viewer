@@ -33,6 +33,9 @@ function project(block: DiffBlock, side: "old" | "new", eof?: number): SourceLin
 function uniquePositions(lines: SourceLine[], start: number, end: number): Map<string, number> {
   const positions = new Map<string, number>();
   for (let i = start; i < end; i++) {
+    // Blank separators must not move a retained body into a later deleted
+    // declaration merely because a new docstring adds an extra separator.
+    if (!lines[i].text.trim()) continue;
     const key = lines[i].key;
     positions.set(key, positions.has(key) ? -1 : i);
   }
@@ -74,6 +77,10 @@ function subsequence(
   otherEnd: number,
   swap: boolean,
 ): Match[] | undefined {
+  // A full embedding maximizes matches only when every line has positive
+  // weight. Matching a blank separator first can otherwise select a later
+  // duplicate body, bypassing the weighted LCS's earliest-copy preference.
+  for (let i = start; i < end; i++) if (!smaller[i].text.trim()) return undefined;
   const result: Match[] = [];
   for (let i = start, j = otherStart; i < end; i++, j++) {
     while (j < otherEnd && smaller[i].key !== larger[j].key) j++;
@@ -173,7 +180,7 @@ function matchRange(
     for (let j = newLength - 1; j >= 0; j--) {
       lengths[i * width + j] =
         old[oldStart + i].key === next[newStart + j].key
-          ? 1 + lengths[(i + 1) * width + j + 1]
+          ? (old[oldStart + i].text.trim() ? 1 : 0) + lengths[(i + 1) * width + j + 1]
           : Math.max(lengths[(i + 1) * width + j], lengths[i * width + j + 1]);
     }
   }
@@ -188,6 +195,39 @@ function matchRange(
   return true;
 }
 
+/** Restore unchanged separators after meaningful line matches are fixed. */
+function matchWhitespace(old: SourceLine[], next: SourceLine[], matches: Match[]): Match[] {
+  const result: Match[] = [];
+  let oldStart = 0;
+  let newStart = 0;
+  for (const [oldEnd, newEnd] of [...matches, [old.length, next.length]]) {
+    const positions = new Map<string, { indexes: number[]; cursor: number }>();
+    for (let index = oldStart; index < oldEnd; index++) {
+      if (old[index].text.trim()) continue;
+      let entry = positions.get(old[index].key);
+      if (!entry) {
+        entry = { indexes: [], cursor: 0 };
+        positions.set(old[index].key, entry);
+      }
+      entry.indexes.push(index);
+    }
+    let previous = oldStart - 1;
+    for (let index = newStart; index < newEnd; index++) {
+      if (next[index].text.trim()) continue;
+      const entry = positions.get(next[index].key);
+      if (!entry) continue;
+      while (entry.cursor < entry.indexes.length && entry.indexes[entry.cursor] <= previous) entry.cursor++;
+      if (entry.cursor === entry.indexes.length) continue;
+      previous = entry.indexes[entry.cursor++];
+      result.push([previous, index]);
+    }
+    if (oldEnd < old.length) result.push([oldEnd, newEnd]);
+    oldStart = oldEnd + 1;
+    newStart = newEnd + 1;
+  }
+  return result;
+}
+
 function realignBlock(block: DiffBlock, eof: DiffFileWithMetadata["noNewline"], budget: Budget): DiffBlock {
   const old = project(block, "old", eof?.old);
   const next = project(block, "new", eof?.new);
@@ -197,7 +237,7 @@ function realignBlock(block: DiffBlock, eof: DiffFileWithMetadata["noNewline"], 
   const lines: DiffLine[] = [];
   let oldIndex = 0;
   let newIndex = 0;
-  for (const [oldMatch, newMatch] of [...matches, [old.length, next.length]]) {
+  for (const [oldMatch, newMatch] of [...matchWhitespace(old, next, matches), [old.length, next.length]]) {
     while (oldIndex < oldMatch) {
       const line = old[oldIndex++];
       lines.push({ type: LineType.DELETE, content: `-${line.text}`, oldNumber: line.number, newNumber: undefined });

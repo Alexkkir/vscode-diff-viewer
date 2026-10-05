@@ -52,7 +52,7 @@ The filename in each available file header is a link (mouse click or Enter); rev
 
 ### Patch alignment and end-of-file changes
 
-Related changed lines are matched in order as a whole when `diffviewer.matching` is `lines` or `words`, so a moved comment or URL does not displace an otherwise matching decorator and class. Within each available hunk, exact context is realigned to prefer the first coherent copy of repeated code. This avoids showing a surviving constructor as deleted just because the patch matched it to a later removed class. Work is bounded; missing context is never fetched or invented, and the original patch file remains unchanged.
+Related changed lines are matched in order as a whole when `diffviewer.matching` is `lines` or `words`, so a moved comment or URL does not displace an otherwise matching decorator and class. Within each available hunk, exact context is realigned to prefer the first coherent copy of repeated code. Blank separators are preserved but do not drive the choice between repeated code blocks. This avoids showing a surviving constructor as deleted just because the patch matched it to a later removed class. Work is bounded; missing context is never fetched or invented, and the original patch file remains unchanged.
 
 A missing final newline is shown as `\ No newline at end of file` beside the affected old/new source line. Arc revision labels are excluded from displayed filenames, preventing ordinary edits from appearing as renames.
 

@@ -1,3 +1,13 @@
+# Latest local build: 1.8.10
+
+Install `diff-viewer-1.8.10-blank-context.vsix`, then run **Developer: Reload Window**.
+
+Fixes another repeated-constructor case: a newly added docstring followed by a blank line could make the matcher delete the original constructor and retain a later test class's copy. Blank separators no longer act as unique code anchors or increase the code-matching score. Exact blank context is restored separately within the chosen matches; source text, line numbers and EOF status remain intact. The subsequence shortcut also respects this rule. All earlier features remain included.
+
+Validation: 522 unit tests, lint, TypeScript, formatting and production build passed. Chromium verified the exact external patch in both layouts: all 16 constructor lines align, removed test-class code stays unpaired, source projections are preserved, and paired rows share the same geometry. Isolated VS Code regressions passed for context folding, external rewrites, refresh performance and syntax colors. The side-by-side screenshot was also visually checked.
+
+The regression uses the same blank-line layout and repeated constructor structure. The private input is not included in the repository. For an external patch, set `DIFF_VIEWER_EXTERNAL_FIXTURE`, `DIFF_VIEWER_EXTERNAL_FILE_INDEX`, `DIFF_VIEWER_EXTERNAL_EXPECT_PAIRS` (JSON pairs of old/new line numbers), and `DIFF_VIEWER_EXTERNAL_DELETED_RANGES` (JSON inclusive old-side ranges), then run `node integration/browser/line-alignment.cjs` after a production build. Private screenshots and numeric reports are stored in a new OS temporary directory. Build with the commands below using output version 1.8.10.
+
 # Latest local build: 1.8.9
 
 Install `diff-viewer-1.8.9-diff-alignment.vsix`, then run **Developer: Reload Window**.

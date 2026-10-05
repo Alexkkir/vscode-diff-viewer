@@ -1,8 +1,13 @@
 // Run after build:prod: node integration/browser/line-alignment.cjs [artifact-directory]
 // Serves the real webview bundle/skeleton on loopback with the VS Code API mocked.
+// Optional private regression fixture: DIFF_VIEWER_EXTERNAL_FIXTURE=/path/to/diff
+// DIFF_VIEWER_EXTERNAL_FILE_INDEX=0 DIFF_VIEWER_EXTERNAL_EXPECT_PAIRS='[[10,12]]'
+// DIFF_VIEWER_EXTERNAL_DELETED_RANGES='[[20,30]]' DIFF_VIEWER_EXTERNAL_VIEW_OLD_LINE=10
+// Private screenshots and numeric reports always go to a new OS temporary directory.
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const http = require("node:http");
+const os = require("node:os");
 const path = require("node:path");
 const { chromium } = require("playwright");
 require("./load-typescript.cjs");
@@ -10,8 +15,12 @@ const { parseDiff } = require("../../src/shared/diff.ts");
 const { realignDiffHunks } = require("../../src/shared/hunk-alignment.ts");
 
 const root = path.resolve(__dirname, "../..");
-const artifactDirectory = path.resolve(process.argv[2] || "/tmp/diff-viewer-line-alignment");
+const externalFixturePath = process.env.DIFF_VIEWER_EXTERNAL_FIXTURE;
+const artifactDirectory = externalFixturePath
+  ? fs.mkdtempSync(path.join(os.tmpdir(), "diff-viewer-private-alignment-"))
+  : path.resolve(process.argv[2] || "/tmp/diff-viewer-line-alignment");
 fs.mkdirSync(artifactDirectory, { recursive: true });
+const privateDebug = { phase: "initializing", pageErrors: [] };
 const colors = `:root {
   --vscode-editor-background: #1e1e1e; --vscode-editor-foreground: #d4d4d4;
   --vscode-foreground: #cccccc; --vscode-descriptionForeground: #a0a0a0;
@@ -190,6 +199,31 @@ const cases = [
     ],
   },
 ];
+function externalFixture() {
+  try {
+    const pairList = (value) => {
+      const pairs = JSON.parse(value || "[]");
+      assert(
+        Array.isArray(pairs) &&
+          pairs.every((pair) => Array.isArray(pair) && pair.length === 2 && pair.every(Number.isInteger)),
+      );
+      return pairs;
+    };
+    const fileIndex = Number(process.env.DIFF_VIEWER_EXTERNAL_FILE_INDEX || 0);
+    assert(Number.isInteger(fileIndex) && fileIndex >= 0);
+    return {
+      name: "external",
+      private: true,
+      fileIndex,
+      patch: fs.readFileSync(externalFixturePath, "utf8"),
+      pairs: pairList(process.env.DIFF_VIEWER_EXTERNAL_EXPECT_PAIRS),
+      deletedRanges: pairList(process.env.DIFF_VIEWER_EXTERNAL_DELETED_RANGES),
+      viewOldLine: Number(process.env.DIFF_VIEWER_EXTERNAL_VIEW_OLD_LINE || 0),
+    };
+  } catch {
+    throw new Error("Unable to read external fixture or parse its numeric check configuration");
+  }
+}
 function projection(files, side) {
   return files.flatMap((file) =>
     file.blocks.flatMap((block) =>
@@ -224,15 +258,21 @@ const server = http.createServer((request, response) => {
 });
 
 (async () => {
+  privateDebug.phase = "starting local server";
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  privateDebug.phase = "launching Chromium";
   const browser = await chromium.launch({ headless: true });
   const results = [];
+  let activePage;
   try {
-    for (const fixture of cases) {
-      const parsed = parseDiff(fixture.patch);
+    for (const fixture of externalFixturePath ? [externalFixture()] : cases) {
+      const allParsed = parseDiff(fixture.patch);
+      const parsed = fixture.private ? allParsed.slice(fixture.fileIndex, fixture.fileIndex + 1) : allParsed;
+      assert(parsed.length, "Requested fixture file index must exist");
       const originalProjections = { old: projection(parsed, "old"), new: projection(parsed, "new") };
       const files = realignDiffHunks(parsed);
       for (const side of ["old", "new"]) {
+        if (fixture.private) continue;
         assert.deepEqual(
           projection(files, side),
           originalProjections[side],
@@ -240,18 +280,29 @@ const server = http.createServer((request, response) => {
         );
       }
       for (const format of ["side-by-side", "line-by-line"]) {
+        privateDebug.phase = `${format}: opening page`;
         const page = await browser.newPage({ viewport: { width: 1680, height: 900 }, deviceScaleFactor: 1 });
+        activePage = page;
         const errors = [];
-        page.on("pageerror", (error) => errors.push(error.message));
+        page.on("pageerror", (error) => {
+          errors.push(error.message);
+          if (fixture.private) privateDebug.pageErrors.push({ format, message: error.message, stack: error.stack });
+        });
         await page.goto(`http://127.0.0.1:${server.address().port}/`);
+        privateDebug.phase = `${format}: sending diff`;
         await page.evaluate(
           (value) => window.postMessage({ kind: "updateWebview", payload: value }, location.origin),
           payload(format, files),
         );
-        await page.waitForSelector(".d2h-code-line-ctn");
+        privateDebug.phase = `${format}: waiting for source rows`;
+        // Large fixtures fold their first source row. Wait for its presence,
+        // not its visibility, then wait separately for rendering to finish.
+        await page.waitForSelector(".d2h-code-line-ctn", { state: "attached" });
+        privateDebug.phase = `${format}: waiting for render completion`;
         await page.waitForFunction(
           () => getComputedStyle(document.getElementById("loading-container")).display === "none",
         );
+        privateDebug.phase = `${format}: collecting geometry`;
         const snapshot = await page.evaluate(() => {
           const panes = Array.from(document.querySelectorAll(".d2h-file-side-diff"));
           const rows = (panes.length ? panes : [document.querySelector(".d2h-file-wrapper")]).map((pane, side) =>
@@ -279,6 +330,99 @@ const server = http.createServer((request, response) => {
           );
           return { rows, header: document.querySelector(".d2h-file-name").textContent };
         });
+        if (fixture.private) {
+          // Compare real source strings only in memory. Reports intentionally
+          // contain no source text, source paths, or raw browser error strings.
+          const equal = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+          const oldRow = (number) => snapshot.rows[0].find((row) => row.old === number);
+          const rightAt = (row) => row && (format === "side-by-side" ? snapshot.rows[1][row.index] : row);
+          const modelProjectionPreserved = {};
+          const renderedProjectionPreserved = {};
+          for (const side of ["old", "new"]) {
+            modelProjectionPreserved[side] = equal(projection(files, side), originalProjections[side]);
+            renderedProjectionPreserved[side] = equal(
+              snapshot.rows
+                .flat()
+                .filter((row) => row[side])
+                .map((row) => ({ number: row[side], text: row.text })),
+              originalProjections[side],
+            );
+          }
+          const pairResults = fixture.pairs.map(([oldNumber, newNumber]) => {
+            const left = oldRow(oldNumber);
+            const right = rightAt(left);
+            return {
+              old: oldNumber,
+              expectedNew: newNumber,
+              actualNew: right?.new || 0,
+              aligned: right?.new === newNumber,
+              oldKind: left?.kind || "missing",
+              newKind: right?.kind || "missing",
+            };
+          });
+          const deletedRanges = fixture.deletedRanges.map(([start, end]) => {
+            const rows = snapshot.rows[0].filter((row) => row.old >= start && row.old <= end);
+            // Blank separators may retain valid context after source-preserving
+            // whitespace restoration. Every nonblank line of removed classes
+            // must still be deleted and unpaired; count every source row below.
+            const codeRows = rows.filter((row) => row.text.trim().length > 0);
+            const ignoredBlankLines = rows.filter((row) => !row.text.trim().length).map((row) => row.old);
+            const nonDeletions = codeRows.filter((row) => !row.kind.includes("d2h-del")).map((row) => row.old);
+            const pairedLines = codeRows
+              .filter((row) => rightAt(row)?.new)
+              .map((row) => ({ old: row.old, new: rightAt(row).new }));
+            return {
+              start,
+              end,
+              sourceLines: rows.length,
+              ignoredBlankLines,
+              nonDeletions,
+              pairedLines,
+              valid: rows.length === end - start + 1 && !nonDeletions.length && !pairedLines.length,
+            };
+          });
+          const geometryAligned =
+            format !== "side-by-side" ||
+            equal(
+              snapshot.rows[0].map((row) => [row.top, row.height]),
+              snapshot.rows[1].map((row) => [row.top, row.height]),
+            );
+          const summary = {
+            fixture: "external",
+            fileIndex: fixture.fileIndex,
+            format,
+            sourceLines: { old: originalProjections.old.length, new: originalProjections.new.length },
+            modelProjectionPreserved,
+            renderedProjectionPreserved,
+            pairResults,
+            deletedRanges,
+            geometryAligned,
+            renderErrorCount: errors.length,
+            rows: snapshot.rows.map((rows) => rows.map(({ text: _text, ...metrics }) => metrics)),
+          };
+          summary.valid =
+            Object.values(modelProjectionPreserved).every(Boolean) &&
+            Object.values(renderedProjectionPreserved).every(Boolean) &&
+            pairResults.every((pair) => pair.aligned) &&
+            deletedRanges.every((range) => range.valid) &&
+            geometryAligned &&
+            !errors.length;
+          if (fixture.viewOldLine) {
+            await page.evaluate((number) => {
+              const pane = document.querySelector(".d2h-file-side-diff") || document.querySelector(".d2h-file-wrapper");
+              const row = Array.from(pane.querySelectorAll("tr")).find(
+                (row) =>
+                  Number(row.querySelector(".d2h-code-side-linenumber, .line-num1")?.textContent?.trim()) === number,
+              );
+              row?.scrollIntoView({ block: "start" });
+            }, fixture.viewOldLine);
+          }
+          privateDebug.phase = `${format}: saving private screenshot`;
+          await page.screenshot({ path: path.join(artifactDirectory, `external-${format}.png`) });
+          results.push(summary);
+          await page.close();
+          continue;
+        }
         for (const side of ["old", "new"]) {
           const actual = snapshot.rows
             .flat()
@@ -338,20 +482,68 @@ const server = http.createServer((request, response) => {
         await page.close();
       }
     }
+    privateDebug.phase = "writing numeric report";
     fs.writeFileSync(
       path.join(artifactDirectory, "line-alignment-browser-results.json"),
       JSON.stringify(results, null, 2),
     );
+    if (externalFixturePath) {
+      console.log("Private alignment report (metrics and line numbers only):", artifactDirectory);
+      console.log(
+        JSON.stringify(
+          results.map(({ format, valid, sourceLines, pairResults, deletedRanges, geometryAligned }) => ({
+            format,
+            valid,
+            sourceLines,
+            pairResults,
+            deletedRanges,
+            geometryAligned,
+          })),
+          null,
+          2,
+        ),
+      );
+      assert(
+        results.every((result) => result.valid),
+        "External fixture alignment checks failed; inspect the numeric report",
+      );
+      return;
+    }
     console.log(
       "Line alignment browser checks passed: moved URL, repeated constructors and their combined class sequence in both layouts, source projections and geometry preserved; screenshots:",
       artifactDirectory,
     );
+  } catch (error) {
+    if (externalFixturePath && activePage && !activePage.isClosed()) {
+      privateDebug.dom = await activePage
+        .evaluate(() => ({
+          sourceRows: document.querySelectorAll(".d2h-code-line-ctn").length,
+          hiddenRows: document.querySelectorAll(".diff-context-hidden").length,
+          loadingDisplay:
+            document.getElementById("loading-container") &&
+            getComputedStyle(document.getElementById("loading-container")).display,
+          messageKinds: (window.extensionMessages || []).map((message) => message.kind),
+        }))
+        .catch(() => undefined);
+      await activePage
+        .screenshot({ path: path.join(artifactDirectory, "external-failure.png") })
+        .catch(() => undefined);
+    }
+    throw error;
   } finally {
     await browser.close();
     await new Promise((resolve) => server.close(resolve));
   }
 })().catch((error) => {
-  console.error(error);
+  if (externalFixturePath) {
+    fs.writeFileSync(
+      path.join(artifactDirectory, "private-debug-error.json"),
+      JSON.stringify({ ...privateDebug, name: error.name, message: error.message, stack: error.stack }, null, 2),
+    );
+    console.error(
+      `External fixture failed during ${privateDebug.phase} (${error.name}); private diagnostics: ${artifactDirectory}`,
+    );
+  } else console.error(error);
   server.close();
   process.exitCode = 1;
 });
