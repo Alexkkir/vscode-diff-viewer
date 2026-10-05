@@ -16,7 +16,7 @@ export function createRenderPlan(args: {
   const warningParts: string[] = [];
 
   if (isLargeDiff) {
-    warningParts.push("Large diff detected. Files are opened collapsed to reduce initial render cost.");
+    warningParts.push("Large diff detected. Use Expand all below to show every file.");
   }
 
   return {

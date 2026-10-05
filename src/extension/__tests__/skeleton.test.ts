@@ -150,10 +150,12 @@ describe("Skeleton Builder", () => {
       expect(html).toContain("</progress>");
     });
 
-    it("should not include footer review action buttons", () => {
+    it("includes a labelled Expand all checkbox in place of footer review action buttons", () => {
       const html = buildTestSkeleton();
 
-      expect(html).not.toContain("Expand all");
+      expect(html).toContain('id="expand-all-control"');
+      expect(html).toContain(`id="${SkeletonElementIds.ExpandAllToggle}" type="checkbox" disabled`);
+      expect(html).toContain("Expand all");
       expect(html).not.toContain("Collapse all");
       expect(html).not.toContain("review-actions-container");
     });

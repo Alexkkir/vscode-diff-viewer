@@ -139,6 +139,7 @@ const renderSkeleton = (): void => {
     <div id="${SkeletonElementIds.DiffContainer}"></div>
     <footer>
       <div id="${SkeletonElementIds.FooterStatus}">
+        <input id="${SkeletonElementIds.ExpandAllToggle}" type="checkbox" disabled />
         <span id="${SkeletonElementIds.ViewedIndicator}"></span>
         <progress id="${SkeletonElementIds.ViewedProgressContainer}" max="100" value="0"></progress>
       </div>
@@ -575,6 +576,79 @@ describe("MessageToWebviewHandlerImpl", () => {
         }),
       ),
     ).resolves.toBeUndefined();
+  });
+
+  it("expands a large diff through the checkbox and keeps it expanded after refresh and restoration", async () => {
+    const payload = createUpdatePayload({
+      diffFiles: ["one.ts", "two.ts"].map((name) => createMockDiffFile({ oldName: name, newName: name })),
+      accessiblePaths: ["one.ts", "two.ts"],
+      collapseAll: true,
+      performance: { isLargeDiff: true, deferViewedStateHashing: true },
+    });
+    await handler.updateWebview(payload);
+    const toggle = document.getElementById(SkeletonElementIds.ExpandAllToggle) as HTMLInputElement;
+    expect(toggle.disabled).toBe(false);
+    expect(toggle.checked).toBe(false);
+    expect(document.querySelectorAll(".d2h-d-none")).toHaveLength(2);
+    toggle.click();
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+      kind: "requestWebviewAction",
+      payload: { action: "expandAll" },
+    });
+    handler.performWebviewAction({ action: "expandAll" });
+    expect(toggle.checked).toBe(true);
+    expect(document.querySelectorAll(".d2h-d-none")).toHaveLength(0);
+    await handler.updateWebview(payload);
+    expect(toggle.checked).toBe(true);
+    expect(document.querySelectorAll(".d2h-d-none")).toHaveLength(0);
+
+    const savedState = setState.mock.calls.at(-1)![0];
+    expect(savedState.expandAllFiles).toBe(true);
+    handler = new MessageToWebviewHandlerImpl({
+      postMessageToExtensionFn,
+      state: { getState: () => savedState, setState },
+    });
+    await handler.updateWebview(payload);
+    expect(toggle.checked).toBe(true);
+    expect(document.querySelectorAll(".d2h-d-none")).toHaveLength(0);
+    toggle.click();
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+      kind: "requestWebviewAction",
+      payload: { action: "collapseAll" },
+    });
+    handler.performWebviewAction({ action: "collapseAll" });
+    expect(toggle.checked).toBe(false);
+    expect(document.querySelectorAll(".d2h-d-none")).toHaveLength(2);
+    expect(setState).toHaveBeenLastCalledWith(expect.objectContaining({ expandAllFiles: false }));
+    await handler.updateWebview(createUpdatePayload({}));
+    expect(toggle.checked).toBe(false);
+    expect(toggle.indeterminate).toBe(false);
+    expect(toggle.disabled).toBe(true);
+  });
+
+  it("reflects individual viewed toggles and editor toolbar actions in Expand all", async () => {
+    await handler.updateWebview(
+      createUpdatePayload({
+        diffFiles: ["one.ts", "two.ts"].map((name) => createMockDiffFile({ oldName: name, newName: name })),
+        accessiblePaths: ["one.ts", "two.ts"],
+      }),
+    );
+    const toggle = document.getElementById(SkeletonElementIds.ExpandAllToggle) as HTMLInputElement;
+    expect(toggle.checked).toBe(true);
+    document.querySelector<HTMLInputElement>(".d2h-file-collapse-input")!.click();
+    expect(toggle.checked).toBe(false);
+    expect(toggle.indeterminate).toBe(true);
+    toggle.click();
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+      kind: "requestWebviewAction",
+      payload: { action: "expandAll" },
+    });
+    handler.performWebviewAction({ action: "expandAll" });
+    expect(toggle.checked).toBe(true);
+    expect(toggle.indeterminate).toBe(false);
+    handler.performWebviewAction({ action: "collapseAll" });
+    expect(toggle.checked).toBe(false);
+    expect(toggle.indeterminate).toBe(false);
   });
 
   it("handles expand, collapse and showRaw actions", async () => {

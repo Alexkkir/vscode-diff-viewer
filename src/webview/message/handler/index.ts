@@ -129,7 +129,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       updateHighlightTheme(appTheme);
       updateLargeDiffNotice(payload.performance.warning);
 
-      if (payload.collapseAll) {
+      const collapseAll = payload.collapseAll && !this.currentUiState.expandAllFiles;
+      if (collapseAll) {
         diffContainer.style.display = "none";
       }
 
@@ -147,7 +148,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       this.registerDiffContainerHandlers(diffContainer);
       this.horizontalScrollbarController.ensureWindowHandlersRegistered();
 
-      if (payload.collapseAll) {
+      if (collapseAll) {
         if (payload.performance.isLargeDiff) {
           this.setAllCollapsedStates(true);
         } else {
@@ -159,6 +160,15 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       }
 
       this.restoreSelection();
+      const expandAllToggle = document.getElementById(SkeletonElementIds.ExpandAllToggle);
+      if (expandAllToggle instanceof HTMLInputElement) {
+        expandAllToggle.onchange = () => {
+          this.args.postMessageToExtensionFn({
+            kind: "requestWebviewAction",
+            payload: { action: expandAllToggle.checked ? "expandAll" : "collapseAll" },
+          });
+        };
+      }
       updateFooter(this.fileBindings);
 
       diffContainer.style.display = "block";
@@ -189,6 +199,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         this.findController.open();
         return;
       case "collapseAll":
+        this.persistUiState({ expandAllFiles: false });
         this.setAllViewedStates(true);
         this.clearChangedSinceViewedIndicators();
         updateFooter(this.fileBindings);
@@ -197,7 +208,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       case "expandAll":
         this.setAllViewedStates(false);
         this.clearChangedSinceViewedIndicators();
-        this.persistUiState({ selectedPath: undefined });
+        this.persistUiState({ selectedPath: undefined, expandAllFiles: true });
         updateFooter(this.fileBindings);
         this.horizontalScrollbarController.refresh();
         return;

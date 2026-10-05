@@ -73,21 +73,23 @@ export function showEmpty(isEmpty: boolean): void {
 }
 
 export function updateFooter(fileBindings: FileDomBinding[]): void {
+  const allCount = fileBindings.length;
+  const viewedCount = fileBindings.reduce((count, { viewedToggle }) => count + (viewedToggle?.checked ? 1 : 0), 0);
+  const expandAllToggle = document.getElementById(SkeletonElementIds.ExpandAllToggle);
+  if (expandAllToggle instanceof HTMLInputElement) {
+    expandAllToggle.disabled = allCount === 0;
+    expandAllToggle.checked = allCount > 0 && viewedCount === 0;
+    expandAllToggle.indeterminate = viewedCount > 0 && viewedCount < allCount;
+  }
   const indicator = document.getElementById(SkeletonElementIds.ViewedIndicator);
   if (!indicator) {
     return;
   }
 
-  const allCount = fileBindings.length;
-  if (allCount === 0) {
-    return;
-  }
-
-  const viewedCount = fileBindings.reduce((count, { viewedToggle }) => count + (viewedToggle?.checked ? 1 : 0), 0);
   indicator.textContent = `${viewedCount} / ${allCount} files viewed`;
 
   const viewedProgressContainer = document.getElementById(SkeletonElementIds.ViewedProgressContainer);
   if (viewedProgressContainer instanceof HTMLProgressElement) {
-    viewedProgressContainer.value = Math.round((viewedCount / allCount) * 100);
+    viewedProgressContainer.value = allCount ? Math.round((viewedCount / allCount) * 100) : 0;
   }
 }

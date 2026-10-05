@@ -8,6 +8,7 @@ export enum SkeletonElementIds {
   HorizontalScrollbarContainer = "horizontal-scrollbar-container",
   HorizontalScrollbarContent = "horizontal-scrollbar-content",
   FooterStatus = "footer-status",
+  ExpandAllToggle = "expand-all-toggle",
   ViewedIndicator = "viewed-indicator",
   ViewedProgressContainer = "viewed-progress-container",
   HighlightLightStylesheet = "highlight-light-stylesheet",

@@ -1,3 +1,13 @@
+# Latest local build: 1.8.11
+
+Install `diff-viewer-1.8.11-expand-all.vsix`, then run **Developer: Reload Window**.
+
+The footer now has an **Expand all** checkbox beside **Syntax highlighting**. Check it to expand every file, or uncheck it to collapse them using the existing review actions. It reflects individual file toggles and title-bar actions, shows a mixed state when some files are closed, and is disabled for empty diffs. Expanding a large diff overrides automatic collapse for that document across refreshes and webview restoration; individually marked viewed files still retain their review state. Context within a file continues to use the existing 50-line folding and 20-line expansion controls.
+
+Build with the commands below using output version 1.8.11. Browser regression: after `npm run build:prod`, run `node integration/browser/expand-all.cjs` (requires Playwright in the test environment). The fixture uses 96 synthetic files.
+
+Validation: 524 tests, lint, TypeScript, formatting and production build passed. Chromium verified both layouts through initial collapse, Expand all, content refresh, individual Viewed/mixed state, re-expansion, collapse and empty state; no browser errors occurred.
+
 # Latest local build: 1.8.10
 
 Install `diff-viewer-1.8.10-blank-context.vsix`, then run **Developer: Reload Window**.

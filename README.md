@@ -36,7 +36,7 @@ Diff Viewer renders `.diff` and `.patch` files inside VS Code with [diff2html](h
 1. Open a `.diff` or `.patch` file in VS Code.
 2. VS Code will open it with the `Diff Viewer` custom editor.
 3. Use the editor title bar buttons to switch between line-by-line and side-by-side views.
-4. Use the checkbox beside each file header to collapse it after review, or use the title bar actions to expand or collapse all files.
+4. Use **Expand all** in the footer beside **Syntax highlighting** to expand every file; uncheck it to collapse them. The checkbox shows a mixed state when only some files are open. Expanding is remembered for this diff when its content refreshes, including large diffs opened collapsed. You can also use the title bar actions or the checkbox beside each file header.
 
 If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, enable `diffviewer.globalScrollbar`. Viewed state is stored per diff document. If a file's diff changes later, the extension expands it again and marks it as changed since the last view. File header actions are only shown for paths the extension can currently resolve.
 

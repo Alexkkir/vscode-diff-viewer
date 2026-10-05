@@ -319,7 +319,8 @@ label.d2h-file-collapse.changed-since-last-view::after {
   color: var(--vscode-editor-findMatchForeground, #000);
 }
 
-#syntax-highlighting-control {
+#syntax-highlighting-control,
+#expand-all-control {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -327,7 +328,8 @@ label.d2h-file-collapse.changed-since-last-view::after {
   white-space: nowrap;
   cursor: pointer;
 }
-#syntax-highlighting-toggle {
+#syntax-highlighting-toggle,
+#expand-all-toggle {
   accent-color: var(--vscode-focusBorder);
 }
 

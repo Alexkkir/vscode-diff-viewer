@@ -12,6 +12,7 @@ export type WebviewAction = ReviewAction | ExtensionAction | "find";
 export interface WebviewUiState {
   scrollTop: number;
   syntaxHighlighting?: boolean;
+  expandAllFiles?: boolean;
   contextExpansions?: ContextExpansionState;
   selectedPath?: string;
 }
