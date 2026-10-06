@@ -53,8 +53,8 @@ const html = fs
   .replace("{{LIGHT_HIGHLIGHT_CSS_URI}}", "/styles/highlight.js@11.9.0-github.min.css")
   .replace("{{DARK_HIGHLIGHT_CSS_URI}}", "/styles/highlight.js@11.9.0-github-dark.min.css")
   .replace(
-    '<body data-shell-generation="{{SHELL_GENERATION}}">',
-    '<body class="vscode-dark" data-shell-generation="1">',
+    /<body\s+data-shell-generation="{{SHELL_GENERATION}}"/,
+    '<body class="vscode-dark" data-shell-generation="1"',
   )
   .replace(
     '<script nonce="{{NONCE}}" src="{{WEBVIEW_URI}}"></script>',
@@ -127,7 +127,64 @@ const patch = [
   ...next.map((line) => `+${line}`),
 ].join("\n");
 
+const oldOptions = [
+  "groups = [",
+  "    OptionGroupLeaf(",
+  '        name="Inputs and Outputs",',
+  '        option_names=["source", "output"],',
+  "    ),",
+  "    OptionGroupLeaf(",
+  '        name="Params",',
+  '        option_names=["model", "revision"],',
+  "    ),",
+  "]",
+];
+const nextOptions = [
+  "groups = [",
+  "    OptionGroupLeaf(",
+  '        name="Входы и выходы",',
+  '        code="inputs_and_outputs",',
+  '        option_names=["source", "output"],',
+  "    ),",
+  "    OptionGroupLeaf(",
+  '        name="Основное",',
+  '        code="main",',
+  '        option_names=["model", "revision"],',
+  "    ),",
+  "]",
+];
+function optionFixture(reverse) {
+  const before = reverse ? nextOptions : oldOptions;
+  const after = reverse ? oldOptions : nextOptions;
+  return {
+    name: `translated-option-groups${reverse ? "-reverse" : ""}`,
+    patch: [
+      "--- settings.py",
+      "+++ settings.py",
+      `@@ -1,${before.length} +1,${after.length} @@`,
+      ...before.map((line) => `-${line}`),
+      ...after.map((line) => `+${line}`),
+      "",
+    ].join("\n"),
+    pairs: reverse
+      ? [
+          [3, 3],
+          [8, 7],
+        ]
+      : [
+          [3, 3],
+          [7, 8],
+        ],
+    matchingModes: ["lines", "words", "none"],
+    verifyUnifiedPairs: true,
+    added: reverse ? [] : [4, 9],
+    removed: reverse ? [4, 9] : [],
+  };
+}
+
 const cases = [
+  optionFixture(false),
+  optionFixture(true),
   {
     name: "full-class-sequence",
     patch,
@@ -260,10 +317,10 @@ function projection(files, side) {
     ),
   );
 }
-const payload = (outputFormat, files) => ({
+const payload = (outputFormat, files, matching = "lines") => ({
   config: {
     globalScrollbar: true,
-    diff2html: { outputFormat, drawFileList: false, matching: "lines", colorScheme: "dark" },
+    diff2html: { outputFormat, drawFileList: false, matching, colorScheme: "dark" },
   },
   diffFiles: files,
   accessiblePaths: [],
@@ -306,7 +363,9 @@ const server = http.createServer((request, response) => {
           `${fixture.name}: model source projection ${side}`,
         );
       }
-      for (const format of ["side-by-side", "line-by-line"]) {
+      for (const { format, matching } of ["side-by-side", "line-by-line"].flatMap((format) =>
+        (fixture.matchingModes ?? ["lines"]).map((matching) => ({ format, matching })),
+      )) {
         privateDebug.phase = `${format}: opening page`;
         const page = await browser.newPage({ viewport: { width: 1680, height: 900 }, deviceScaleFactor: 1 });
         activePage = page;
@@ -319,7 +378,7 @@ const server = http.createServer((request, response) => {
         privateDebug.phase = `${format}: sending diff`;
         await page.evaluate(
           (value) => window.postMessage({ kind: "updateWebview", payload: value }, location.origin),
-          payload(format, files),
+          payload(format, files, matching),
         );
         privateDebug.phase = `${format}: waiting for source rows`;
         // Large fixtures fold their first source row. Wait for its presence,
@@ -480,7 +539,7 @@ const server = http.createServer((request, response) => {
         // Save failed-regression evidence too, before checking line pairing.
         await page.screenshot({
           fullPage: true,
-          path: path.join(artifactDirectory, `line-alignment-${fixture.name}-${format}.png`),
+          path: path.join(artifactDirectory, `line-alignment-${fixture.name}-${format}-${matching}.png`),
         });
         if (format === "side-by-side") {
           assert.deepEqual(
@@ -495,11 +554,15 @@ const server = http.createServer((request, response) => {
               `${fixture.name}: old ${oldNumber} and new ${newNumber} must align`,
             );
           }
+          for (const n of fixture.added ?? [])
+            assert.equal(snapshot.rows[0][newRow(n).index].old, 0, "Added argument must face an empty cell");
+          for (const n of fixture.removed ?? [])
+            assert.equal(snapshot.rows[1][oldRow(n).index].new, 0, "Removed argument must face an empty cell");
           if (fixture.name === "moved-url") {
             assert.equal(snapshot.rows[1][oldRow(3).index].new, 0, "Removed URL comment must not displace decorators");
             assert.equal(snapshot.rows[0][newRow(6).index].old, 0, "Moved docstring URL belongs to its own added row");
           }
-        } else if (fixture.verifyUnifiedPairs) {
+        } else if (fixture.verifyUnifiedPairs && matching !== "none") {
           for (const [oldNumber, newNumber] of fixture.pairs) {
             const left = oldRow(oldNumber);
             const right = newRow(newNumber);
@@ -526,7 +589,7 @@ const server = http.createServer((request, response) => {
           assert(newRow(3).kind.includes("d2h-ins"), "New docstring remains added");
         }
         assert.deepEqual(errors, []);
-        results.push({ fixture: fixture.name, format, snapshot, errors });
+        results.push({ fixture: fixture.name, format, matching, snapshot, errors });
         await page.close();
       }
     }
@@ -558,7 +621,7 @@ const server = http.createServer((request, response) => {
       return;
     }
     console.log(
-      "Line alignment browser checks passed: moved URL, repeated constructors, combined class sequence and changed guard/return in both layouts; source projections and geometry preserved; screenshots:",
+      "Line alignment browser checks passed: moved URL, repeated constructors, combined class sequence, changed guard/return and translated keyword arguments in both layouts; source projections and geometry preserved; screenshots:",
       artifactDirectory,
     );
   } catch (error) {

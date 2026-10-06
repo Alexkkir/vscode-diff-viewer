@@ -76,6 +76,21 @@ export function replacementCase(
 const constructor = (value: string) => ["    def __init__(self):", `        super().__init__(value="${value}")`];
 
 export const diffContractCorpus: DiffContractCase[] = [
+  replacementCase("translated-keyword-argument", ['    name="Params",'], ['    name="Основное",', '    code="main",'], {
+    pairs: [[1, 1]],
+  }),
+  replacementCase(
+    "translated-label-versus-similar-code",
+    ['    name="Inputs and Outputs",'],
+    ['    name="Входы и выходы",', '    code="inputs_and_outputs",'],
+    { pairs: [[1, 1]] },
+  ),
+  replacementCase(
+    "translated-keyword-after-insertion",
+    ['    name="Params",'],
+    ['    code="main",', '    name="Основное",'],
+    { pairs: [[1, 2]] },
+  ),
   replacementCase("renamed-guard-operand", ["if old_name:"], ["if replacement:"], { pairs: [[1, 1]] }),
   replacementCase("renamed-return-operand", ["return old_name"], ["return replacement"], { pairs: [[1, 1]] }),
   replacementCase("rewritten-assignment", ["config.flag = True"], ["options.enabled = False"], { pairs: [[1, 1]] }),

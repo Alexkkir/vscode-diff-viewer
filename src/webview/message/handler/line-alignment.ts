@@ -29,6 +29,13 @@ const ASSIGNMENT = new RegExp(
   `^(?:(?:const|let|var|final|val)\\s+)?${MEMBER}\\s*(?::[^=]+)?\\s*(?:\\*\\*|//|<<|>>|[-+*/%&|^])?=(?!=)`,
   "u",
 );
+// A structural identity needs an unambiguous left-hand side. In particular,
+// do not reuse ASSIGNMENT's permissive type-annotation branch: `std::string`
+// would otherwise look like an assignment to `std`.
+const ASSIGNMENT_TARGET = new RegExp(
+  `^(?:(?:const|let|var|final|val)\\s+)?(${IDENTIFIER}(?:\\s*\\.\\s*${IDENTIFIER})*)\\s*((?:\\*\\*|//|<<|>>|[-+*/%&|^])?=)(?![=>])`,
+  "u",
+);
 const CALL = new RegExp(`^(?:new\\s+)?${MEMBER}\\s*\\(`, "u");
 
 type LinePair = [number, number];
@@ -54,6 +61,10 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   const newDeclarations = newText.map(declarationShape);
   const oldImports = oldText.map(importStatement);
   const newImports = newText.map(importStatement);
+  const oldAssignments = oldLines.map((line) => assignmentKey(line, python));
+  const newAssignments = newLines.map((line) => assignmentKey(line, python));
+  const oldAssignmentCounts = countKeys(oldAssignments);
+  const newAssignmentCounts = countKeys(newAssignments);
   const scores = new Float64Array((oldLines.length + 1) * width);
   const similarities = new Float64Array(scores.length);
   const directions = new Uint8Array(scores.length);
@@ -68,6 +79,19 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
     for (let newIndex = 1; newIndex <= newLines.length; newIndex++) {
       const left = oldText[oldIndex - 1];
       const right = newText[newIndex - 1];
+      const oldAssignment = oldAssignments[oldIndex - 1];
+      const newAssignment = newAssignments[newIndex - 1];
+      // If the same target exists on the other side, nearby values belonging
+      // to another parameter must not steal its match. Duplicate targets are
+      // protected too, but receive no structural bonus without a unique pair.
+      const incompatibleAssignment =
+        (oldAssignment !== undefined && newAssignmentCounts.has(oldAssignment) && oldAssignment !== newAssignment) ||
+        (newAssignment !== undefined && oldAssignmentCounts.has(newAssignment) && oldAssignment !== newAssignment);
+      const uniqueAssignment =
+        oldAssignment !== undefined &&
+        oldAssignment === newAssignment &&
+        oldAssignmentCounts.get(oldAssignment) === 1 &&
+        newAssignmentCounts.get(oldAssignment) === 1;
       const oldImport = oldImports[oldIndex - 1];
       const newImport = newImports[newIndex - 1];
       // Pair a rewritten import with its header, not with a continuation name
@@ -83,11 +107,13 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
             ? 0
             : undefined;
       const unchangedCode = oldCode[oldIndex - 1] !== undefined && oldCode[oldIndex - 1] === newCode[newIndex - 1];
-      const compared = unchangedCode
-        ? { score: 1, work: 0 }
-        : importScore !== undefined
-          ? { score: importScore, work: 0 }
-          : similarity(left, right, characterBudget);
+      const compared = incompatibleAssignment
+        ? { score: -1, work: 0 }
+        : unchangedCode
+          ? { score: 1, work: 0 }
+          : importScore !== undefined
+            ? { score: importScore, work: 0 }
+            : similarity(left, right, characterBudget);
       if (!compared) return [[oldLines, newLines]];
       characterBudget -= compared.work;
       // A one-character module rename can otherwise outscore the matching
@@ -97,7 +123,9 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
       }
       const declaration = oldDeclarations[oldIndex - 1];
       const renamedDeclaration = declaration !== undefined && declaration === newDeclarations[newIndex - 1];
-      const score = Math.max(compared.score, renamedDeclaration ? 0.8 : 0);
+      const score = incompatibleAssignment
+        ? -1
+        : Math.max(compared.score, renamedDeclaration || uniqueAssignment ? 0.8 : 0);
       similarities[oldIndex * width + newIndex] = score;
       const weight =
         score > MIN_SIMILARITY ? (score - MIN_SIMILARITY) * Math.min(1, Math.min(left.length, right.length) / 10) : 0;
@@ -184,6 +212,8 @@ function pairCoherentReplacement(
   width: number,
 ): LinePair[] {
   const canPair = (oldIndex: number, newIndex: number) => {
+    // Keep the target-identity restriction through positional gap filling too.
+    if (similarities[(oldIndex + 1) * width + newIndex + 1] < 0) return false;
     const old = oldShapes[oldIndex];
     const next = newShapes[newIndex];
     if (!old || !next || old.indentation !== next.indentation) return false;
@@ -219,6 +249,22 @@ function pairCoherentReplacement(
     newStart = newEnd + 1;
   }
   return pairs;
+}
+
+function assignmentKey(line: DiffLine, python: boolean): string | undefined {
+  const source = line.content.slice(1);
+  const match = ASSIGNMENT_TARGET.exec(source.trim());
+  if (!match || (match[2] === "//=" && !python)) return undefined;
+  const indentation = /^[ \t]*/.exec(source)![0];
+  return `${indentation}\0${match[1].replace(/\s+/g, "")}\0${match[2]}`;
+}
+
+function countKeys(keys: Array<string | undefined>): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const key of keys) {
+    if (key !== undefined) counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return counts;
 }
 
 function statementRole(line: DiffLine): string | undefined {

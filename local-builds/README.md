@@ -1,3 +1,13 @@
+# Latest local build: 1.8.20
+
+Install `diff-viewer-1.8.20-argument-alignment.vsix`, then run **Developer: Reload Window**.
+
+Translated keyword arguments now pair by their unchanged target, operator and indentation. A neighboring `code` value cannot steal the corresponding `name` row merely because its literal looks more similar. This handles unequal replacement runs with inserted arguments, including the reverse diff. Source order, exact text and computational limits remain intact; ambiguous duplicate targets get no forced structural priority.
+
+Validation: 940 unit tests, TypeScript, ESLint and formatting passed. Twenty browser scenarios check actual row positions, source projections and existing class/constructor/guard regressions. The two translated-argument blocks are checked in both layouts and all three matching modes, forward and reverse. See [report](argument-alignment-1.8.20.md).
+
+Use the build commands below with output version 1.8.20. Run `node integration/browser/line-alignment.cjs` after the production build to repeat the visual checks.
+
 # Latest local build: 1.8.19
 
 Install `diff-viewer-1.8.19-continuous-stripes.vsix`, then run **Developer: Reload Window**.

@@ -352,3 +352,170 @@ describe("changed line alignment", () => {
     expect(alignChangedLines(before, after)).toEqual([[before, after]]);
   });
 });
+
+describe("assignment target anchors", () => {
+  function aligned(old: string[], next: string[], language = "py") {
+    const before = lines(LineType.DELETE, old);
+    const after = lines(LineType.INSERT, next);
+    const snapshot = JSON.stringify([before, after]);
+    const groups = alignChangedLines(before, after, language);
+    expect(groups.flatMap(([left]) => left)).toEqual(before);
+    expect(groups.flatMap(([, right]) => right)).toEqual(after);
+    expect(JSON.stringify([before, after])).toBe(snapshot);
+    return {
+      groups,
+      before,
+      after,
+      pairs: groups.filter(([left, right]) => left.length && right.length),
+    };
+  }
+
+  it.each([
+    ["Params", "Основное", "main"],
+    ["Inputs and Outputs", "Входы и выходы", "inputs_and_outputs"],
+  ])("pairs translated keyword values with their target (%s)", (old, next, code) => {
+    const { groups, before, after } = aligned(
+      [`            name="${old}",`],
+      [`            name="${next}",`, `            code="${code}",`],
+    );
+    expect(groups).toEqual([
+      [[before[0]], [after[0]]],
+      [[], [after[1]]],
+    ]);
+  });
+
+  it.each([false, true])(
+    "keeps a translated parameter next to an added or removed parameter (reverse=%s)",
+    (reverse) => {
+      const old = ['    caption="English display text",'];
+      const next = ['    identifier="English display text",', '    caption="Переведённая подпись",'];
+      const { pairs, before, after } = aligned(reverse ? next : old, reverse ? old : next);
+      expect(pairs).toEqual(reverse ? [[[before[1]], [after[0]]]] : [[[before[0]], [after[1]]]]);
+    },
+  );
+
+  it.each([
+    "title",
+    "options.label",
+    "settings . presentation . caption",
+    "настройки.подпись",
+    "const caption",
+    "let caption",
+    "var caption",
+    "val caption",
+    "final caption",
+  ])("recognizes a generic unchanged assignment target: %s", (target) => {
+    const { pairs, before, after } = aligned(
+      [`${target} = "English description";`],
+      ['unrelated = "English description";', `${target} = "Совершенно другая подпись";`],
+    );
+    expect(pairs).toEqual([[[before[0]], [after[1]]]]);
+  });
+
+  it("normalizes whitespace around member access while retaining exact indentation", () => {
+    const { pairs, before, after } = aligned(
+      ['\toptions . caption = "English description"'],
+      ['\toptions.caption = "Совершенно другая подпись"', '\toptions.code = "English description"'],
+    );
+    expect(pairs).toEqual([[[before[0]], [after[0]]]]);
+    expect(
+      aligned(
+        ['    caption = "English description"'],
+        ['\tcaption = "Совершенно другая подпись на другом языке"', "\tidentifier = 42"],
+      ).pairs,
+    ).toEqual([]);
+  });
+
+  it("does not let neighboring gap extension steal an assignment with its own matching target", () => {
+    const { pairs, before, after } = aligned(
+      ["start = stable()", '    caption="English display text",', "finish = stable()"],
+      [
+        "start = stable()",
+        '    identifier="English display text",',
+        '    caption="Переведённая подпись",',
+        "finish = stable()",
+      ],
+    );
+    expect(pairs).toEqual([
+      [[before[0]], [after[0]]],
+      [[before[1]], [after[2]]],
+      [[before[2]], [after[3]]],
+    ]);
+  });
+
+  it("distinguishes assignment operators when a same-operator counterpart exists", () => {
+    const { pairs, before, after } = aligned(
+      ["counter += previous"],
+      ["counter = previous", "counter += completely_different_operand"],
+    );
+    expect(pairs).toEqual([[[before[0]], [after[1]]]]);
+  });
+
+  it.each(["==", "!=", "<=", ">=", "=>", ":="])("does not treat %s as an assignment anchor", (operator) => {
+    const { pairs } = aligned(
+      [`caption ${operator} "${"a".repeat(50)}"`],
+      [`caption ${operator} "${"ж".repeat(60)}"`, "extra = 42"],
+    );
+    expect(pairs).toEqual([]);
+  });
+
+  it.each([
+    "# caption = ",
+    "// caption = ",
+    "/* caption = ",
+    '"caption = ',
+    "f'caption = ",
+    "std::string caption = ",
+    "caption: SomeType = ",
+  ])("does not promote comment, literal, or ambiguous typed text to a target (%s)", (prefix) => {
+    const { pairs } = aligned([`${prefix}${"a".repeat(60)}`], [`${prefix}${"ж".repeat(70)}`, "extra = 42"]);
+    expect(pairs).toEqual([]);
+  });
+
+  it("does not interpret a JavaScript //= comment as a floor assignment", () => {
+    expect(
+      aligned([`caption //= "${"a".repeat(60)}"`], [`caption //= "${"ж".repeat(70)}"`, "extra = 42"], "js").pairs,
+    ).toEqual([]);
+  });
+
+  it("does not manufacture structural pairs for repeated translated targets", () => {
+    const { pairs } = aligned(
+      [`name = "${"a".repeat(50)}"`, `name = "${"b".repeat(50)}"`],
+      [
+        `name = "${"ж".repeat(60)}"`,
+        `code = "${"a".repeat(50)}"`,
+        `name = "${"я".repeat(60)}"`,
+        `slug = "${"b".repeat(50)}"`,
+      ],
+    );
+    expect(pairs).toEqual([]);
+  });
+
+  it("still uses exact value evidence for repeated targets and keeps inserted fields separate", () => {
+    const { pairs, before, after } = aligned(
+      ['name = "first"', 'name = "second"'],
+      ['name = "first"', 'code = "first"', 'name = "second"', 'code = "second"'],
+    );
+    expect(pairs).toEqual([
+      [[before[0]], [after[0]]],
+      [[before[1]], [after[2]]],
+    ]);
+  });
+
+  it("keeps source order when same-target anchors cross after parameter reordering", () => {
+    const { pairs } = aligned(
+      ['caption = "English description"', 'identifier = "old machine key"'],
+      ['identifier = "Совершенно новое значение"', 'caption = "Полностью переведённое описание"'],
+    );
+    expect(pairs).toHaveLength(1);
+    for (const [[old], [next]] of pairs) {
+      expect(old.content.slice(1).split("=")[0]).toBe(next.content.slice(1).split("=")[0]);
+    }
+  });
+
+  it("does not promote two different targets merely because both lines are assignments", () => {
+    expect(
+      aligned([`previous = "${"a".repeat(50)}"`], [`replacement = "${"ж".repeat(60)}"`, "extra = 42"]).pairs,
+    ).toEqual([]);
+  });
+});
