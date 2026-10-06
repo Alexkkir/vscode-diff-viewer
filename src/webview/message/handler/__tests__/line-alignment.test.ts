@@ -1,5 +1,6 @@
 import { DiffLine, LineType } from "diff2html/lib/types";
 import { alignChangedLines } from "../line-alignment";
+import { conversationMatchingCorpus } from "../../../../shared/testing/conversation-matching-corpus";
 
 function lines(type: LineType.DELETE | LineType.INSERT, text: string[], start = 1): DiffLine[] {
   return text.map((content, index) =>
@@ -650,5 +651,79 @@ describe("standalone identifier literal alignment", () => {
     const before = lines(LineType.DELETE, [`"alpha-${"a".repeat(3000)}",`]);
     const after = lines(LineType.INSERT, [`"${"b".repeat(3000)}-alpha",`, '"extra-key",']);
     expect(alignChangedLines(before, after)).toEqual([[before, after]]);
+  });
+});
+
+describe("comment transitions competing with declaration groups", () => {
+  it.each([false, true])("keeps the decorated survivor ahead of a moved URL comment (reverse=%s)", (reverse) => {
+    // This independently hand-labelled story also passes through the complete
+    // parse/realign/render pipeline in conversation-matching.test.ts.
+    const fixture = conversationMatchingCorpus.find(
+      (entry) => entry.name === "conversation-decorated-rename-removed-class-and-url",
+    )!.files[0];
+    const before = lines(
+      LineType.DELETE,
+      (reverse ? fixture.next : fixture.old).map((row) => row.text),
+    );
+    const after = lines(
+      LineType.INSERT,
+      (reverse ? fixture.old : fixture.next).map((row) => row.text),
+    );
+    const groups = alignChangedLines(before, after, "py");
+    const pairs = groups
+      .filter(([left, right]) => left.length && right.length)
+      .map(([left, right]) => [left[0].oldNumber, right[0].newNumber]);
+    expect(pairs).toEqual(reverse ? fixture.pairs!.map(([old, next]) => [next, old]) : fixture.pairs);
+    expect(groups.flatMap(([left]) => left)).toEqual(before);
+    expect(groups.flatMap(([, right]) => right)).toEqual(after);
+  });
+
+  it.each([
+    "enabled = True",
+    "counter += next_value",
+    "if ready:",
+    "return value",
+    "run(value)",
+    '@REGISTRY.register("worker")',
+    "value: Mapping[str, str] = {}",
+    '"worker-pool",',
+  ])("preserves isolated comment-out and uncomment operations: %s", (statement) => {
+    for (const prefix of ["# ", "// "]) {
+      for (const reverse of [false, true]) {
+        const before = lines(LineType.DELETE, [reverse ? statement : prefix + statement]);
+        const after = lines(LineType.INSERT, [reverse ? prefix + statement : statement]);
+        expect(alignChangedLines(before, after, "py")).toEqual([[before, after]]);
+      }
+    }
+  });
+
+  it.each([false, true])(
+    "preserves a commented-out code block beside a changed ordinary call (reverse=%s)",
+    (reverse) => {
+      const code = ["def build(value):", "    return transform(value)", "save(value)"];
+      const commented = ["# def build(value):", "#     return transform(value)", "save(next_value)"];
+      const before = lines(LineType.DELETE, reverse ? code : commented);
+      const after = lines(LineType.INSERT, reverse ? commented : code);
+      expect(alignChangedLines(before, after, "py")).toEqual(before.map((line, index) => [[line], [after[index]]]));
+    },
+  );
+
+  it.each([
+    ["md", "# Review guide", ["# Review notes", "Review guide"]],
+    ["plaintext", "//public/review/guide", ["//public/review/notes", "public/review/guide"]],
+  ] as const)("preserves ordinary heading/path matches outside declaration groups (%s)", (language, old, next) => {
+    const before = lines(LineType.DELETE, [old]);
+    const after = lines(LineType.INSERT, [...next]);
+    expect(alignChangedLines(before, after, language)).toEqual([
+      [[], [after[0]]],
+      [[before[0]], [after[1]]],
+    ]);
+  });
+
+  it("retains a standalone comment-to-text comparison when no declaration competes for the rows", () => {
+    const url = "https://example.invalid/public/component.py?rev=123456789";
+    const before = lines(LineType.DELETE, [`# ${url}`]);
+    const after = lines(LineType.INSERT, [`    ${url}`]);
+    expect(alignChangedLines(before, after, "py")).toEqual([[before, after]]);
   });
 });

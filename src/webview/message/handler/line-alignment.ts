@@ -11,6 +11,7 @@ const MAX_LITERAL_LENGTH = 256;
 const MIN_SIMILARITY = 0.5;
 const MIN_NEIGHBOR_SIMILARITY = 0.3;
 const CONTINUITY_BONUS = 0.5;
+const COMMENT_TO_TEXT_WEIGHT = 0.1;
 const CODE_KEYWORDS = new Set(
   (
     "and as assert async await break case catch class const continue def default delete do else elif enum except " +
@@ -69,6 +70,7 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   const newCode = python ? newText.map(pythonCode) : [];
   const oldDeclarations = oldText.map(declarationShape);
   const newDeclarations = newText.map(declarationShape);
+  const compareDeclarations = oldDeclarations.some(Boolean) && newDeclarations.some(Boolean);
   const oldImports = oldText.map(importStatement);
   const newImports = newText.map(importStatement);
   const oldAssignments = oldLines.map((line) => assignmentKey(line, python));
@@ -77,6 +79,10 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   const newAssignmentCounts = countKeys(newAssignments);
   const oldLiterals = oldLines.map(literalIdentifier);
   const newLiterals = newLines.map(literalIdentifier);
+  const oldComments = oldText.map((text) => /^(?:#|\/\/)/.test(text));
+  const newComments = newText.map((text) => /^(?:#|\/\/)/.test(text));
+  const oldStatements = oldLines.map((line, index) => isExecutableStatement(line, oldAssignments[index]));
+  const newStatements = newLines.map((line, index) => isExecutableStatement(line, newAssignments[index]));
   const scores = new Float64Array((oldLines.length + 1) * width);
   const similarities = new Float64Array(scores.length);
   const directions = new Uint8Array(scores.length);
@@ -142,8 +148,20 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
         ? -1
         : Math.max(compared.score, renamedDeclaration || uniqueAssignment ? 0.8 : 0, literal.score);
       similarities[oldIndex * width + newIndex] = score;
+      // A comment copied into documentation is a weak anchor: its long text
+      // must not displace a related declaration group. Outside competing
+      // declarations (e.g. Markdown headings), retain the original scoring;
+      // actual code being commented out also keeps its full weight.
+      const commentToText =
+        compareDeclarations &&
+        oldComments[oldIndex - 1] !== newComments[newIndex - 1] &&
+        !(oldComments[oldIndex - 1] ? newStatements[newIndex - 1] : oldStatements[oldIndex - 1]);
       const weight =
-        score > MIN_SIMILARITY ? (score - MIN_SIMILARITY) * Math.min(1, Math.min(left.length, right.length) / 10) : 0;
+        score > MIN_SIMILARITY
+          ? (score - MIN_SIMILARITY) *
+            Math.min(1, Math.min(left.length, right.length) / 10) *
+            (commentToText ? COMMENT_TO_TEXT_WEIGHT : 1)
+          : 0;
       const index = oldIndex * width + newIndex;
       const deletion = scores[index - width];
       const insertion = scores[index - 1];
@@ -318,6 +336,16 @@ function countKeys(keys: Array<string | undefined>): Map<string, number> {
     if (key !== undefined) counts.set(key, (counts.get(key) ?? 0) + 1);
   }
   return counts;
+}
+
+function isExecutableStatement(line: DiffLine, assignment?: string): boolean {
+  const role = statementRole(line);
+  // The permissive positional assignment role also accepts text such as a URL
+  // with ?rev=...; only an unambiguous target establishes executable code here.
+  if (role === "assignment") return assignment !== undefined;
+  if (role) return true;
+  const text = line.content.slice(1).trim();
+  return text.startsWith("@") && CALL.test(text.slice(1));
 }
 
 function statementRole(line: DiffLine): string | undefined {

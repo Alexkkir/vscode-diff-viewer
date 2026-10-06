@@ -13,6 +13,7 @@ const { chromium } = require("playwright");
 require("./load-typescript.cjs");
 const { parseDiff } = require("../../src/shared/diff.ts");
 const { realignDiffHunks } = require("../../src/shared/hunk-alignment.ts");
+const { conversationMatchingCorpus } = require("../../src/shared/testing/conversation-matching-corpus.ts");
 
 const root = path.resolve(__dirname, "../..");
 const externalFixturePath = process.env.DIFF_VIEWER_EXTERNAL_FIXTURE;
@@ -212,6 +213,15 @@ function listFixture(reverse) {
 }
 
 const cases = [
+  ...conversationMatchingCorpus.map(({ name, patch, files: [file] }) => ({
+    name,
+    patch,
+    pairs: file.pairs ?? [],
+    added: file.added ?? [],
+    removed: file.removed ?? [],
+    matchingModes: ["lines", "words"],
+    verifyUnifiedPairs: true,
+  })),
   listFixture(false),
   listFixture(true),
   optionFixture(false),
@@ -597,11 +607,23 @@ const server = http.createServer((request, response) => {
           for (const [oldNumber, newNumber] of fixture.pairs) {
             const left = oldRow(oldNumber);
             const right = newRow(newNumber);
+            if (left.index === right.index) {
+              assert(left.kind.includes("d2h-cntx"), "An unchanged pair must share its context row");
+              continue;
+            }
             assert.equal(right.index, left.index + 1, `${fixture.name}: unified replacement rows must be adjacent`);
             assert(
               left.kind.includes("d2h-change") && right.kind.includes("d2h-change"),
               "Unified replacements need inline matching",
             );
+          }
+          for (const n of fixture.added ?? []) {
+            assert.equal(newRow(n).old, 0, "Added source cannot contain an old line number");
+            assert(!newRow(n).kind.includes("d2h-change"), "Added source must not be a paired replacement");
+          }
+          for (const n of fixture.removed ?? []) {
+            assert.equal(oldRow(n).new, 0, "Removed source cannot contain a new line number");
+            assert(!oldRow(n).kind.includes("d2h-change"), "Removed source must not be a paired replacement");
           }
         }
         if (fixture.name === "repeated-constructors") {

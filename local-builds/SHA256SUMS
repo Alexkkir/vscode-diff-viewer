@@ -17,6 +17,7 @@ e2ebe01e7841527a81adb81fccce3c0c9655fd7f4ee15ad6f78c41d357d7ae8e  diff-viewer-1.
 7a80e9e64135be66b00ff85396aa2fe2f4d81817d73061144c25dd79dd6c083f  diff-viewer-1.8.2-fstring-context.vsix
 0bcdc42b3573073d8d2846e60d1d4ec7f7f9f05f09bf8d905dc2bc98574b1352  diff-viewer-1.8.20-argument-alignment.vsix
 a7f861a759be3ac40593c001df98e50bf873788432e51342d905b3f23f0192d0  diff-viewer-1.8.21-list-alignment.vsix
+4a62989511faac39b8e6eabf808b3738046193d8ba8aac1afce1e538d806e80e  diff-viewer-1.8.22-matching-regressions.vsix
 b2cd9f3c6cd0f6b07c2010334d3ffcf0c895aa4e830eb6f34e2ce94e868f1827  diff-viewer-1.8.3-semantic-colors.vsix
 7aa1084fb57ee20264c3233fbec4e0376fa7d7102d746e4a782badce2f633c65  diff-viewer-1.8.4-expand-context.vsix
 376a688eada4b3a33fce794fd37a398c4d42960b5a92fa0c85bde0f15b1f0a62  diff-viewer-1.8.5-arc-mode.vsix

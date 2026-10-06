@@ -32,6 +32,46 @@ describe("realignDiffHunks", () => {
     },
   );
 
+  it.each([false, true])(
+    "keeps supplied meaningful context when a tie only exchanges it for moved lines (reverse=%s)",
+    (reverse) => {
+      const removed = reverse ? "+" : "-";
+      const added = reverse ? "-" : "+";
+      const body = ["tick()", "", "tick()", "", ""];
+      const before = parseDiff(
+        patch([
+          "@@ -1,7 +1,7 @@",
+          `${removed}checkpoint_one()`,
+          `${removed}checkpoint_two()`,
+          ...body.map((line) => ` ${line}`),
+          `${added}checkpoint_one()`,
+          `${added}checkpoint_two()`,
+        ]),
+      );
+      const [file] = realignDiffHunks(before);
+      expect(file).toBe(before[0]);
+      expect(file).toMatchObject({ addedLines: 2, deletedLines: 2 });
+      expect(file.blocks[0].lines.filter((line) => line.type === LineType.CONTEXT).map((line) => line.content)).toEqual(
+        body.map((line) => ` ${line}`),
+      );
+    },
+  );
+
+  it.each([false, true])(
+    "keeps a moved checkpoint from replacing a long blank-only context (reverse=%s)",
+    (reverse) => {
+      const removed = reverse ? "+checkpoint()" : "-checkpoint()";
+      const added = reverse ? "-checkpoint()" : "+checkpoint()";
+      const before = parseDiff(
+        patch(["@@ -1,101 +1,101 @@", removed, ...Array.from({ length: 100 }, () => " "), added]),
+      );
+      const [file] = realignDiffHunks(before);
+      expect(file).toBe(before[0]);
+      expect(file).toMatchObject({ addedLines: 1, deletedLines: 1 });
+      expect(file.blocks[0].lines.filter((line) => line.type === LineType.CONTEXT)).toHaveLength(100);
+    },
+  );
+
   it("keeps the surviving constructor and deletes both removed test classes", () => {
     const before = parseDiff(
       patch([
@@ -272,6 +312,59 @@ describe("realignDiffHunks", () => {
     expect(
       file.blocks[0].lines.filter((line) => (line.oldNumber ?? 0) >= 4).every((line) => line.newNumber === undefined),
     ).toBe(true);
+  });
+
+  it.each([
+    { name: "removed documentation", prefix: ['    """Surviving worker."""'] },
+    { name: "removed blank separator", prefix: [""] },
+    { name: "removed documentation and blank separator", prefix: ['    """Surviving worker."""', ""] },
+  ])("keeps the surviving constructor before newly added copies after $name", ({ prefix }) => {
+    const body = ["    def __init__(self):", "        self.value = 1"];
+    const old = ["class Worker:", ...prefix, ...body];
+    const next = ["class Worker:", ...body, "", "class TestOne:", ...body, "", "class TestTwo:", ...body];
+    const before = parseDiff(replacement(old, next, 21, 51));
+    const original = JSON.stringify(before);
+    const [file] = realignDiffHunks(before);
+    for (const side of ["old", "new"] as const)
+      expect(projection(file.blocks[0], side)).toEqual(projection(before[0].blocks[0], side));
+    const lines = file.blocks[0].lines;
+    for (let index = 0; index < body.length; index++)
+      expect(lines.find((line) => line.oldNumber === 22 + prefix.length + index)).toMatchObject({
+        type: LineType.CONTEXT,
+        newNumber: 52 + index,
+      });
+    expect(lines.filter((line) => (line.newNumber ?? 0) >= 54).every((line) => line.oldNumber === undefined)).toBe(
+      true,
+    );
+    expect(lines.filter((line) => line.type === LineType.DELETE).map((line) => line.content.slice(1))).toEqual(prefix);
+    expect(realignDiffHunks([file])[0]).toBe(file);
+    expect(JSON.stringify(before)).toBe(original);
+  });
+
+  it("does not let supplied whitespace context pin the survivor to a newly added class", () => {
+    const before = parseDiff(
+      patch([
+        "@@ -21,4 +51,7 @@",
+        " class Worker:",
+        "+    def __init__(self):",
+        "+        self.value = 1",
+        " ",
+        "+class TestOne:",
+        "     def __init__(self):",
+        "         self.value = 1",
+      ]),
+    );
+    const [file] = realignDiffHunks(before);
+    const lines = file.blocks[0].lines;
+    expect(lines.find((line) => line.oldNumber === 23)).toMatchObject({ type: LineType.CONTEXT, newNumber: 52 });
+    expect(lines.find((line) => line.oldNumber === 24)).toMatchObject({ type: LineType.CONTEXT, newNumber: 53 });
+    expect(lines.find((line) => line.oldNumber === 22)).toMatchObject({ type: LineType.DELETE, newNumber: undefined });
+    expect(lines.filter((line) => (line.newNumber ?? 0) >= 54).every((line) => line.type === LineType.INSERT)).toBe(
+      true,
+    );
+    for (const side of ["old", "new"] as const)
+      expect(projection(file.blocks[0], side)).toEqual(projection(before[0].blocks[0], side));
+    expect(realignDiffHunks([file])[0]).toBe(file);
   });
 
   it("handles 6000 mostly unique lines without quadratic allocation", () => {

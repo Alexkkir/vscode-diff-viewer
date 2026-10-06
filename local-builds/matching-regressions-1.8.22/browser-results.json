@@ -1,0 +1,686 @@
+[
+  {
+    "fixture": "conversation-option-groups-labels-and-list-keys",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 16,
+    "newRows": 19,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-option-groups-labels-and-list-keys",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 16,
+    "newRows": 19,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-option-groups-labels-and-list-keys",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 16,
+    "newRows": 19,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-option-groups-labels-and-list-keys",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 16,
+    "newRows": 19,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-insertions-before-label-and-key",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 8,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-insertions-before-label-and-key",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 8,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-insertions-before-label-and-key",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 8,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-insertions-before-label-and-key",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 8,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unwrapped-imports-and-checker-comments",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 9,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unwrapped-imports-and-checker-comments",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 9,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unwrapped-imports-and-checker-comments",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 9,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unwrapped-imports-and-checker-comments",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 9,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-similar-module-before-unwrapped-header",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 3,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-similar-module-before-unwrapped-header",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 3,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-similar-module-before-unwrapped-header",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 3,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-similar-module-before-unwrapped-header",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 3,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-guard-return-and-annotation-removal",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-guard-return-and-annotation-removal",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-guard-return-and-annotation-removal",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-guard-return-and-annotation-removal",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 7,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-literal-hash-beside-rewritten-guard",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-literal-hash-beside-rewritten-guard",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-literal-hash-beside-rewritten-guard",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-literal-hash-beside-rewritten-guard",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-decorated-rename-removed-class-and-url",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 15,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-decorated-rename-removed-class-and-url",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 15,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-decorated-rename-removed-class-and-url",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 15,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-decorated-rename-removed-class-and-url",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 15,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-surviving-constructor-before-duplicate-tests",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-surviving-constructor-before-duplicate-tests",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-surviving-constructor-before-duplicate-tests",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-surviving-constructor-before-duplicate-tests",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-constructor-replaced-by-unrelated-docstring",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-constructor-replaced-by-unrelated-docstring",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-constructor-replaced-by-unrelated-docstring",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-constructor-replaced-by-unrelated-docstring",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unrelated-prose-between-code-anchors",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unrelated-prose-between-code-anchors",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unrelated-prose-between-code-anchors",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-unrelated-prose-between-code-anchors",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-strong-list-rename-with-weak-neighbors",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-strong-list-rename-with-weak-neighbors",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-strong-list-rename-with-weak-neighbors",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "conversation-strong-list-rename-with-weak-neighbors",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "side-by-side",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "line-by-line",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 5,
+    "newRows": 6,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 6,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 6,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "side-by-side",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 6,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 6,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 6,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "line-by-line",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 6,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 10,
+    "newRows": 12,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 10,
+    "newRows": 12,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "side-by-side",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 10,
+    "newRows": 12,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 10,
+    "newRows": 12,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 10,
+    "newRows": 12,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "line-by-line",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 10,
+    "newRows": 12,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "side-by-side",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "side-by-side",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "line-by-line",
+    "matching": "words",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "line-by-line",
+    "matching": "none",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 10,
+    "errors": []
+  },
+  {
+    "fixture": "full-class-sequence",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 54,
+    "newRows": 25,
+    "errors": []
+  },
+  {
+    "fixture": "full-class-sequence",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 54,
+    "newRows": 25,
+    "errors": []
+  },
+  {
+    "fixture": "moved-url",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 8,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "moved-url",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 8,
+    "newRows": 8,
+    "errors": []
+  },
+  {
+    "fixture": "repeated-constructors",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "repeated-constructors",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 12,
+    "newRows": 5,
+    "errors": []
+  },
+  {
+    "fixture": "changed-guard-and-return",
+    "format": "side-by-side",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 11,
+    "newRows": 11,
+    "errors": []
+  },
+  {
+    "fixture": "changed-guard-and-return",
+    "format": "line-by-line",
+    "matching": "lines",
+    "passed": true,
+    "oldRows": 11,
+    "newRows": 11,
+    "errors": []
+  }
+]

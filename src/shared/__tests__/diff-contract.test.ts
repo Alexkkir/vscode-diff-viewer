@@ -167,7 +167,7 @@ describe("synthetic visual pairing contract", () => {
     },
   );
 
-  it.each(diffContractCorpus.filter(({ files }) => files.some((file) => file.pairs || file.removed)))(
+  it.each(diffContractCorpus.filter(({ files }) => files.some((file) => file.pairs || file.removed || file.added)))(
     "keeps intended review rows adjacent: $name",
     ({ patch, files: expected }) => {
       for (const matching of ["lines", "words"] as const) {
@@ -193,6 +193,13 @@ describe("synthetic visual pairing contract", () => {
             const oldRow = left.findIndex((row) => number(row) === String(oldNumber));
             expect(oldRow).toBeGreaterThanOrEqual(0);
             expect(number(right[oldRow])).toBe("");
+            expect(right[oldRow].querySelector(".d2h-code-line-ctn")?.textContent ?? "").toBe("");
+          }
+          for (const newNumber of file.added ?? []) {
+            const newRow = right.findIndex((row) => number(row) === String(newNumber));
+            expect(newRow).toBeGreaterThanOrEqual(0);
+            expect(number(left[newRow])).toBe("");
+            expect(left[newRow].querySelector(".d2h-code-line-ctn")?.textContent ?? "").toBe("");
           }
         });
       }

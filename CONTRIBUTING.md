@@ -21,6 +21,7 @@ The repository declares `engines.node = 22.x` in `package.json`. Using Node 22 l
 ```bash
 npm run build:dev
 npm test
+npm run test:matching
 npm run test:coverage:ci
 npm run test:integration:desktop
 npm run smoke:web
@@ -29,6 +30,18 @@ npm run lint
 npm run format:check
 npx tsc --noEmit -p tsconfig.json
 ```
+
+## Diff Matching Regressions
+
+```bash
+npm run test:matching
+```
+
+This focused suite runs the real parser, hunk realignment and both renderers. The conversation corpus in `src/shared/testing/conversation-matching-corpus.ts` combines previously reported problems: translated arguments with newly inserted keys, reordered option-name components, imports with removed annotations, guards and returns, and decorated or duplicated classes.
+
+Expected pairs and one-sided rows are handwritten source line numbers, not results copied from the matcher. Each story also runs in reverse and with leading context and different old/new line offsets. Every matching mode must preserve exact source text, ordering and numbering. `lines` and `words` additionally check visual pairs and isolated additions/deletions; `none` deliberately retains positional behavior. In unified output, adjacent rows count as a replacement only when both carry the renderer's change marker. Split output checks that the missing counterpart contains neither a number nor text. Separate verbatim patches check context/hunk barriers.
+
+Add small synthetic examples with explicit `pairs`, `added` and `removed` expectations. Keep private source files and internal paths out of fixtures. Preserve hunk boundaries in tests that exercise those boundaries instead of rebuilding them as one replacement. The focused suite is also part of ordinary `npm test` and the existing CI test jobs.
 
 ## Web Smoke Test
 

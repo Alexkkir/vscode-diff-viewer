@@ -184,13 +184,22 @@ function matchRange(
           : Math.max(lengths[(i + 1) * width + j], lengths[i * width + j + 1]);
     }
   }
+  const lastNewPositions = new Map<string, number>();
+  for (let j = 0; j < newLength; j++) lastNewPositions.set(next[newStart + j].key, j);
   for (let i = 0, j = 0; i < oldLength && j < newLength; ) {
     if (old[oldStart + i].key === next[newStart + j].key) {
       result.push([oldStart + i++, newStart + j++]);
-    } else if (lengths[i * width + j + 1] >= lengths[(i + 1) * width + j]) {
-      // Ties insert on the new side first, retaining the earliest old copy.
-      j++;
-    } else i++;
+    } else {
+      const deletion = lengths[(i + 1) * width + j];
+      const insertion = lengths[i * width + j + 1];
+      // Preserve the earliest old copy only while this meaningful old line
+      // can still match. An unmatched removed prefix or a zero-weight blank
+      // must not make us skip an earlier surviving copy on the new side.
+      // Whitespace is restored separately after the meaningful matches.
+      const canRetainOld = !!old[oldStart + i].text.trim() && (lastNewPositions.get(old[oldStart + i].key) ?? -1) >= j;
+      if (insertion > deletion || (insertion === deletion && canRetainOld)) j++;
+      else i++;
+    }
   }
   return true;
 }
@@ -256,10 +265,23 @@ function realignBlock(block: DiffBlock, eof: DiffFileWithMetadata["noNewline"], 
     }
   }
   // A unique moved line can become a patience anchor at the expense of a
-  // larger repeated body that the patch already aligned correctly. Both
-  // projections are fixed, so more rendered lines means fewer exact matches.
-  // Keep the supplied alignment whenever recomputing would invent more edits.
-  if (lines.length > block.lines.length) return block;
+  // larger repeated body that the patch already aligned correctly. Extra
+  // whitespace edits are allowed only when the same meaningful context text
+  // remains matched: one blank must not pin that body to a later duplicate.
+  if (lines.length > block.lines.length) {
+    const retained = new Map<string, number>();
+    for (const line of lines)
+      if (line.type === LineType.CONTEXT && line.content.slice(1).trim())
+        retained.set(line.content, (retained.get(line.content) ?? 0) + 1);
+    for (const line of block.lines) {
+      if (line.type !== LineType.CONTEXT || !line.content.slice(1).trim()) continue;
+      const available = retained.get(line.content) ?? 0;
+      if (!available) return block;
+      if (available === 1) retained.delete(line.content);
+      else retained.set(line.content, available - 1);
+    }
+    if (retained.size) return block;
+  }
   if (
     lines.length === block.lines.length &&
     lines.every((line, index) => {

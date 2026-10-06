@@ -1,3 +1,13 @@
+# Latest local build: 1.8.22
+
+Install `diff-viewer-1.8.22-matching-regressions.vsix`, then run **Developer: Reload Window**.
+
+Adds a matching regression corpus based on the review stories: 11 compound examples in both directions with extra context and distinct old/new offsets, plus two boundary cases (46 scenarios). The suite checks exact sources and visual pairing through the real parser, hunk alignment and both renderers. `npm run test:matching` runs the focused suite; ordinary tests and CI include it too.
+
+The new oracles exposed two real bugs, now fixed: a copied comment could outweigh the surviving class's declarations, and removing documentation could associate the original constructor with a later duplicate in the reverse diff. The fixes preserve isolated commenting/uncommenting and existing meaningful context when realigning whitespace. See [report](matching-regressions-1.8.22.md).
+
+Validation: all 448 focused matching checks, 1044 total tests, TypeScript, ESLint, formatting, production build and 76 browser scenarios passed. Build with the commands below using output version 1.8.22.
+
 # Latest local build: 1.8.21
 
 Install `diff-viewer-1.8.21-list-alignment.vsix`, then run **Developer: Reload Window**.

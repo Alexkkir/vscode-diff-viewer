@@ -14,6 +14,8 @@ export interface ExpectedDiffFile {
   pairs?: Array<[number, number]>;
   /** Old rows that must face an empty cell, such as a removed class. */
   removed?: number[];
+  /** New rows that must face an empty cell, such as an additional argument. */
+  added?: number[];
 }
 
 export interface DiffContractCase {
@@ -38,6 +40,7 @@ export function replacementCase(
     newEof?: boolean;
     pairs?: Array<[number, number]>;
     removed?: number[];
+    added?: number[];
   } = {},
 ): DiffContractCase {
   const path = options.path ?? `${name}.py`;
@@ -68,6 +71,7 @@ export function replacementCase(
         ...(Object.keys(noNewline).length ? { noNewline } : {}),
         pairs: options.pairs,
         removed: options.removed,
+        added: options.added,
       },
     ],
   };
