@@ -4,6 +4,7 @@ import { ColorSchemeType } from "diff2html/lib/types";
 import * as vscode from "vscode";
 import { AppConfig } from "../configuration";
 import { ViewedStateStore } from "../viewed-state";
+import type { WebviewAction } from "../../webview/message/api";
 
 export interface DiffViewerProviderArgs {
   extensionContext: vscode.ExtensionContext;
@@ -19,6 +20,7 @@ export interface WebviewContext {
   shellInitialized: boolean;
   shellGeneration: number;
   webviewReady: boolean;
+  pendingWebviewActions?: WebviewAction[];
   lastRenderedData?: string;
   lastRenderedId?: number;
   lastRenderedSyntax?: string;

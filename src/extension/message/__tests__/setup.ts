@@ -9,6 +9,7 @@ jest.mock(
     commands: {
       executeCommand: jest.fn(),
     },
+    env: { clipboard: { writeText: jest.fn(async () => undefined) } },
     workspace: {
       getConfiguration: jest.fn(() => ({ get: (_key: string, fallback: unknown) => fallback })),
       getWorkspaceFolder: jest.fn(),

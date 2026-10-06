@@ -173,6 +173,21 @@ export class HorizontalScrollbarController {
     this.dragPointerId = undefined;
   };
 
+  private readonly onScrollbarWheel = (event: WheelEvent): void => {
+    if (!this.metrics) return;
+    const delta = event.deltaX || (event.shiftKey ? event.deltaY : 0);
+    if (!delta) return;
+    const scale =
+      event.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? 16
+        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+          ? this.metrics.maxClientWidth
+          : 1;
+    const maximum = Math.max(0, this.metrics.maxScrollWidth - this.metrics.maxClientWidth);
+    event.preventDefault();
+    this.applyScrollLeft(Math.max(0, Math.min(maximum, this.metrics.scrollLeft + delta * scale)));
+  };
+
   private registerScrollbarHandlers(): void {
     if (this.horizontalScrollbarHandlersRegistered) {
       return;
@@ -186,6 +201,7 @@ export class HorizontalScrollbarController {
 
     scrollbar.addEventListener("scroll", this.onScrollbarScrolled, { passive: true });
     scrollbar.addEventListener("pointerdown", this.onScrollbarPointerDown);
+    scrollbar.addEventListener("wheel", this.onScrollbarWheel, { passive: false });
     thumb.addEventListener("pointermove", this.onScrollbarPointerMove);
     thumb.addEventListener("pointerup", this.onScrollbarPointerUp);
     thumb.addEventListener("pointercancel", this.onScrollbarPointerUp);

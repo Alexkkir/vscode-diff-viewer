@@ -128,6 +128,10 @@ export class FindController {
       });
     }
     this.input = this.panel.querySelector<HTMLInputElement>('input[type="text"]')!;
+    this.input.dataset.vscodeContext = JSON.stringify({
+      webviewSection: "findInput",
+      preventDefaultContextMenuItems: false,
+    });
     this.matchCase = this.panel.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
     this.count = this.panel.querySelector("span")!;
     const update = () => {

@@ -54,6 +54,12 @@ export class MessageToExtensionHandlerImpl extends GenericMessageHandlerImpl imp
     await vscode.commands.executeCommand("vscode.open", uri, showOptions);
   }
 
+  public async copyText(payload: { text: string }): Promise<void> {
+    if (typeof payload?.text === "string" && payload.text.length > 0) {
+      await vscode.env.clipboard.writeText(payload.text);
+    }
+  }
+
   public toggleFileViewed(payload: { path: string; viewedSha1: string | null }): void {
     this.args.viewedStateStore.toggleViewedState(payload);
   }

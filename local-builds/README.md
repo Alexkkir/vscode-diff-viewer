@@ -1,3 +1,15 @@
+# Latest local build: 1.8.15
+
+Install `diff-viewer-1.8.15-ui-contracts.vsix`, then run **Developer: Reload Window**.
+
+Names are selectable without accidental navigation. **Copy path** and native menu actions copy exact paths, basenames or selected source text using the system clipboard. Read-only menus omit Cut/Paste; Find retains its editing menu. Open source with Ctrl/Cmd+click, Enter or Open file. Horizontal wheel and Shift+wheel work over the global scrollbar.
+
+Early toolbar actions and actions during asynchronous redraw are replayed on the correct rendered view. A Viewed click during refresh survives for unchanged file contents, without falsely marking new contents reviewed. Isolated and fully rewritten statements align by compatible role/indentation while preserving source text and ordered anchors. Combined merge patches open as exact original text because the viewer has only two source columns.
+
+The [validation report](ui-contract-1.8.15.md) records the source corpus and the actual desktop click/keyboard/menu/clipboard checks. Build with the commands below using output version 1.8.15. For the desktop UI suite, build production then run `DIFF_UI_AUDIT_PHASE=final node scripts/test-ui-controls-desktop.mjs`; it uses an isolated profile and restores the clipboard. The installed executable can be set with `VSCODE_EXECUTABLE`.
+
+Validation: 732 tests passed in 43 suites; 67 source fixtures were checked in six rendering configurations. The full actual VS Code UI run passed all 28 groups without browser errors. Bundle hashes in the final report are verified against the packaged VSIX.
+
 # Latest local build: 1.8.14
 
 Install `diff-viewer-1.8.14-review-fixes.vsix`, then run **Developer: Reload Window**.

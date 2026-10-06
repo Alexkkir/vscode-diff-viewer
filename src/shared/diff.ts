@@ -9,6 +9,14 @@ export interface DiffFileWithMetadata extends DiffFile {
 const NO_NEWLINE = "\\ No newline at end of file";
 const ARC_REVISION = /[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i;
 
+/** A combined merge has multiple old sources that a two-source renderer cannot represent. */
+export function hasCombinedDiff(text: string): boolean {
+  return (
+    /^diff --(?:cc|combined)[ \t]+\S/m.test(text) ||
+    /^(@{3,}) (?:-\d+(?:,\d+)? )+\+\d+(?:,\d+)? \1(?:[ \t].*)?\r?$/m.test(text)
+  );
+}
+
 function decodeGitPath(quoted: string): string {
   const escapes: Record<string, string> = {
     a: "\u0007",

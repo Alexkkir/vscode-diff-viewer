@@ -40,6 +40,7 @@ jest.mock("vscode", () => ({
     registerCommand: jest.fn(),
     executeCommand: jest.fn(),
   },
+  env: { clipboard: { writeText: jest.fn() } },
   workspace: {
     getConfiguration: jest.fn(() => ({ get: () => false })),
     onDidChangeTextDocument: jest.fn(),
@@ -268,6 +269,9 @@ describe("DiffViewerProvider", () => {
         "diffviewer.expandAll",
         "diffviewer.collapseAll",
         "diffviewer.showRaw",
+        "diffviewer.copyFilePath",
+        "diffviewer.copyFileName",
+        "diffviewer.copySelection",
         "diffviewer.openCollapsed",
         "diffviewer._captureActiveTestState",
         "diffviewer._runActiveTestAction",
@@ -293,6 +297,29 @@ describe("DiffViewerProvider", () => {
       command();
 
       expect(mockSetOutputFormatConfig).toHaveBeenCalledWith(expectedConfig, undefined);
+    });
+
+    it.each([
+      ["copyFilePath", "diffviewerFilePath", "src/file name.ts"],
+      ["copyFileName", "diffviewerFileName", "file name.ts"],
+    ])("copies the exact %s context value", (name, key, value) => {
+      DiffViewerProvider.registerContributions({
+        extensionContext: mockExtensionContext,
+        webviewPath: mockWebviewPath,
+      });
+      const command = mockRegisterCommand.mock.calls.find(([id]) => id === `diffviewer.${name}`)?.[1];
+      command({ [key]: value });
+      expect(vscode.env.clipboard.writeText).toHaveBeenCalledWith(value);
+    });
+
+    it.each(["copyFilePath", "copyFileName"])("ignores absent or malformed %s context", (name) => {
+      DiffViewerProvider.registerContributions({
+        extensionContext: mockExtensionContext,
+        webviewPath: mockWebviewPath,
+      });
+      const command = mockRegisterCommand.mock.calls.find(([id]) => id === `diffviewer.${name}`)?.[1];
+      for (const context of [undefined, {}, { diffviewerFilePath: 1, diffviewerFileName: 1 }]) command(context);
+      expect(vscode.env.clipboard.writeText).not.toHaveBeenCalled();
     });
 
     it.each([
@@ -356,6 +383,8 @@ describe("DiffViewerProvider", () => {
         isDisposed: false,
         renderRequestId: 0,
         shellInitialized: true,
+        webviewReady: true,
+        lastRenderedId: 1,
       });
       command();
 

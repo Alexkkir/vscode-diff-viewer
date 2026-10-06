@@ -48,13 +48,15 @@ If you prefer a persistent horizontal scrollbar for wide side-by-side diffs, ena
 
 `DiffViewer: Arc Mode` (`diffviewer.arcMode`) is enabled by default. For a diff stored anywhere inside `arcadia` or a numbered directory such as `5arcadia`, root-relative filenames are resolved inside that containing mount. For example, `/home/me/5arcadia/ml/project/review/diff.diff` links `ml/project/demo.py` to `/home/me/5arcadia/ml/project/demo.py`. Remote URI schemes and hosts are preserved.
 
-The filename in each available file header is a link (mouse click or Enter); revision labels such as `(working tree)` are removed when locating its source. A missing file is not substituted from another Arcadia. If the diff is outside an Arcadia directory, normal workspace path resolution applies. Turning Arc mode off restores normal workspace path resolution everywhere.
+File names can be selected and copied without leaving the diff. Use **Ctrl/Cmd+click**, **Enter**, or **Open file** to open an available source file. **Copy path** copies the displayed path; the header's context menu also offers **Copy file name** and **Copy file path**. Revision labels such as `(working tree)` are removed when locating its source. A missing file is not substituted from another Arcadia. If the diff is outside an Arcadia directory, normal workspace path resolution applies. Turning Arc mode off restores normal workspace path resolution everywhere.
 
 ### Patch alignment and end-of-file changes
 
 Related changed lines are matched in order as a whole when `diffviewer.matching` is `lines` or `words`, so a moved comment or URL does not displace an otherwise matching decorator and class. Within each available hunk, exact context is realigned to prefer the first coherent copy of repeated code. Blank separators are preserved but do not drive the choice between repeated code blocks. This avoids showing a surviving constructor as deleted just because the patch matched it to a later removed class. Work is bounded; missing context is never fetched or invented, and the original patch file remains unchanged.
 
 An established code match can keep nearby rewritten lines together when they retain compatible indentation and shared identifiers. For example, a rewritten condition stays beside its corresponding early return instead of gaining a separate empty row on each side. This does not use comments or literals as anchors or force unrelated blocks to match.
+
+Equal-sized replacement gaps can also compare statements with the same role and indentation, including fully renamed assignments, calls and conditions. Existing ordered anchors remain fixed. Combined merge patches have more than two versions and open as their original text with an explanation instead of being reduced to an inaccurate two-column view.
 
 Python lines with unchanged code stay paired when a trailing comment is added or removed. A multiline `from ... import (...)` rewritten as one line aligns with its original import header. Quoted hashes remain part of strings; ambiguous f-strings and multiline strings retain full-text matching. Fixed line-number columns use an opaque background so changed code cannot show through them during horizontal scrolling.
 
@@ -69,6 +71,8 @@ Native lexical colors appear with the diff. Language-server colors arrive separa
 ### Find in a diff
 
 Press `Ctrl+F` (`Cmd+F` on macOS) or use the search button in the editor title bar. Search highlights literal matches in visible code and file names, including text split across syntax-highlight spans. Use `Enter` / `Shift+Enter` for the next / previous match, `Aa` to match case, and `Escape` to close. Expand collapsed files to include their code in the search.
+
+The read-only diff context menu offers copying without Cut/Paste. Cut/Paste remain available in the editable Find field. Copying selected text uses the selection captured before the native context menu takes focus.
 
 ## Commands ⌘
 

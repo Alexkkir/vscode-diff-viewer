@@ -2,7 +2,7 @@
   "name": "vscode-diff-viewer",
   "displayName": "Diff Viewer (Local syntax toggle)",
   "description": "Visualize git diff files in VS Code",
-  "version": "1.8.14",
+  "version": "1.8.15",
   "license": "MIT",
   "publisher": "caponetto",
   "homepage": "https://github.com/caponetto/vscode-diff-viewer",
@@ -79,6 +79,19 @@
         "command": "diffviewer.find",
         "title": "Find in diff",
         "icon": "$(search)"
+      },
+      {
+        "command": "diffviewer.copyFileName",
+        "title": "Copy file name"
+      },
+      {
+        "command": "diffviewer.copyFilePath",
+        "title": "Copy file path"
+      },
+      {
+        "command": "diffviewer.copySelection",
+        "title": "Copy selected text",
+        "enablement": "diffviewerHasSelection"
       }
     ],
     "customEditors": [
@@ -207,6 +220,18 @@
         {
           "command": "diffviewer.openCollapsed",
           "when": "false"
+        },
+        {
+          "command": "diffviewer.copyFileName",
+          "when": "false"
+        },
+        {
+          "command": "diffviewer.copyFilePath",
+          "when": "false"
+        },
+        {
+          "command": "diffviewer.copySelection",
+          "when": "false"
         }
       ],
       "explorer/context": [
@@ -246,6 +271,23 @@
           "command": "diffviewer.find",
           "group": "navigation@2",
           "when": "activeCustomEditorId == 'diffViewer'"
+        }
+      ],
+      "webview/context": [
+        {
+          "command": "diffviewer.copyFileName",
+          "when": "webviewId == 'diffViewer' && webviewSection == 'fileHeader'",
+          "group": "1_copy@1"
+        },
+        {
+          "command": "diffviewer.copyFilePath",
+          "when": "webviewId == 'diffViewer' && webviewSection == 'fileHeader'",
+          "group": "1_copy@2"
+        },
+        {
+          "command": "diffviewer.copySelection",
+          "when": "webviewId == 'diffViewer' && webviewSection != 'findInput'",
+          "group": "1_copy@3"
         }
       ]
     },

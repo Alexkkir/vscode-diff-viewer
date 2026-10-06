@@ -271,6 +271,30 @@ describe("MessageToWebviewHandlerImpl", () => {
     }
   });
 
+  it("copies the context-menu selection even after native menu focus clears the DOM selection", async () => {
+    await handler.updateWebview(
+      createUpdatePayload({
+        diffFiles: [createMockDiffFile({ oldName: "one.ts", newName: "one.ts" })],
+        accessiblePaths: ["one.ts"],
+      }),
+    );
+    const line = document.querySelector<HTMLElement>(".d2h-code-line")!;
+    const selection = globalThis.getSelection()!;
+    const range = document.createRange();
+    range.selectNodeContents(line);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    const text = selection.toString();
+    line.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true, button: 2 }));
+    selection.removeAllRanges();
+    line.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true }));
+    handler.performWebviewAction({ action: "copySelection" });
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({ kind: "copyText", payload: { text } });
+    postMessageToExtensionFn.mockClear();
+    handler.performWebviewAction({ action: "copySelection" });
+    expect(postMessageToExtensionFn).not.toHaveBeenCalled();
+  });
+
   it("queues early semantic colors until their diff is ready and discards superseded colors", async () => {
     const update = jest.spyOn(SyntaxHighlightingController.prototype, "updateNative");
     try {
@@ -425,7 +449,13 @@ describe("MessageToWebviewHandlerImpl", () => {
     );
 
     const actionButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".diff-viewer-file-action-button"));
-    expect(actionButtons.map((button) => button.textContent)).toEqual(["Open old", "Open new", "Open file"]);
+    expect(actionButtons.map((button) => button.textContent)).toEqual([
+      "Open old",
+      "Open new",
+      "Copy path",
+      "Open file",
+      "Copy path",
+    ]);
 
     const firstHeader = document.querySelector<HTMLElement>(".d2h-file-header");
     const firstActions = firstHeader?.querySelector<HTMLElement>(".diff-viewer-file-actions");
@@ -573,7 +603,7 @@ describe("MessageToWebviewHandlerImpl", () => {
     );
 
     const actionButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".diff-viewer-file-action-button"));
-    expect(actionButtons.map((button) => button.textContent)).toEqual(["Open new"]);
+    expect(actionButtons.map((button) => button.textContent)).toEqual(["Open new", "Copy path", "Copy path"]);
   });
 
   it("uses Diff2HtmlUI to draw the diff", async () => {
@@ -832,6 +862,8 @@ describe("MessageToWebviewHandlerImpl", () => {
     const lineNumber = document.querySelectorAll(".d2h-code-side-linenumber")[1] as HTMLElement;
 
     fileLink.click();
+    expect(postMessageToExtensionFn).not.toHaveBeenCalled();
+    fileLink.dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
     lineNumber.click();
 
     expect(postMessageToExtensionFn).toHaveBeenCalledWith({
@@ -856,11 +888,15 @@ describe("MessageToWebviewHandlerImpl", () => {
     expect(fileLink.classList.contains("diff-file-link")).toBe(true);
     expect(fileLink.getAttribute("role")).toBe("link");
     expect(fileLink.tabIndex).toBe(0);
-    expect(fileLink.title).toBe("src/new name.ts");
+    expect(fileLink.title).toContain("src/new name.ts");
     expect(fileLink.getAttribute("aria-label")).toBe("Open file: src/new name.ts");
     expect(fileLink.innerHTML).toBe("<span>src/new name.ts</span>");
 
     fileLink.querySelector<HTMLElement>("span")!.click();
+    expect(postMessageToExtensionFn).not.toHaveBeenCalled();
+    fileLink
+      .querySelector<HTMLElement>("span")!
+      .dispatchEvent(new MouseEvent("click", { bubbles: true, metaKey: true }));
     const enter = new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true });
     fileLink.dispatchEvent(enter);
     expect(enter.defaultPrevented).toBe(true);

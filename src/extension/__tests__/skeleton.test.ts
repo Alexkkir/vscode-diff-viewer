@@ -51,7 +51,8 @@ describe("Skeleton Builder", () => {
 
       expect(html).toContain("<!doctype html>");
       expect(html).toContain('<html lang="en">');
-      expect(html).toContain('<body data-shell-generation="3">');
+      expect(html).toContain('data-shell-generation="3"');
+      expect(html).toContain("preventDefaultContextMenuItems");
       expect(html).toContain("</html>");
     });
 
@@ -196,7 +197,7 @@ describe("Skeleton Builder", () => {
       // Check that the HTML structure is properly nested
       const headStart = html.indexOf("<head>");
       const headEnd = html.indexOf("</head>");
-      const bodyStart = html.indexOf("<body ");
+      const bodyStart = html.indexOf("<body");
       const bodyEnd = html.indexOf("</body>");
 
       expect(headStart).toBeLessThan(headEnd);

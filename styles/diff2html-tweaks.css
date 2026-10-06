@@ -31,12 +31,14 @@ ins {
 }
 
 .d2h-file-name {
-  cursor: default;
+  cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 .d2h-file-name.diff-file-link {
   color: var(--vscode-textLink-foreground, #3794ff);
-  cursor: pointer;
+  cursor: text;
 }
 
 .d2h-file-name.diff-file-link:hover,

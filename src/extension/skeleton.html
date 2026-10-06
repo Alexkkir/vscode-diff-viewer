@@ -13,7 +13,10 @@
     <link id="highlight-light-stylesheet" rel="stylesheet" href="{{LIGHT_HIGHLIGHT_CSS_URI}}" />
     <link id="highlight-dark-stylesheet" rel="stylesheet" href="{{DARK_HIGHLIGHT_CSS_URI}}" disabled />
   </head>
-  <body data-shell-generation="{{SHELL_GENERATION}}">
+  <body
+    data-shell-generation="{{SHELL_GENERATION}}"
+    data-vscode-context='{"preventDefaultContextMenuItems":true,"webviewSection":"diff","diffviewerHasSelection":false}'
+  >
     <div id="loading-container">
       <span>Loading...</span>
     </div>

@@ -9,6 +9,27 @@ const MAX_CHARACTER_COMPARISONS = 5_000_000;
 const MIN_SIMILARITY = 0.5;
 const MIN_NEIGHBOR_SIMILARITY = 0.3;
 const CONTINUITY_BONUS = 0.5;
+const CODE_KEYWORDS = new Set(
+  (
+    "and as assert async await break case catch class const continue def default delete do else elif enum except " +
+    "export false False finally for from function if import in instanceof interface is lambda let match new None " +
+    "not null of or pass private protected public raise return static struct super switch this throw true True " +
+    "try type typeof undefined var void while with yield"
+  ).split(" "),
+);
+const STATEMENT_KEYWORDS = new Set(
+  (
+    "assert await break case catch class continue def do else elif enum except finally for from function if import " +
+    "interface match pass raise return struct switch throw try type while with yield"
+  ).split(" "),
+);
+const IDENTIFIER = "[\\p{L}_$][\\p{L}\\p{N}_$]*";
+const MEMBER = `${IDENTIFIER}(?:\\s*(?:\\.\\s*${IDENTIFIER}|\\[[^\\]\\r\\n]*\\]))*`;
+const ASSIGNMENT = new RegExp(
+  `^(?:(?:const|let|var|final|val)\\s+)?${MEMBER}\\s*(?::[^=]+)?\\s*(?:\\*\\*|//|<<|>>|[-+*/%&|^])?=(?!=)`,
+  "u",
+);
+const CALL = new RegExp(`^(?:new\\s+)?${MEMBER}\\s*\\(`, "u");
 
 type LinePair = [number, number];
 
@@ -120,9 +141,17 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
     }
   }
   anchors.reverse();
-  const pairs = anchors.length
-    ? extendCodeAnchors(anchors, oldLines.map(codeShape), newLines.map(codeShape), similarities, width)
-    : anchors;
+  const oldShapes = oldLines.map(codeShape);
+  const newShapes = newLines.map(codeShape);
+  const pairs = pairCoherentReplacement(
+    extendCodeAnchors(anchors, oldShapes, newShapes, similarities, width),
+    oldLines,
+    newLines,
+    oldShapes,
+    newShapes,
+    similarities,
+    width,
+  );
 
   const result: AlignedLineGroup[] = [];
   oldIndex = 0;
@@ -137,6 +166,73 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   if (oldIndex < oldLines.length) result.push([oldLines.slice(oldIndex), []]);
   if (newIndex < newLines.length) result.push([[], newLines.slice(newIndex)]);
   return result;
+}
+
+/**
+ * Equal-sized gaps are useful positional comparisons when each row has the
+ * same statement role and indentation, even if all operand names changed.
+ * Existing anchors remain fixed. A shared identifier also permits related
+ * role changes, without letting comments or literals establish that relation.
+ */
+function pairCoherentReplacement(
+  anchors: LinePair[],
+  oldLines: DiffLine[],
+  newLines: DiffLine[],
+  oldShapes: Array<CodeShape | undefined>,
+  newShapes: Array<CodeShape | undefined>,
+  similarities: Float64Array,
+  width: number,
+): LinePair[] {
+  const canPair = (oldIndex: number, newIndex: number) => {
+    const old = oldShapes[oldIndex];
+    const next = newShapes[newIndex];
+    if (!old || !next || old.indentation !== next.indentation) return false;
+    const oldRole = statementRole(oldLines[oldIndex]);
+    const newRole = statementRole(newLines[newIndex]);
+    if (oldRole && oldRole === newRole) return true;
+    if ([oldRole, newRole].some((role) => role === "from" || role === "import")) return false;
+    // Without a tokenizer's state, strings and comments cannot provide reliable
+    // identifier evidence for a replacement between different statement roles.
+    const text = oldLines[oldIndex].content.slice(1) + "\n" + newLines[newIndex].content.slice(1);
+    if (/["'`#]|\/\/|\/\*/.test(text)) return false;
+    if (similarities[(oldIndex + 1) * width + newIndex + 1] < MIN_NEIGHBOR_SIMILARITY) return false;
+    if (![...old.identifiers].some((identifier) => !CODE_KEYWORDS.has(identifier) && next.identifiers.has(identifier)))
+      return false;
+    // Bare prose is not evidence of a code replacement. Both rows must have
+    // code punctuation; punctuation-only rows already failed codeShape above.
+    return [oldLines[oldIndex], newLines[newIndex]].every((line) => /[()[\]=:;{}]/.test(line.content));
+  };
+  const pairs: LinePair[] = [];
+  let oldStart = 0;
+  let newStart = 0;
+  for (const [oldEnd, newEnd] of [...anchors, [oldLines.length, newLines.length]]) {
+    if (oldEnd - oldStart === newEnd - newStart) {
+      const gap: LinePair[] = [];
+      for (let offset = 0; offset < oldEnd - oldStart; offset++) {
+        if (!canPair(oldStart + offset, newStart + offset)) break;
+        gap.push([oldStart + offset, newStart + offset]);
+      }
+      if (gap.length === oldEnd - oldStart) pairs.push(...gap);
+    }
+    if (oldEnd < oldLines.length) pairs.push([oldEnd, newEnd]);
+    oldStart = oldEnd + 1;
+    newStart = newEnd + 1;
+  }
+  return pairs;
+}
+
+function statementRole(line: DiffLine): string | undefined {
+  const text = line.content
+    .slice(1)
+    .trim()
+    .replace(/^(?:(?:export|default|async|public|private|protected|static)\s+)+/, "");
+  const keyword = /^[\p{L}_$][\p{L}\p{N}_$]*/u.exec(text)?.[0];
+  if (keyword && STATEMENT_KEYWORDS.has(keyword)) return keyword;
+  // Only the statement's prefix is classified; operand strings and comments
+  // remain untouched for inline highlighting and exact source reconstruction.
+  if (ASSIGNMENT.test(text)) return "assignment";
+  if (CALL.test(text)) return "call";
+  return undefined;
 }
 
 function codeShape(line: DiffLine): CodeShape | undefined {

@@ -5,6 +5,7 @@ export interface MessageToExtensionCommandApi {
   ready: (payload: { shellGeneration: number }) => void;
   focused: (payload: { shellGeneration: number }) => void;
   openFile: (payload: { path: string; line?: number }) => Promise<void>;
+  copyText: (payload: { text: string }) => Promise<void>;
   toggleFileViewed: (payload: { path: string; viewedSha1: string | null }) => void;
   requestWebviewAction: (payload: { action: WebviewAction }) => void;
 }
@@ -15,6 +16,7 @@ export const MESSAGE_TO_EXTENSION_COMMAND_KINDS = [
   "ready",
   "focused",
   "openFile",
+  "copyText",
   "toggleFileViewed",
   "requestWebviewAction",
 ] as const satisfies readonly (keyof MessageToExtensionCommandApi)[];

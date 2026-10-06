@@ -1,6 +1,6 @@
 import { highlightDiffProgressively } from "./textmate";
 import { diffReadDiagnostics, readDiffText, watchDiffFile } from "./document";
-import { parseDiff } from "../../shared/diff";
+import { hasCombinedDiff, parseDiff } from "../../shared/diff";
 import { realignDiffHunks } from "../../shared/hunk-alignment";
 import * as vscode from "vscode";
 import { isMessageToExtension, MessageToExtensionHandler, MessageToWebview } from "../../shared/message";
@@ -82,6 +82,15 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       vscode.commands.registerCommand("diffviewer.expandAll", () => provider.performWebviewAction("expandAll")),
       vscode.commands.registerCommand("diffviewer.collapseAll", () => provider.performWebviewAction("collapseAll")),
       vscode.commands.registerCommand("diffviewer.showRaw", () => provider.performWebviewAction("showRaw")),
+      vscode.commands.registerCommand("diffviewer.copyFilePath", (context?: { diffviewerFilePath?: unknown }) => {
+        const value = context?.diffviewerFilePath;
+        if (typeof value === "string" && value) return vscode.env.clipboard.writeText(value);
+      }),
+      vscode.commands.registerCommand("diffviewer.copyFileName", (context?: { diffviewerFileName?: unknown }) => {
+        const value = context?.diffviewerFileName;
+        if (typeof value === "string" && value) return vscode.env.clipboard.writeText(value);
+      }),
+      vscode.commands.registerCommand("diffviewer.copySelection", () => provider.performWebviewAction("copySelection")),
       vscode.commands.registerCommand("diffviewer.openCollapsed", async (file) => {
         if (file) {
           const collapsedUri = file.with({ query: "collapsed" });
@@ -310,7 +319,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     }
   }
 
-  private updateWebview(webviewContext: WebviewContext, collapseAll = false): void {
+  private updateWebview(webviewContext: WebviewContext, collapseAll?: boolean): void {
     const requestId = ++webviewContext.renderRequestId;
     if (webviewContext.pendingRender) {
       clearTimeout(webviewContext.pendingRender);
@@ -326,19 +335,20 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       webviewContext,
     });
 
+    // Focus, settings and file notifications can arrive while the initial
+    // document is still loading. Keep its requested opening mode until rendered.
+    const requestedCollapseAll = collapseAll ?? webviewContext.pendingReadyRender?.collapseAll ?? false;
     if (!webviewContext.webviewReady) {
-      webviewContext.pendingReadyRender = { collapseAll };
+      webviewContext.pendingReadyRender = { collapseAll: requestedCollapseAll };
       return;
     }
-
-    webviewContext.pendingReadyRender = undefined;
 
     webviewContext.pendingRender = setTimeout(() => {
       void this.renderWebview({
         webviewContext,
         requestId,
         config,
-        collapseAll,
+        collapseAll: requestedCollapseAll,
       });
     }, 20);
   }
@@ -368,6 +378,10 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         context.lastRenderedSyntax = JSON.stringify(renderedData.syntax);
         this.postUpdateWebviewMessage({ webviewContext: context, renderedData });
         context.lastRenderedData = serialized;
+        context.pendingReadyRender = undefined;
+        const pendingActions = context.pendingWebviewActions ?? [];
+        context.pendingWebviewActions = undefined;
+        for (const action of pendingActions) this.performWebviewAction(action, context);
       }
       // Slow language servers enrich the existing view; they never hold up content
       // or replace a newer diff, and no full redraw is needed just to change colors.
@@ -404,6 +418,10 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
   > {
     let text = await readDiffText(args.webviewContext.document);
     if (!isActiveRenderRequest(args)) return;
+    if (hasCombinedDiff(text)) {
+      this.handleCombinedDiff(args.webviewContext);
+      return;
+    }
     let diffFiles: ReturnType<typeof parseDiff> | undefined;
     try {
       diffFiles = parseDiff(text, args.config.diff2html);
@@ -419,6 +437,10 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       if (!isActiveRenderRequest(args)) return;
       text = await readDiffText(args.webviewContext.document);
       if (!isActiveRenderRequest(args)) return;
+      if (hasCombinedDiff(text)) {
+        this.handleCombinedDiff(args.webviewContext);
+        return;
+      }
       diffFiles = parseDiff(text, args.config.diff2html);
     }
     if (!diffFiles) return;
@@ -487,6 +509,14 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     this.openDocumentWithDefaultEditor(webviewContext.document.uri);
   }
 
+  private handleCombinedDiff(webviewContext: WebviewContext): void {
+    webviewContext.panel.dispose();
+    vscode.window.showWarningMessage(
+      "Combined merge diffs contain multiple parent versions and cannot be shown correctly in the two-column viewer. Opened the original patch as text.",
+    );
+    this.openDocumentWithDefaultEditor(webviewContext.document.uri);
+  }
+
   private handleWebviewRenderFailure(webviewContext: WebviewContext): void {
     webviewContext.panel.dispose();
     vscode.window.showWarningMessage(
@@ -520,7 +550,6 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
 
     const pendingReadyRender = webviewContext.pendingReadyRender;
     if (pendingReadyRender) {
-      webviewContext.pendingReadyRender = undefined;
       this.updateWebview(webviewContext, pendingReadyRender.collapseAll);
       return;
     }
@@ -547,7 +576,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
   }
 
   private performWebviewAction(action: WebviewAction, targetContext = this.getTargetWebviewContext()): void {
-    if (!targetContext) {
+    if (!targetContext || targetContext.isDisposed) {
       return;
     }
 
@@ -558,6 +587,13 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
 
     if (action === "expandAll") {
       targetContext.viewedStateStore.clearViewedState();
+    }
+
+    if (!targetContext.webviewReady || targetContext.lastRenderedId === undefined) {
+      // The iframe drops messages before ready, and has no file controls until
+      // its first update. Replay commands after that update has been posted.
+      (targetContext.pendingWebviewActions ??= []).push(action);
+      return;
     }
 
     this.postMessageToWebviewWrapper({

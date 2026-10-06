@@ -42,6 +42,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   private currentRenderId: number | undefined;
   private rendering = false;
   private pendingSyntax: UpdateSyntaxPayload | undefined;
+  private pendingInteractions: Array<{ action: WebviewAction } | { path: string; file: DiffFile; viewed: boolean }> =
+    [];
   private readonly contextFoldingController = new ContextFoldingController({
     getState: () => this.currentUiState.contextExpansions ?? {},
     setState: (contextExpansions) => this.persistUiState({ contextExpansions }),
@@ -62,6 +64,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   private viewedRequestIds = new Map<string, number>();
   private fileBindings: FileDomBinding[] = [];
   private diffContainerHandlersRegistered = false;
+  private contextSelection: string | undefined;
   private readonly horizontalScrollbarController: HorizontalScrollbarController;
   private readonly testSupport: WebviewHandlerTestSupport;
 
@@ -183,6 +186,28 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     if (generation === this.updateGeneration) {
       this.rendering = false;
       if (this.pendingSyntax) this.updateSyntax(this.pendingSyntax);
+      const pending = this.pendingInteractions;
+      this.pendingInteractions = [];
+      for (const interaction of pending) {
+        if ("action" in interaction) {
+          this.performWebviewAction(interaction);
+        } else {
+          const binding = this.fileBindings.find((file) => file.filePath === interaction.path);
+          if (!binding?.viewedToggle) continue;
+          const unchanged =
+            JSON.stringify(interaction.file) === JSON.stringify(this.currentDiffFilesByPath[interaction.path]);
+          if (unchanged) {
+            binding.viewedToggle.checked = interaction.viewed;
+            this.onViewedToggleChangedHandler(binding.viewedToggle);
+          } else if (interaction.viewed) {
+            this.updateDiff2HtmlFileCollapsed(binding.viewedToggle, false);
+            binding.viewedToggle.classList.add(CHANGED_SINCE_VIEWED);
+            this.getViewedToggleLabel(binding.viewedToggle)?.classList.add(CHANGED_SINCE_VIEWED);
+          }
+        }
+      }
+      updateFooter(this.fileBindings);
+      this.horizontalScrollbarController.refresh();
     }
   }
 
@@ -198,6 +223,18 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   }
 
   public performWebviewAction(payload: { action: WebviewAction }): void {
+    if (payload.action === "copySelection") {
+      // Opening VS Code's native context menu can clear the iframe selection.
+      // Copy the text selected when that menu was requested, not its later state.
+      const text = this.contextSelection ?? globalThis.getSelection()?.toString();
+      this.contextSelection = undefined;
+      if (text) this.args.postMessageToExtensionFn({ kind: "copyText", payload: { text } });
+      return;
+    }
+    if (this.rendering) {
+      this.pendingInteractions.push(payload);
+      return;
+    }
     switch (payload.action) {
       case "find":
         this.findController.open();
@@ -237,6 +274,34 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     diffContainer.addEventListener("click", this.onDiffClickedHandler.bind(this));
     diffContainer.addEventListener("keydown", this.onDiffKeyDownHandler.bind(this));
     diffContainer.addEventListener("change", this.onDiffContainerChangedHandler.bind(this));
+    const rememberContextSelection = () => {
+      this.contextSelection = globalThis.getSelection()?.toString() ?? "";
+      diffContainer.dataset.vscodeContext = JSON.stringify({ diffviewerHasSelection: !!this.contextSelection });
+    };
+    diffContainer.addEventListener(
+      "pointerdown",
+      (event) => {
+        this.contextSelection = undefined;
+        // Chromium can clear a text selection between right pointerdown and
+        // contextmenu. Capture both its contents and menu enablement first.
+        if (event.button === 2) rememberContextSelection();
+      },
+      true,
+    );
+    diffContainer.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) rememberContextSelection();
+      },
+      true,
+    );
+    diffContainer.addEventListener(
+      "contextmenu",
+      () => {
+        if (this.contextSelection === undefined) rememberContextSelection();
+      },
+      true,
+    );
 
     this.diffContainerHandlersRegistered = true;
   }
@@ -262,7 +327,11 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     this.selectDiffFile(this.getDiffElementFileName(viewedToggle));
     updateFooter(this.fileBindings);
     this.horizontalScrollbarController.refresh();
-    void this.sendFileViewedMessage(viewedToggle, viewedToggle.checked);
+    const path = this.getDiffElementFileName(viewedToggle);
+    const file = path && this.currentDiffFilesByPath[path];
+    if (this.rendering && path && file) {
+      this.pendingInteractions.push({ path, file, viewed: viewedToggle.checked });
+    } else void this.sendFileViewedMessage(viewedToggle, viewedToggle.checked);
   }
 
   private onDiffClickedHandler(event: Event): void {
@@ -279,10 +348,19 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     const actionButton = diffElement.closest<HTMLElement>(`button.${FILE_ACTION_BUTTON_CLASS}`);
     const actionPath = actionButton?.dataset.path;
     if (actionPath) {
-      this.openFileAtPath(actionPath);
+      if (actionButton?.dataset.action === "copy") {
+        this.args.postMessageToExtensionFn({ kind: "copyText", payload: { text: actionPath } });
+      } else this.openFileAtPath(actionPath);
       return;
     }
 
+    // Names are selectable text. Explicit open controls, keyboard activation,
+    // or the editor's usual modifier-click gesture avoid stealing Copy focus.
+    if (
+      diffElement.closest(Diff2HtmlCssClassElements.A__FileName) &&
+      !(event instanceof MouseEvent && (event.ctrlKey || event.metaKey))
+    )
+      return;
     this.maybeOpenFile(diffElement);
   }
 
@@ -383,6 +461,13 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     return getRenderedFileWrappers(diffContainer, diffFiles).flatMap(({ file: diffFile, wrapper: fileContainer }) => {
       const viewModel = buildDiffFileViewModel(diffFile, this.accessiblePaths);
       fileContainer.dataset.diffPath = viewModel.primaryPath;
+      const header = fileContainer.querySelector<HTMLElement>(Diff2HtmlCssClassElements.Div__DiffFileHeader);
+      if (header && viewModel.primaryPath)
+        header.dataset.vscodeContext = JSON.stringify({
+          webviewSection: "fileHeader",
+          diffviewerFilePath: viewModel.primaryPath,
+          diffviewerFileName: viewModel.primaryPath.split("/").pop(),
+        });
       this.enhanceFileNameLink(fileContainer, viewModel);
       this.appendFileNavigationActions(fileContainer, viewModel);
       return viewModel.primaryPath
@@ -410,7 +495,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     fileName.classList.add(FILE_NAME_LINK_CLASS);
     fileName.setAttribute("role", "link");
     fileName.tabIndex = 0;
-    fileName.title = viewModel.primaryPath;
+    fileName.title = `${viewModel.primaryPath}\nCtrl/Cmd+click or Enter to open`;
     fileName.setAttribute("aria-label", `Open file: ${viewModel.primaryPath}`);
   }
 
@@ -432,6 +517,13 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       }
     } else if (viewModel.primaryPath && (viewModel.isNewPathAccessible || viewModel.isOldPathAccessible)) {
       actionsContainer.append(this.createFileActionButton("Open file", viewModel.primaryPath));
+    }
+
+    if (viewModel.primaryPath) {
+      const copy = this.createFileActionButton("Copy path", viewModel.primaryPath);
+      copy.classList.add("diff-viewer-copy-path");
+      copy.dataset.action = "copy";
+      actionsContainer.append(copy);
     }
 
     if (actionsContainer.childElementCount > 0) {

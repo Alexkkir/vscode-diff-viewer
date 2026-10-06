@@ -55,7 +55,7 @@ describe("changed line alignment", () => {
     ['f"related old"', 'f"related new"'],
   ])("does not extend a comment or literal anchor into neighboring code (%s)", (old, next) => {
     const before = lines(LineType.DELETE, [oldCondition, old]);
-    const after = lines(LineType.INSERT, [newCondition, next]);
+    const after = lines(LineType.INSERT, ["    while other is None:", next]);
     expect(alignChangedLines(before, after)).toEqual([
       [[before[0]], []],
       [[], [after[0]]],
@@ -63,19 +63,16 @@ describe("changed line alignment", () => {
     ]);
   });
 
-  it("does not force a weak pair without an existing code anchor", () => {
+  it("pairs an isolated rewritten guard from its own identifier and indentation evidence", () => {
     const before = lines(LineType.DELETE, [oldCondition]);
     const after = lines(LineType.INSERT, [newCondition]);
-    expect(alignChangedLines(before, after)).toEqual([
-      [before, []],
-      [[], after],
-    ]);
+    expect(alignChangedLines(before, after)).toEqual([[before, after]]);
   });
 
   it.each([
     [oldCondition, `    ${newCondition}`],
-    ["    ax = 1111", "    by = 2222"],
-  ])("requires matching indentation and a shared identifier in a rescued pair (%s)", (old, next) => {
+    ["    ax = 1111", "    throw OtherFault();"],
+  ])("requires matching indentation and compatible code evidence in a rescued pair (%s)", (old, next) => {
     const before = lines(LineType.DELETE, [old, "        return value"]);
     const after = lines(LineType.INSERT, [next, "        return None"]);
     expect(alignChangedLines(before, after)).toEqual([
@@ -134,10 +131,19 @@ describe("changed line alignment", () => {
   ])("does not discard string content, whole comments, or non-Python suffixes", (old, next, language) => {
     const before = lines(LineType.DELETE, [old]);
     const after = lines(LineType.INSERT, [next]);
-    expect(alignChangedLines(before, after, language)).toEqual([
-      [before, []],
-      [[], after],
-    ]);
+    const result = alignChangedLines(before, after, language);
+    expect(result.flatMap(([left]) => left)).toEqual(before);
+    expect(result.flatMap(([, right]) => right)).toEqual(after);
+    // Assignments and guards remain useful comparisons even when their string
+    // operands are rewritten; whole comments have no statement-role evidence.
+    expect(result).toEqual(
+      old.startsWith("#")
+        ? [
+            [before, []],
+            [[], after],
+          ]
+        : [[before, after]],
+    );
   });
 
   it.each([
@@ -228,10 +234,17 @@ describe("changed line alignment", () => {
   ])("does not treat hashes inside strings or whole comments as import suffixes", (old, next) => {
     const before = lines(LineType.DELETE, [old]);
     const after = lines(LineType.INSERT, [next]);
-    expect(alignChangedLines(before, after)).toEqual([
-      [before, []],
-      [[], after],
-    ]);
+    const result = alignChangedLines(before, after);
+    expect(result.flatMap(([left]) => left)).toEqual(before);
+    expect(result.flatMap(([, right]) => right)).toEqual(after);
+    expect(result).toEqual(
+      old.startsWith("#")
+        ? [
+            [before, []],
+            [[], after],
+          ]
+        : [[before, after]],
+    );
   });
 
   it("keeps a related declaration and docstring together instead of anchoring on a moved URL", () => {

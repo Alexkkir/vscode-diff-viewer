@@ -81,7 +81,7 @@ export class WebviewHandlerTestSupport {
         if (!fileNameLink?.classList.contains("diff-file-link")) {
           throw new Error(`No file name link found for ${action.path}.`);
         }
-        fileNameLink.click();
+        fileNameLink.dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
         return;
       }
       case "clickLineNumber": {

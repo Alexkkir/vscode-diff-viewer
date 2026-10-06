@@ -8,6 +8,13 @@ describe("MessageToExtensionHandlerImpl", () => {
   let mockViewedStateStore: jest.Mocked<ViewedStateStore>;
   let handler: MessageToExtensionHandlerImpl;
 
+  it("copies exact selected text and leaves the clipboard unchanged for an empty selection", async () => {
+    await handler.copyText({ text: 'src/название "file".py' });
+    expect(vscode.env.clipboard.writeText).toHaveBeenCalledWith('src/название "file".py');
+    await handler.copyText({ text: "" });
+    expect(vscode.env.clipboard.writeText).toHaveBeenCalledTimes(1);
+  });
+
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();

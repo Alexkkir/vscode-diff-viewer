@@ -17,6 +17,15 @@ const messageReceivedHandler = new MessageToWebviewHandlerImpl({
   },
 });
 
+// Keep native read-only context-menu actions in sync with the real selection.
+document.addEventListener("selectionchange", () => {
+  document.body.dataset.vscodeContext = JSON.stringify({
+    preventDefaultContextMenuItems: true,
+    webviewSection: "diff",
+    diffviewerHasSelection: !!globalThis.getSelection()?.toString(),
+  });
+});
+
 const shellGeneration = Number(document.body.dataset.shellGeneration ?? "0");
 postMessageToExtensionWrapper({
   kind: "ready",
