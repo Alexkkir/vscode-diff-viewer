@@ -1,7 +1,9 @@
 /** @jest-environment jsdom */
 import { parse } from "diff2html";
 import { Diff2HtmlUI } from "diff2html/lib/ui/js/diff2html-ui-slim.js";
+import { parseDiff } from "../../../../shared/diff";
 import type { DiffFileWithMetadata } from "../../../../shared/diff";
+import { AlignedDiff2HtmlUI } from "../aligned-diff-renderer";
 import { ContextFoldingController } from "../context-folding";
 import { renderNoNewlineMarkers } from "../no-newline";
 import { SyntaxHighlightingController } from "../syntax-highlighting";
@@ -33,6 +35,33 @@ function source(root: ParentNode): string[] {
 describe("end-of-file newline annotations", () => {
   beforeEach(() => {
     document.body.innerHTML = '<input type="checkbox" id="syntax-highlighting-toggle">';
+  });
+
+  it.each(formats)("keeps EOF metadata on the correct file when renderer IDs collide in %s", (outputFormat) => {
+    const patch = [
+      "--- a/Aa.py",
+      "+++ b/Aa.py",
+      "@@ -1 +1 @@",
+      "-first_before",
+      "\\ No newline at end of file",
+      "+first_after",
+      "--- a/BB.py",
+      "+++ b/BB.py",
+      "@@ -1 +1 @@",
+      "-second_before",
+      "+second_after",
+    ].join("\n");
+    const files = parseDiff(patch);
+    const root = document.createElement("div");
+    new AlignedDiff2HtmlUI(root, files, { outputFormat, highlight: false, drawFileList: false }).draw();
+    renderNoNewlineMarkers(root, files);
+    const wrappers = root.querySelectorAll(".d2h-file-wrapper");
+    expect(wrappers[0].id).toBe(wrappers[1].id);
+    expect(markers(wrappers[0])).toHaveLength(1);
+    expect(markers(wrappers[1])).toHaveLength(0);
+    expect(markers(wrappers[0])[0].closest("tr")?.querySelector(".d2h-code-line-ctn")?.textContent).toBe(
+      "first_before",
+    );
   });
 
   it.each(formats)("leaves normal diff markup unchanged in %s", (format) => {

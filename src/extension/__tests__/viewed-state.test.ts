@@ -233,6 +233,17 @@ describe("ViewedStateStore", () => {
   });
 
   describe("clearViewedState", () => {
+    it("should not restore first-session marks after clearing a previously unseen document", () => {
+      const store = new ViewedStateStore({ docId: "fresh-doc", context: mockContext });
+      store.toggleViewedState({ path: "first.ts", viewedSha1: "first-hash" });
+
+      store.clearViewedState();
+
+      expect(store.getViewedState()).toEqual({});
+      store.toggleViewedState({ path: "second.ts", viewedSha1: "second-hash" });
+      expect(store.getViewedState()).toEqual({ "second.ts": "second-hash" });
+    });
+
     it("should remove persisted state for the document", () => {
       const docId = "test-doc-id";
       workspaceState.set(docId, { "file1.ts": "sha1-abc123" });

@@ -1,4 +1,5 @@
 import { DiffFile } from "diff2html/lib/types";
+import { getRenderedFileWrappers } from "./rendered-file-wrappers";
 import { getSha1Hash } from "../hash";
 import {
   buildContextGaps,
@@ -51,9 +52,7 @@ export class ContextFoldingController {
     this.rowGaps = new WeakMap();
     const previous = this.args.getState();
     this.state = {};
-    const wrappers = container.querySelectorAll<HTMLElement>(".d2h-file-wrapper");
-    files.forEach((file, fileIndex) => {
-      const wrapper = wrappers[fileIndex];
+    getRenderedFileWrappers(container, files).forEach(({ file, fileIndex, wrapper }) => {
       const { key, gaps } = prepared.entries[fileIndex];
       if (!wrapper || !gaps.length) return;
       if (previous[key]) this.state[key] = { ...previous[key] };

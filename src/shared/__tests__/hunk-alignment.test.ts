@@ -15,6 +15,23 @@ const replacement = (old: string[], next: string[], oldStart = 1, newStart = 1):
   ]);
 
 describe("realignDiffHunks", () => {
+  it.each([false, true])(
+    "does not enlarge a valid edit by anchoring on a unique moved line (reverse=%s)",
+    (reverse) => {
+      const checkpoint = reverse ? "+checkpoint()" : "-checkpoint()";
+      const moved = reverse ? "-checkpoint()" : "+checkpoint()";
+      const before = parseDiff(
+        patch(["@@ -1,6 +1,6 @@", checkpoint, ...Array.from({ length: 5 }, () => " tick()"), moved]),
+      );
+      const [file] = realignDiffHunks(before);
+      expect(file).toBe(before[0]);
+      expect(file).toMatchObject({ addedLines: 1, deletedLines: 1 });
+      expect(file.blocks[0].lines.filter((line) => line.type === LineType.CONTEXT).map((line) => line.content)).toEqual(
+        Array.from({ length: 5 }, () => " tick()"),
+      );
+    },
+  );
+
   it("keeps the surviving constructor and deletes both removed test classes", () => {
     const before = parseDiff(
       patch([
@@ -310,6 +327,7 @@ describe("realignDiffHunks", () => {
         expect(projection(file.blocks[0], side)).toEqual(projection(before[0].blocks[0], side));
       expect(file.addedLines).toBe(file.blocks[0].lines.filter((line) => line.type === LineType.INSERT).length);
       expect(file.deletedLines).toBe(file.blocks[0].lines.filter((line) => line.type === LineType.DELETE).length);
+      expect(file.addedLines + file.deletedLines).toBeLessThanOrEqual(before[0].addedLines + before[0].deletedLines);
     }
   });
 });

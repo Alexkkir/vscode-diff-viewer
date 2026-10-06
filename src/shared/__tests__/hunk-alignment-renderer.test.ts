@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 import { parseDiff } from "../diff";
 import { realignDiffHunks } from "../hunk-alignment";
-import { renderAlignedDiffHtml } from "../../webview/message/handler/aligned-diff-renderer";
+import { AlignedDiff2HtmlUI, renderAlignedDiffHtml } from "../../webview/message/handler/aligned-diff-renderer";
 
 const constructor = (name: string, size: string) => [
   "    def __init__(self):",
@@ -62,6 +62,31 @@ const patch = [
 ].join("\n");
 
 describe("full constructor topology", () => {
+  it("keeps repeated retained code on the same visible rows through actual UI draw", () => {
+    const patch = [
+      "--- moved.py",
+      "+++ moved.py",
+      "@@ -1,6 +1,6 @@",
+      "-checkpoint()",
+      ...Array.from({ length: 5 }, () => " tick()"),
+      "+checkpoint()",
+    ].join("\n");
+    const root = document.createElement("div");
+    new AlignedDiff2HtmlUI(root, realignDiffHunks(parseDiff(patch)), {
+      outputFormat: "side-by-side",
+      matching: "lines",
+      highlight: false,
+      drawFileList: false,
+    }).draw();
+    const panes = Array.from(root.querySelectorAll(".d2h-diff-tbody"), (pane) =>
+      Array.from(pane.querySelectorAll("tr")),
+    );
+    const leftIndex = panes[0].findIndex(
+      (row) => row.querySelector(".d2h-code-side-linenumber")?.textContent?.trim() === "2",
+    );
+    expect(panes[1][leftIndex].querySelector(".d2h-code-side-linenumber")?.textContent?.trim()).toBe("1");
+  });
+
   it("preserves complete sources and takes both retained constructors from their own classes", () => {
     const files = realignDiffHunks(parseDiff(patch));
     const lines = files[0].blocks[0].lines;

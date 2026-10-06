@@ -127,6 +127,52 @@ describe("HorizontalScrollbarController", () => {
     });
   });
 
+  it.each([false, true])(
+    "ignores delayed clamped pane events and vertical movement (narrowFirst=%s)",
+    (narrowFirst) => {
+      const first = createSideBySideBinding();
+      const second = createSideBySideBinding();
+      fileBindings = [first.binding, second.binding];
+      const targets = [...first.sideDiffs, ...second.sideDiffs];
+      targets.forEach((target, index) => {
+        const max = (index === 0) === narrowFirst ? 80 : 300;
+        let left = 0;
+        setElementDimensions(target, { clientWidth: 100, scrollWidth: 100 + max });
+        Object.defineProperty(target, "scrollLeft", {
+          configurable: true,
+          get: () => left,
+          set: (value: number) => {
+            left = Math.max(0, Math.min(value, max));
+          },
+        });
+      });
+      const scrollbar = document.getElementById(SkeletonElementIds.HorizontalScrollbarContainer) as HTMLDivElement;
+      const thumb = document.getElementById(SkeletonElementIds.HorizontalScrollbarContent) as HTMLDivElement;
+      setElementDimensions(scrollbar, { clientWidth: 100, scrollWidth: 100 });
+      setElementRect(scrollbar, { left: 0, width: 100 });
+      setElementRect(thumb, { left: 0, width: 25 });
+      controller.refresh();
+      scrollbar.dispatchEvent(new MouseEvent("pointerdown", { clientX: 100 }));
+      const expected = targets.map((target) => target.scrollWidth - target.clientWidth);
+      expect(targets.map((target) => target.scrollLeft)).toEqual(expected);
+      targets.forEach((target) => target.dispatchEvent(new Event("scroll")));
+      scrollbar.dispatchEvent(new Event("scroll"));
+      expect(targets.map((target) => target.scrollLeft)).toEqual(expected);
+      expect(thumb.style.transform).toBe("translateX(75px)");
+
+      const narrow = targets.find((target) => target.scrollLeft === 80)!;
+      narrow.scrollTop = 50;
+      narrow.dispatchEvent(new Event("scroll"));
+      controller.refresh();
+      expect(targets.map((target) => target.scrollLeft)).toEqual(expected);
+      expect(thumb.style.transform).toBe("translateX(75px)");
+
+      narrow.scrollLeft = 40;
+      narrow.dispatchEvent(new Event("scroll"));
+      expect(targets.map((target) => target.scrollLeft)).toEqual([40, 40, 40, 40]);
+    },
+  );
+
   it("shows a thumb and syncs expanded file panes", () => {
     const first = createSideBySideBinding();
     const second = createSideBySideBinding();

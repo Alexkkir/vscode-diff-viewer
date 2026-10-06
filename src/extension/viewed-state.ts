@@ -14,7 +14,7 @@ export class ViewedStateStore {
     }
 
     const savedState = this.args.context.workspaceState.get<ViewedState>(this.args.docId);
-    return savedState || this.transientViewedState;
+    return savedState || {};
   }
 
   public toggleViewedState(args: { path: string; viewedSha1: string | null }): void {

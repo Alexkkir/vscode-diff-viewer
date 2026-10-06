@@ -57,8 +57,12 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         },
         supportsMultipleEditorsPerDocument: false,
       }),
-      vscode.commands.registerCommand("diffviewer.showLineByLine", () => setOutputFormatConfig("line-by-line")),
-      vscode.commands.registerCommand("diffviewer.showSideBySide", () => setOutputFormatConfig("side-by-side")),
+      vscode.commands.registerCommand("diffviewer.showLineByLine", () =>
+        setOutputFormatConfig("line-by-line", provider.getTargetWebviewContext()?.document.uri),
+      ),
+      vscode.commands.registerCommand("diffviewer.showSideBySide", () =>
+        setOutputFormatConfig("side-by-side", provider.getTargetWebviewContext()?.document.uri),
+      ),
       vscode.commands.registerCommand("diffviewer.diagnostics", async () => {
         const context = provider.getTargetWebviewContext();
         if (!context) return;
@@ -129,8 +133,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       this.activeWebviewContext = webviewContext;
     }
 
-    await this.hidePanelForEditor(webviewContext);
     this.registerEventHandlers({ webviewContext, messageHandler: messageReceivedHandler });
+    await this.hidePanelForEditor(webviewContext);
+    if (webviewContext.isDisposed || token.isCancellationRequested) return;
     this.updateWebview(webviewContext, collapseAll);
   }
 
@@ -199,7 +204,11 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         }
       }),
       vscode.window.onDidChangeActiveColorTheme(() => {
-        if (!isAutoColorScheme() || !args.webviewContext.panel.visible || !this.hasThemeChanged(args.webviewContext)) {
+        if (
+          !isAutoColorScheme(args.webviewContext.document.uri) ||
+          !args.webviewContext.panel.visible ||
+          !this.hasThemeChanged(args.webviewContext)
+        ) {
           return;
         }
 
@@ -214,7 +223,11 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
           return;
         }
 
-        if (!event.webviewPanel.visible || !isAutoColorScheme() || !this.hasThemeChanged(args.webviewContext)) {
+        if (
+          !event.webviewPanel.visible ||
+          !isAutoColorScheme(args.webviewContext.document.uri) ||
+          !this.hasThemeChanged(args.webviewContext)
+        ) {
           return;
         }
 
@@ -223,6 +236,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     );
 
     args.webviewContext.panel.onDidDispose(() => {
+      args.webviewContext.isDisposed = true;
       this.testSupport.rejectPendingRequests({
         webviewContext: args.webviewContext,
         testStateMessage: "Webview disposed before test state was captured.",
@@ -232,7 +246,6 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       if (this.activeWebviewContext === args.webviewContext) {
         this.activeWebviewContext = this.getTargetWebviewContext();
       }
-      args.webviewContext.isDisposed = true;
       if (args.webviewContext.pendingRender) {
         clearTimeout(args.webviewContext.pendingRender);
       }
@@ -303,7 +316,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       clearTimeout(webviewContext.pendingRender);
     }
 
-    const config = extractConfig();
+    const config = extractConfig(webviewContext.document.uri);
     webviewContext.lastRenderedColorScheme = config.diff2html.colorScheme;
     if (!webviewContext.shellInitialized) {
       webviewContext.webviewReady = false;
@@ -431,7 +444,9 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         webviewContext: args.webviewContext,
         diffFiles,
       }),
-      highlightDiffProgressively(diffFiles, args.webviewContext.document.uri).catch(() => undefined),
+      highlightDiffProgressively(diffFiles, args.webviewContext.document.uri, () => isActiveRenderRequest(args)).catch(
+        () => undefined,
+      ),
     ]);
     return {
       renderedData: {
@@ -516,7 +531,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
   }
 
   private hasThemeChanged(webviewContext: WebviewContext): boolean {
-    return webviewContext.lastRenderedColorScheme !== extractConfig().diff2html.colorScheme;
+    return webviewContext.lastRenderedColorScheme !== extractConfig(webviewContext.document.uri).diff2html.colorScheme;
   }
 
   private openDocumentWithDefaultEditor(uri: vscode.Uri): void {

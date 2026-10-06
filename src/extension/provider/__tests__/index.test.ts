@@ -292,7 +292,24 @@ describe("DiffViewerProvider", () => {
       // Execute commands
       command();
 
-      expect(mockSetOutputFormatConfig).toHaveBeenCalledWith(expectedConfig);
+      expect(mockSetOutputFormatConfig).toHaveBeenCalledWith(expectedConfig, undefined);
+    });
+
+    it.each([
+      ["showSideBySide", "side-by-side"],
+      ["showLineByLine", "line-by-line"],
+    ])("updates the active diff document's scoped layout when %s is executed", (cmd, expectedConfig) => {
+      DiffViewerProvider.registerContributions({
+        extensionContext: mockExtensionContext,
+        webviewPath: mockWebviewPath,
+      });
+      const registeredProvider = mockRegisterCustomEditorProvider.mock.calls[0]?.[1] as DiffViewerProvider;
+      Reflect.set(registeredProvider, "activeWebviewContext", { document: mockTextDocument, isDisposed: false });
+      const command = mockRegisterCommand.mock.calls.find((call) => call[0] === `diffviewer.${cmd}`)?.[1];
+
+      command();
+
+      expect(mockSetOutputFormatConfig).toHaveBeenCalledWith(expectedConfig, mockTextDocument.uri);
     });
 
     it("should open a diff with all files collapsed", () => {
@@ -615,6 +632,32 @@ describe("DiffViewerProvider", () => {
         .mockReturnValueOnce({ get: () => true } as unknown as vscode.WorkspaceConfiguration);
       await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
       expect(vscode.commands.executeCommand).toHaveBeenCalledWith("workbench.action.closePanel");
+    });
+
+    it("cleans up an editor closed while the panel-hide command is pending", async () => {
+      jest
+        .mocked(vscode.workspace.getConfiguration)
+        .mockReturnValueOnce({ get: () => true } as unknown as vscode.WorkspaceConfiguration);
+      let finishClose!: () => void;
+      jest.mocked(vscode.commands.executeCommand).mockReturnValueOnce(
+        new Promise<void>((resolve) => {
+          finishClose = resolve;
+        }),
+      );
+      const disposeHandlers = jest.fn();
+      jest.mocked(vscode.Disposable.from).mockReturnValueOnce({ dispose: disposeHandlers });
+
+      const opening = provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
+      const onDispose = jest.mocked(mockWebviewPanel.onDidDispose).mock.calls[0]?.[0];
+      onDispose?.();
+      finishClose();
+      await opening;
+
+      expect(Reflect.get(provider, "webviewContexts").size).toBe(0);
+      expect(Reflect.get(provider, "activeWebviewContext")).toBeUndefined();
+      expect(disposeHandlers).toHaveBeenCalledTimes(1);
+      expect(mockBuildSkeleton).not.toHaveBeenCalled();
+      expect(mockWebview.postMessage).not.toHaveBeenCalled();
     });
 
     it("hides the panel on repeated webview focus without reopening or redrawing the diff", async () => {
@@ -992,6 +1035,23 @@ describe("DiffViewerProvider", () => {
       expect(mockWebview.postMessage).not.toHaveBeenCalled();
     });
 
+    it("cancels lexical highlighting when a newer render or disposal makes the request obsolete", async () => {
+      const context = readyContext();
+      Reflect.get(provider, "updateWebview").call(provider, context);
+      await jest.advanceTimersByTimeAsync(20);
+      const isCurrent = jest.mocked(highlightDiffProgressively).mock.calls.at(-1)?.[2];
+      expect(isCurrent).toBeDefined();
+      expect(isCurrent?.()).toBe(true);
+
+      Reflect.get(provider, "updateWebview").call(provider, context);
+      expect(isCurrent?.()).toBe(false);
+      await jest.advanceTimersByTimeAsync(220);
+      const latestIsCurrent = jest.mocked(highlightDiffProgressively).mock.calls.at(-1)?.[2];
+      expect(latestIsCurrent?.()).toBe(true);
+      context.isDisposed = true;
+      expect(latestIsCurrent?.()).toBe(false);
+    });
+
     it("enriches only the current render without prepare or redraw", async () => {
       let finish!: (syntax: [null]) => void;
       jest.mocked(highlightDiffProgressively).mockResolvedValueOnce({
@@ -1069,7 +1129,7 @@ describe("DiffViewerProvider", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (provider as any).updateWebview(webviewContext);
 
-      expect(mockExtractConfig).toHaveBeenCalled();
+      expect(mockExtractConfig).toHaveBeenCalledWith(mockTextDocument.uri);
       expect(mockBuildSkeleton).toHaveBeenCalled();
       expect(mockWebview.postMessage).not.toHaveBeenCalled();
       expect(
@@ -1436,6 +1496,8 @@ describe("DiffViewerProvider", () => {
       (provider as any).registerEventHandlers({ webviewContext, messageHandler: mockMessageHandler });
 
       expect(mockUpdateWebview).toHaveBeenCalledWith(webviewContext);
+      expect(mockIsAutoColorScheme).toHaveBeenCalledWith(mockTextDocument.uri);
+      expect(mockExtractConfig).toHaveBeenCalledWith(mockTextDocument.uri);
     });
 
     it("should update the active context and rerender on visible theme-sensitive view state changes", () => {

@@ -65,6 +65,29 @@ interface HighlightEnvironment {
   languages: Map<string, string>;
   extensions: Map<string, string>;
 }
+
+// Match the named editor.tokenColorCustomizations groups before applying the
+// explicit TextMate rules, as the editor does for global and theme overrides.
+const tokenColorGroups: Readonly<Record<string, string[]>> = {
+  comments: ["comment", "punctuation.definition.comment"],
+  strings: ["string", "meta.embedded.assembly"],
+  keywords: ["keyword - keyword.operator", "keyword.control", "storage", "storage.type"],
+  numbers: ["constant.numeric"],
+  types: ["entity.name.type", "entity.name.class", "support.type", "support.class"],
+  functions: ["entity.name.function", "support.function"],
+  variables: ["variable", "entity.name.variable"],
+};
+
+function customTokenRules(custom: Record<string, unknown>): IRawTheme["settings"] {
+  const settings: IRawTheme["settings"] = [];
+  for (const [group, scopes] of Object.entries(tokenColorGroups)) {
+    const value = custom[group];
+    const style = typeof value === "string" ? { foreground: value } : value;
+    if (style && typeof style === "object" && !Array.isArray(style)) settings.push({ scope: scopes, settings: style });
+  }
+  if (Array.isArray(custom.textMateRules)) settings.push(...custom.textMateRules);
+  return settings;
+}
 interface EnvironmentEntry {
   promise: Promise<HighlightEnvironment | undefined>;
   users: number;
@@ -111,8 +134,14 @@ async function createEnvironment(snapshot: ThemeSnapshot): Promise<HighlightEnvi
   const scoped = matchingThemeCustomizations(custom, name);
   const theme = await themeRules(selectedTheme);
   const settings = theme.settings;
-  for (const rules of [custom.textMateRules, ...scoped.map((entry) => entry.textMateRules)])
-    if (Array.isArray(rules)) settings.push(...rules);
+  settings.push(...customTokenRules(custom));
+  // Group values use the last matching theme entry, while textMateRules are
+  // concatenated across matching entries in their configured order.
+  const themeCustom = Object.assign({}, ...scoped);
+  themeCustom.textMateRules = scoped.flatMap((entry) =>
+    Array.isArray(entry.textMateRules) ? entry.textMateRules : [],
+  );
+  settings.push(...customTokenRules(themeCustom));
   const registry = new Registry({
     onigLib: onig,
     theme: { settings },
@@ -206,13 +235,28 @@ async function highlightLexically(
   environment: HighlightEnvironment,
   name: string | undefined,
   editors: EditorSettings[],
+  isCurrent: () => boolean,
 ): Promise<PreparedSyntax> {
   const { registry, theme, languages, extensions } = environment;
   const result: PreparedSyntax = { syntax: [], semantics: [] };
+  let yieldedAt = Date.now();
+  const assertCurrent = () => {
+    if (!isCurrent()) throw new Error("Obsolete syntax request");
+  };
+  const yieldIfNeeded = (): Promise<void> | undefined => {
+    if (Date.now() - yieldedAt < 8) return;
+    assertCurrent();
+    return new Promise<void>((resolve) => setTimeout(resolve, 0)).then(() => {
+      assertCurrent();
+      yieldedAt = Date.now();
+    });
+  };
   for (const [fileIndex, file] of files.entries()) {
+    assertCurrent();
     const language = extensions.get(fileSuffix(file)) ?? "";
     const scope = languages.get(language);
     const grammar = scope ? await registry.loadGrammar(scope).catch(() => null) : null;
+    assertCurrent();
     if (!grammar) {
       result.syntax.push(null);
       result.semantics.push(undefined);
@@ -270,9 +314,15 @@ async function highlightLexically(
               .filter((number): number is number => number !== undefined),
           ),
         );
-        const last = Math.max(0, ...visibleLines);
-        for (let index = 0; index < last; index++) emit(fullSource[index], index + 1, visibleLines.has(index + 1));
+        let last = 0;
+        for (const number of visibleLines) last = Math.max(last, number);
+        for (let index = 0; index < last; index++) {
+          emit(fullSource[index], index + 1, visibleLines.has(index + 1));
+          const pause = yieldIfNeeded();
+          if (pause) await pause;
+        }
       } else {
+        const prefixLength = file.isCombined ? 2 : 1;
         let previous = -1;
         for (const block of file.blocks) {
           const lines = block.lines.filter((line) => (side === "old" ? line.oldNumber : line.newNumber) !== undefined);
@@ -281,18 +331,24 @@ async function highlightLexically(
             state = INITIAL;
             const prefix =
               first && first > 1 && scope === "source.python"
-                ? pythonHunkPrefix(lines.map((line) => line.content.slice(1)))
+                ? pythonHunkPrefix(lines.map((line) => line.content.slice(prefixLength)))
                 : undefined;
             if (prefix) state = grammar.tokenizeLine2(prefix, INITIAL).ruleStack;
           }
           for (const line of lines) {
             const number = (side === "old" ? line.oldNumber : line.newNumber)!;
-            emit(line.content.slice(1), number, true);
+            emit(line.content.slice(prefixLength), number, true);
             previous = number;
+            const pause = yieldIfNeeded();
+            if (pause) await pause;
           }
         }
       }
-      for (const span of constants?.spans() ?? []) applySemanticSpan(highlighted, semantics, side, span);
+      for (const span of constants?.spans() ?? []) {
+        applySemanticSpan(highlighted, semantics, side, span);
+        const pause = yieldIfNeeded();
+        if (pause) await pause;
+      }
     }
     if (semanticEnabled) {
       for (const block of file.blocks)
@@ -329,16 +385,21 @@ function enrichSyntax(prepared: PreparedSyntax, semanticSpans: SemanticSpan[][])
 
 // Small exact-snapshot cache: focus/layout changes do not retokenize identical
 // sources. Large patches remain bounded rather than retaining multiple token trees.
-const lexicalCache = new Map<string, Promise<PreparedSyntax>>();
+const lexicalCache = new Map<string, PreparedSyntax>();
 export interface ProgressiveSyntax {
   syntax: Array<FileSyntax | null>;
   enriched: Promise<Array<FileSyntax | null>>;
 }
-export async function highlightDiffProgressively(files: DiffFile[], diffUri?: vscode.Uri): Promise<ProgressiveSyntax> {
+export async function highlightDiffProgressively(
+  files: DiffFile[],
+  diffUri?: vscode.Uri,
+  isCurrent: () => boolean = () => true,
+): Promise<ProgressiveSyntax> {
   const snapshot = themeSnapshot();
   const entry = acquireEnvironment(snapshot);
   try {
     const [sources, environment] = await Promise.all([readSyntaxSources(files, diffUri), entry.promise]);
+    if (!isCurrent()) throw new Error("Obsolete syntax request");
     if (!environment) {
       const syntax = files.map(() => null);
       return { syntax, enriched: Promise.resolve(syntax) };
@@ -362,19 +423,18 @@ export async function highlightDiffProgressively(files: DiffFile[], diffUri?: vs
       sources.map((source) => source && [source.uri.toString(), source.old, source.new]),
       editors,
     ]);
-    let pending = lexicalCache.get(key);
-    if (pending) lexicalCache.delete(key);
-    else pending = highlightLexically(files, sources, environment, snapshot.name, editors);
+    let prepared = lexicalCache.get(key);
+    if (prepared) lexicalCache.delete(key);
+    else prepared = await highlightLexically(files, sources, environment, snapshot.name, editors, isCurrent);
+    if (!isCurrent()) throw new Error("Obsolete syntax request");
     if (key.length <= 1024 * 1024) {
-      lexicalCache.set(key, pending);
+      lexicalCache.set(key, prepared);
       while (lexicalCache.size > 3) lexicalCache.delete(lexicalCache.keys().next().value!);
-      const cached = pending;
-      void pending.catch(() => {
-        if (lexicalCache.get(key) === cached) lexicalCache.delete(key);
-      });
     }
-    const prepared = await pending;
-    return { syntax: prepared.syntax, enriched: semanticSpans.then((spans) => enrichSyntax(prepared, spans)) };
+    return {
+      syntax: prepared.syntax,
+      enriched: semanticSpans.then((spans) => (isCurrent() ? enrichSyntax(prepared, spans) : prepared.syntax)),
+    };
   } finally {
     entry.users--;
     disposeRetiredEnvironment(entry);

@@ -1,5 +1,5 @@
 import type { DiffFileWithMetadata } from "../../../shared/diff";
-import { getHtmlId } from "diff2html/lib/render-utils";
+import { getRenderedFileWrappers } from "./rendered-file-wrappers";
 
 type Side = "old" | "new";
 
@@ -29,15 +29,9 @@ function isLine(value: string | null | undefined, target?: number): boolean {
 // numbers and text, while a newline-only change remains visible to the reader.
 export function renderNoNewlineMarkers(container: HTMLElement, files: DiffFileWithMetadata[]): void {
   container.querySelectorAll(".diff-no-newline").forEach((marker) => marker.remove());
-  const wrappers = new Map(
-    Array.from(container.querySelectorAll<HTMLElement>(".d2h-file-wrapper"), (wrapper) => [wrapper.id, wrapper]),
-  );
-  files.forEach((file) => {
-    // renderNothingWhenEmpty can omit earlier file wrappers, so DOM positions
-    // need not match positions in the full file model.
-    const wrapper = wrappers.get(getHtmlId(file));
+  getRenderedFileWrappers(container, files).forEach(({ file, wrapper }) => {
     const eof = file.noNewline;
-    if (!wrapper || !eof) return;
+    if (!eof) return;
     const panes = Array.from(wrapper.querySelectorAll<HTMLElement>(".d2h-file-side-diff"));
     if (panes.length === 2) {
       const rows = panes.map((pane) => Array.from(pane.querySelectorAll<HTMLTableRowElement>("tbody > tr")));

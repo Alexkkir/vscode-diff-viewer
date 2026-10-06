@@ -24,6 +24,34 @@ const patch = [
 ].join("\n");
 
 describe("aligned diff renderer", () => {
+  it("keeps local pane scrolling synchronized without bouncing a clamped opposite pane", () => {
+    const root = document.createElement("div");
+    new AlignedDiff2HtmlUI(root, parse(patch), { outputFormat: "side-by-side", highlight: false }).draw();
+    const [left, right] = root.querySelectorAll<HTMLElement>(".d2h-file-side-diff");
+    [left, right].forEach((pane, index) => {
+      let position = 0;
+      Object.defineProperty(pane, "scrollLeft", {
+        get: () => position,
+        set: (value: number) => {
+          position = Math.max(0, Math.min(value, index ? 100 : 500));
+        },
+      });
+    });
+    left.scrollLeft = 500;
+    left.dispatchEvent(new Event("scroll"));
+    right.dispatchEvent(new Event("scroll"));
+    expect([left.scrollLeft, right.scrollLeft]).toEqual([500, 100]);
+    right.scrollTop = 75;
+    right.dispatchEvent(new Event("scroll"));
+    left.dispatchEvent(new Event("scroll"));
+    expect([left.scrollTop, right.scrollTop]).toEqual([75, 75]);
+    expect([left.scrollLeft, right.scrollLeft]).toEqual([500, 100]);
+    right.scrollLeft = 40;
+    right.dispatchEvent(new Event("scroll"));
+    left.dispatchEvent(new Event("scroll"));
+    expect([left.scrollLeft, right.scrollLeft]).toEqual([40, 40]);
+  });
+
   it.each([
     ["side-by-side", "lines"],
     ["side-by-side", "words"],

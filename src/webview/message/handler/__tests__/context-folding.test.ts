@@ -94,6 +94,22 @@ describe("folded diff context", () => {
   });
 
   it.each(["line-by-line", "side-by-side"] as const)(
+    "folds the correct file when earlier empty wrappers are omitted (%s)",
+    async (format) => {
+      const files = parse(patch());
+      const empty = { ...files[0], oldName: "empty.py", newName: "empty.py", blocks: [] };
+      const { root, controller } = createHarness();
+      const all = [empty, ...files];
+      new Diff2HtmlUI(root, all, { highlight: false, outputFormat: format, renderNothingWhenEmpty: true }).draw();
+      await controller.render(root, all);
+      expect(root.querySelectorAll(".d2h-file-wrapper")).toHaveLength(1);
+      expectHidden(root, "leading_025", true);
+      expectHidden(root, "leading_026", false);
+      expect(gaps(firstTable(root))).toHaveLength(3);
+    },
+  );
+
+  it.each(["line-by-line", "side-by-side"] as const)(
     "shows fifty context lines around every change in %s without discarding diff contents",
     async (format) => {
       const files = parse(patch());

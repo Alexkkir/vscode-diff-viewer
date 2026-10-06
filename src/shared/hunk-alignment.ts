@@ -255,6 +255,11 @@ function realignBlock(block: DiffBlock, eof: DiffFileWithMetadata["noNewline"], 
       });
     }
   }
+  // A unique moved line can become a patience anchor at the expense of a
+  // larger repeated body that the patch already aligned correctly. Both
+  // projections are fixed, so more rendered lines means fewer exact matches.
+  // Keep the supplied alignment whenever recomputing would invent more edits.
+  if (lines.length > block.lines.length) return block;
   if (
     lines.length === block.lines.length &&
     lines.every((line, index) => {

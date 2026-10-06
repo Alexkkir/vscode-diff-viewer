@@ -7,6 +7,7 @@ import SideBySideRenderer from "diff2html/lib/side-by-side-renderer";
 import { DiffFile, DiffLine } from "diff2html/lib/types";
 import { Diff2HtmlUI, Diff2HtmlUIConfig } from "diff2html/lib/ui/js/diff2html-ui-slim.js";
 import { alignChangedLines } from "./line-alignment";
+import { setProgrammaticScroll, userScrollAxes } from "./scroll-synchronization";
 
 type RendererConfig = typeof defaultDiff2HtmlConfig;
 
@@ -90,5 +91,19 @@ export class AlignedDiff2HtmlUI extends Diff2HtmlUI {
     // can be expensive when refreshing an already-rendered large diff.
     super(target, [], config);
     this.diffHtml = renderAlignedDiffHtml(files, this.config);
+  }
+
+  override synchronisedScroll(): void {
+    this.targetElement.querySelectorAll(".d2h-file-wrapper").forEach((wrapper) => {
+      const [left, right] = wrapper.querySelectorAll<HTMLElement>(".d2h-file-side-diff");
+      if (!left || !right) return;
+      const onScroll = (event: Event) => {
+        const source = event.target === left ? left : right;
+        const target = source === left ? right : left;
+        for (const axis of userScrollAxes(event, source)) setProgrammaticScroll(target, axis, source[axis]);
+      };
+      left.addEventListener("scroll", onScroll, { passive: true });
+      right.addEventListener("scroll", onScroll, { passive: true });
+    });
   }
 }

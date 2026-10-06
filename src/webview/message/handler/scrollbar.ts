@@ -3,6 +3,7 @@ import { SkeletonElementIds } from "../../../shared/css/elements";
 import { Diff2HtmlCssClasses } from "../../css/classes";
 import { Diff2HtmlCssClassElements } from "../../css/elements";
 import { FileDomBinding } from "./types";
+import { setProgrammaticScroll, userScrollAxes } from "./scroll-synchronization";
 
 interface HorizontalScrollbarMetrics {
   maxClientWidth: number;
@@ -12,7 +13,6 @@ interface HorizontalScrollbarMetrics {
 
 export class HorizontalScrollbarController {
   private horizontalScrollTargets: HTMLElement[] = [];
-  private syncingHorizontalScroll = false;
   private resizeHandlerRegistered = false;
   private pendingRefreshFrame: number | undefined = undefined;
   private horizontalScrollbarHandlersRegistered = false;
@@ -71,10 +71,13 @@ export class HorizontalScrollbarController {
       return;
     }
 
+    // A narrower first pane may have clamped the global offset. Preserve the
+    // largest actual pane position when refreshing instead of moving it back.
+    const scrollLeft = Math.max(...nextTargets.map((target) => target.scrollLeft), 0);
     this.metrics = {
       maxClientWidth,
       maxScrollWidth,
-      scrollLeft: nextTargets[0]?.scrollLeft ?? 0,
+      scrollLeft,
     };
     this.updateVisual(this.metrics.scrollLeft);
   }
@@ -104,35 +107,26 @@ export class HorizontalScrollbarController {
   };
 
   private readonly onHorizontalScrollTarget = (event: Event): void => {
-    if (this.syncingHorizontalScroll) {
-      return;
-    }
-
     const scrollTarget = event.target;
     const scrollbar = this.getScrollbarContainer();
-    if (!(scrollTarget instanceof HTMLElement) || !scrollbar) {
+    if (
+      !(scrollTarget instanceof HTMLElement) ||
+      !scrollbar ||
+      !userScrollAxes(event, scrollTarget).includes("scrollLeft")
+    ) {
       return;
     }
 
-    this.syncingHorizontalScroll = true;
-    this.updateVisual(scrollTarget.scrollLeft);
-    scrollbar.scrollLeft = scrollTarget.scrollLeft;
-    this.syncingHorizontalScroll = false;
+    this.applyScrollLeft(scrollTarget.scrollLeft);
   };
 
   private readonly onScrollbarScrolled = (event: Event): void => {
-    if (this.syncingHorizontalScroll) {
-      return;
-    }
-
     const scrollbar = event.target;
-    if (!(scrollbar instanceof HTMLElement)) {
+    if (!(scrollbar instanceof HTMLElement) || !userScrollAxes(event, scrollbar).includes("scrollLeft")) {
       return;
     }
 
-    this.syncingHorizontalScroll = true;
     this.applyScrollLeft(scrollbar.scrollLeft);
-    this.syncingHorizontalScroll = false;
   };
 
   private readonly onScrollbarPointerDown = (event: PointerEvent): void => {
@@ -271,12 +265,12 @@ export class HorizontalScrollbarController {
     this.metrics.scrollLeft = scrollLeft;
     thumb.style.width = `${thumbWidth}px`;
     thumb.style.transform = `translateX(${thumbLeft}px)`;
-    scrollbar.scrollLeft = scrollLeft;
+    setProgrammaticScroll(scrollbar, "scrollLeft", scrollLeft);
   }
 
   private applyScrollLeft(scrollLeft: number): void {
     this.horizontalScrollTargets.forEach((target) => {
-      target.scrollLeft = scrollLeft;
+      setProgrammaticScroll(target, "scrollLeft", scrollLeft);
     });
     this.updateVisual(scrollLeft);
   }
@@ -295,9 +289,7 @@ export class HorizontalScrollbarController {
     const maxScrollLeft = Math.max(this.metrics.maxScrollWidth - this.metrics.maxClientWidth, 0);
     const scrollLeft = maxThumbLeft > 0 ? (clampedThumbLeft / maxThumbLeft) * maxScrollLeft : 0;
 
-    this.syncingHorizontalScroll = true;
     this.applyScrollLeft(scrollLeft);
-    this.syncingHorizontalScroll = false;
   }
 
   private getScrollbarContainer(): HTMLDivElement | null {

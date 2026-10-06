@@ -9,9 +9,12 @@ describe("diff find", () => {
     Object.defineProperty(globalThis, "CSS", { configurable: true, value: { highlights } });
     Object.defineProperty(globalThis, "Highlight", {
       configurable: true,
-      value: class {
+      value: class extends Set<Range> {
         constructor(...ranges: Range[]) {
-          return ranges;
+          super(ranges);
+        }
+        get length() {
+          return this.size;
         }
       },
     });
@@ -25,6 +28,21 @@ describe("diff find", () => {
     expect(findTextRanges(root, "[x]").map((r) => r.toString())).toEqual(["[x]"]);
     expect(findTextRanges(root, "a.b").map((r) => r.toString())).toEqual(["a.b"]);
     expect(findTextRanges(root, "")).toHaveLength(0);
+  });
+  it("counts every match while bounding the ranges painted for a large result set", () => {
+    document.getElementById("diff-container")!.innerHTML =
+      `<span class="d2h-code-line-ctn">${"x ".repeat(2501)}</span>`;
+    const controller = new FindController();
+    controller.open();
+    const input = document.querySelector<HTMLInputElement>('#diff-find-widget input[type="text"]')!;
+    input.value = "x";
+    input.dispatchEvent(new Event("input"));
+    expect(document.querySelector("#diff-find-widget span")!.textContent).toBe("1 / 2501");
+    expect(highlights.get("diff-find")).toHaveLength(2000);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", shiftKey: true, bubbles: true }));
+    expect(document.querySelector("#diff-find-widget span")!.textContent).toBe("2501 / 2501");
+    const current = [...(highlights.get("diff-find-current") as Set<Range>)][0];
+    expect(current.startOffset).toBe(5000);
   });
   it("searches folded context while respecting collapsed files and other hidden ancestors", () => {
     const root = document.getElementById("diff-container")!;

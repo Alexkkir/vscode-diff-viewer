@@ -19,6 +19,7 @@ jest.mock("../aligned-diff-renderer", () => ({
       highlightCode: jest.fn(),
       draw: jest.fn(() => {
         container.innerHTML = diffFiles
+          .filter((file) => !config.renderNothingWhenEmpty || file.blocks.length > 0)
           .map((diffFile) => {
             const fileBody =
               config.outputFormat === "line-by-line"
@@ -188,6 +189,65 @@ describe("MessageToWebviewHandlerImpl", () => {
         }),
         setState,
       },
+    });
+  });
+
+  it.each(["uncheck", "expandAll", "refresh"] as const)(
+    "does not persist a delayed Viewed check after %s",
+    async (action) => {
+      const payload = createUpdatePayload({
+        diffFiles: [createMockDiffFile({ oldName: "one.ts", newName: "one.ts" })],
+        accessiblePaths: ["one.ts"],
+        performance: { isLargeDiff: false, deferViewedStateHashing: true },
+      });
+      await handler.updateWebview(payload);
+      let finish!: (hash: string) => void;
+      mockGetSha1Hash.mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      );
+      const toggle = document.querySelector<HTMLInputElement>(".d2h-file-collapse-input")!;
+      toggle.click();
+      if (action === "uncheck") toggle.click();
+      else if (action === "expandAll") handler.performWebviewAction({ action });
+      else await handler.updateWebview(payload);
+      finish("obsolete-hash");
+      for (let turn = 0; turn < 5; turn++) await Promise.resolve();
+      const viewedMessages = postMessageToExtensionFn.mock.calls
+        .map(([message]) => message)
+        .filter((message) => message.kind === "toggleFileViewed");
+      expect(viewedMessages).toEqual(
+        action === "refresh" ? [] : [{ kind: "toggleFileViewed", payload: { path: "one.ts", viewedSha1: null } }],
+      );
+    },
+  );
+
+  it("keeps file links attached to the visible model after an empty file is omitted", async () => {
+    const config = createConfig();
+    config.diff2html.renderNothingWhenEmpty = true;
+    await handler.updateWebview(
+      createUpdatePayload({
+        config,
+        diffFiles: [
+          createMockDiffFile({ oldName: "empty.ts", newName: "empty.ts" }),
+          createMockDiffFile({
+            oldName: "visible.ts",
+            newName: "visible.ts",
+            blocks: [{ header: "@@ -1 +1 @@", oldStartLine: 1, newStartLine: 1, lines: [] }],
+          }),
+        ],
+        accessiblePaths: ["empty.ts", "visible.ts"],
+      }),
+    );
+    expect(document.querySelectorAll(".d2h-file-wrapper")).toHaveLength(1);
+    const file = document.querySelector<HTMLElement>(".d2h-file-wrapper")!;
+    expect(file.dataset.diffPath).toBe("visible.ts");
+    file.querySelector<HTMLButtonElement>(".diff-viewer-file-action-button")!.click();
+    expect(postMessageToExtensionFn).toHaveBeenCalledWith({
+      kind: "openFile",
+      payload: { path: "visible.ts", line: undefined },
     });
   });
 

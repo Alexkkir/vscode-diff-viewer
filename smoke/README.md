@@ -16,4 +16,6 @@ Keeping these files in JavaScript is a reasonable tradeoff for this repository:
 
 The web smoke flow now validates rendered webview state, command-driven layout and collapse behavior, config-driven rerenders, and raw-file fallback so DOM regressions surface even when the underlying diff text is unchanged.
 
+The focused browser regressions in `../integration/browser/review-ui.cjs` load the built webview bundle with its normal CSS and synthetic inputs. They check large Find results, unequal pane widths, local/global horizontal synchronization, and independent vertical scrolling using native Chromium events. Run `npm run build:prod` followed by `node integration/browser/review-ui.cjs` from the repository root; Playwright's Chromium must be installed.
+
 If the smoke surface grows substantially, a separate `tsconfig.smoke.json` would be a good next step. Until then, the current JavaScript setup keeps the workflow simple.

@@ -270,3 +270,62 @@ it("retries an environment after a failed theme read", async () => {
   await expect(highlightDiffProgressively(files)).rejects.toThrow("read failed");
   await expect(highlightDiff(files)).resolves.not.toEqual([null]);
 });
+
+it("applies named token colors and theme overrides before explicit TextMate rules", async () => {
+  tokenCustom = {
+    strings: "#123456",
+    comments: { foreground: "#234567", fontStyle: "italic" },
+    textMateRules: [{ scope: "string", settings: { foreground: "#345678" } }],
+    "[*]": { strings: "#456789", numbers: "#567890" },
+    "[fixture]": {
+      strings: "#678901",
+      textMateRules: [{ scope: "string.quoted", settings: { foreground: "#789012" } }],
+    },
+  };
+  await highlightDiff(files);
+  const settings = createRegistry.mock.calls[0][0].theme.settings;
+  expect(settings).toEqual([
+    { settings: { foreground: "#808080" } },
+    { scope: ["comment", "punctuation.definition.comment"], settings: { foreground: "#234567", fontStyle: "italic" } },
+    { scope: ["string", "meta.embedded.assembly"], settings: { foreground: "#123456" } },
+    { scope: "string", settings: { foreground: "#345678" } },
+    { scope: ["string", "meta.embedded.assembly"], settings: { foreground: "#678901" } },
+    { scope: ["constant.numeric"], settings: { foreground: "#567890" } },
+    { scope: "string.quoted", settings: { foreground: "#789012" } },
+  ]);
+});
+
+it("uses the same two-column combined diff prefix as the renderer", async () => {
+  files = parse('diff --combined code.py\n--- a/code.py\n+++ b/code.py\n@@@ -1 -1 +1 @@@\n--before\n++print("new")\n');
+  source = undefined;
+  const result = await highlightDiffProgressively(files);
+  expect(tokenize.mock.calls.map(([text]) => text)).toEqual(["before", 'print("new")']);
+  expect(result.syntax[0]?.new[1][0].end).toBe('print("new")'.length);
+});
+
+it("yields to a newer request and does not cache a cancelled partial snapshot", async () => {
+  files = parse(
+    "--- a/code.py\n+++ b/code.py\n@@ -0,0 +1,100 @@\n" + Array.from({ length: 100 }, () => "+value = 1\n").join(""),
+  );
+  source = undefined;
+  let clock = 0;
+  let current = true;
+  const now = jest.spyOn(Date, "now").mockImplementation(() => clock++);
+  const obsolete = setTimeout(() => {
+    current = false;
+  }, 0);
+  try {
+    await expect(highlightDiffProgressively(files, undefined, () => current)).rejects.toThrow(
+      "Obsolete syntax request",
+    );
+    expect(tokenize.mock.calls.length).toBeLessThan(100);
+    tokenize.mockClear();
+    current = true;
+    const result = await highlightDiffProgressively(files, undefined, () => current);
+    expect(Object.keys(result.syntax[0]!.new)).toHaveLength(100);
+    expect(tokenize).toHaveBeenCalledTimes(100);
+  } finally {
+    clearTimeout(obsolete);
+    now.mockRestore();
+  }
+});

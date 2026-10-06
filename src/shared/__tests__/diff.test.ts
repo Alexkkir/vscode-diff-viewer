@@ -7,6 +7,65 @@ const headers = ["--- prompt.py\t(0123456789abcdef0123456789abcdef01234567)", "+
 const patch = (...lines: string[]): string => [...headers, ...lines, ""].join("\n");
 
 describe("parseDiff", () => {
+  it("decodes Git C-quoted UTF-8 filenames for display and file resolution", () => {
+    const [file] = parseDiff(
+      [
+        'diff --git "a/\\321\\202.py" "b/\\321\\202.py"',
+        '--- "a/\\321\\202.py"',
+        '+++ "b/\\321\\202.py"',
+        "@@ -1 +1 @@",
+        "-before",
+        "+after",
+      ].join("\n"),
+    );
+    expect(file).toMatchObject({ oldName: "т.py", newName: "т.py", language: "py" });
+  });
+
+  it("decodes quoted rename-only paths without retaining the closing quote", () => {
+    const [file] = parseDiff(
+      [
+        'diff --git "a/old\\tname.py" "b/new\\tname.py"',
+        "similarity index 100%",
+        'rename from "old\\tname.py"',
+        'rename to "new\\tname.py"',
+      ].join("\n"),
+    );
+    expect(file).toMatchObject({ oldName: "old\tname.py", newName: "new\tname.py", isRename: true });
+  });
+
+  it.each([
+    [String.raw`name\twith\nlines.py`, "name\twith\nlines.py"],
+    [String.raw`name\"quote\\slash.py`, 'name"quote\\slash.py'],
+  ])("decodes quoted path escapes without altering escaped source text: %s", (encoded, decoded) => {
+    const [file] = parseDiff(
+      [
+        `diff --git "a/${encoded}" "b/${encoded}"`,
+        `--- "a/${encoded}"`,
+        `+++ "b/${encoded}"`,
+        "@@ -1 +1 @@",
+        `-${encoded}`,
+        `+${encoded}`,
+      ].join("\n"),
+    );
+    expect(file).toMatchObject({ oldName: decoded, newName: decoded, language: "py" });
+    expect(file.blocks[0].lines.map((line) => line.content)).toEqual([`-${encoded}`, `+${encoded}`]);
+  });
+
+  it("restores quoted paths in binary and mode-only Git metadata", () => {
+    const files = parseDiff(
+      [
+        'diff --git "a/\\321\\202.png" "b/\\321\\202.png"',
+        'Binary files "a/\\321\\202.png" and "b/\\321\\202.png" differ',
+        'diff --git "a/\\321\\202.py" "b/\\321\\202.py"',
+        "old mode 100644",
+        "new mode 100755",
+      ].join("\n"),
+    );
+    expect(files).toHaveLength(2);
+    expect(files[0]).toMatchObject({ oldName: "т.png", newName: "т.png", isBinary: true });
+    expect(files[1]).toMatchObject({ oldName: "т.py", newName: "т.py", oldMode: "100644", newMode: "100755" });
+  });
+
   it("preserves the removed EOF newline marker without inventing a code line or rename", () => {
     const [file] = parseDiff(
       patch(

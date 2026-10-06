@@ -9,6 +9,31 @@ export interface DiffFileWithMetadata extends DiffFile {
 const NO_NEWLINE = "\\ No newline at end of file";
 const ARC_REVISION = /[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i;
 
+function decodeGitPath(quoted: string): string {
+  const escapes: Record<string, string> = {
+    a: "\u0007",
+    b: "\b",
+    t: "\t",
+    n: "\n",
+    v: "\v",
+    f: "\f",
+    r: "\r",
+    '"': '"',
+    "\\": "\\",
+  };
+  return quoted.slice(1, -1).replace(/(?:\\[0-7]{1,3})+|\\[abtnvfr"\\]/g, (escape) => {
+    if (/^\\[0-7]/.test(escape)) {
+      const bytes = Array.from(escape.matchAll(/\\([0-7]{1,3})/g), (match) => Number.parseInt(match[1], 8));
+      try {
+        return new TextDecoder("utf-8", { fatal: true }).decode(Uint8Array.from(bytes));
+      } catch {
+        return escape;
+      }
+    }
+    return escapes[escape[1]];
+  });
+}
+
 interface DiffSection {
   lines: string[];
   noNewline: NonNullable<DiffFileWithMetadata["noNewline"]>;
@@ -36,6 +61,26 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
   let literalToken = "\uE000";
   while (text.includes(literalToken)) literalToken += "\uE000";
   const literalMarker = NO_NEWLINE.replace("\\", literalToken);
+  const quotedPaths = new Map<string, string>();
+  // Hide quoted names from upstream's permissive quote/whitespace parsing.
+  // Only metadata is rewritten; escaped text inside source remains literal.
+  const maskPaths = (line: string, stripPrefix: boolean): string =>
+    line.replace(/"(?:\\.|[^"\\])*"/g, (quoted) => {
+      const decoded = decodeGitPath(quoted);
+      const prefix = stripPrefix
+        ? (["a/", "b/", "i/", "w/", "c/", "o/", config?.srcPrefix, config?.dstPrefix].find(
+            (value): value is string => !!value && decoded.startsWith(value),
+          ) ?? "")
+        : "";
+      const placeholder = `${literalToken}path${quotedPaths.size}`;
+      quotedPaths.set(placeholder, decoded.slice(prefix.length));
+      return prefix + placeholder;
+    });
+  const restorePath = (value: string): string =>
+    value.replace(
+      new RegExp(`${literalToken}path\\d+`, "g"),
+      (placeholder) => quotedPaths.get(placeholder) ?? placeholder,
+    );
   const restore = (value: string): string =>
     value
       .replaceAll(literalMarker, NO_NEWLINE)
@@ -71,14 +116,20 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
       (combinedHunk && (combinedHunk.newRemaining > 0 || combinedHunk.oldRemaining.some((count) => count > 0)));
     if (line.startsWith("diff --git") || line.startsWith("diff --combined")) {
       startFile(true);
+      line = maskPaths(line, true);
     } else if (!insideHunk && line.startsWith("Binary files") && !isGit) {
       startFile(false);
+      line = maskPaths(line, true);
     } else if (!insideHunk && line.startsWith("--- ") && lines[index + 1]?.startsWith("+++ ")) {
       if (!isGit || hasHeaders) startFile(false);
       hasHeaders = true;
       // Strip only recognized revision metadata in actual file headers.
-      line = line.replace(ARC_REVISION, "");
-      lines[index + 1] = lines[index + 1].replace(ARC_REVISION, "");
+      line = maskPaths(line.replace(ARC_REVISION, ""), true);
+      lines[index + 1] = maskPaths(lines[index + 1].replace(ARC_REVISION, ""), true);
+    } else if (!insideHunk && /^(?:copy|rename) (?:from|to) /.test(line)) {
+      line = maskPaths(line, false);
+    } else if (!insideHunk && line.startsWith("Binary files")) {
+      line = maskPaths(line, true);
     }
 
     const header = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/.exec(line);
@@ -149,8 +200,16 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
         : config;
     const files: DiffFileWithMetadata[] = parse(part.lines.join("\n"), options);
     for (const file of files) {
-      if (file.oldName) file.oldName = restore(file.oldName);
-      file.newName = restore(file.newName);
+      const hadQuotedPath =
+        file.oldName?.includes(`${literalToken}path`) || file.newName.includes(`${literalToken}path`);
+      if (file.oldName) file.oldName = restorePath(restore(file.oldName));
+      file.newName = restorePath(restore(file.newName));
+      if (hadQuotedPath) {
+        for (const path of [file.oldName, file.newName]) {
+          const parts = path?.split(".");
+          if (parts && parts.length > 1) file.language = parts[parts.length - 1];
+        }
+      }
       for (const block of file.blocks) {
         block.header = restore(block.header);
         for (const line of block.lines) line.content = restore(line.content);

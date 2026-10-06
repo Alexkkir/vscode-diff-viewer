@@ -45,8 +45,8 @@ const DEFAULT_CONFIG: AppConfig = {
   },
 };
 
-export function extractConfig(): AppConfig {
-  const config = vscode.workspace.getConfiguration(APP_CONFIG_SECTION);
+export function extractConfig(resource?: vscode.Uri): AppConfig {
+  const config = vscode.workspace.getConfiguration(APP_CONFIG_SECTION, resource);
   const configuredColorScheme = getColorSchemeSetting(config);
 
   return {
@@ -83,12 +83,22 @@ export function extractConfig(): AppConfig {
   };
 }
 
-export function isAutoColorScheme(): boolean {
-  return getColorSchemeSetting(vscode.workspace.getConfiguration(APP_CONFIG_SECTION)) === "auto";
+export function isAutoColorScheme(resource?: vscode.Uri): boolean {
+  return getColorSchemeSetting(vscode.workspace.getConfiguration(APP_CONFIG_SECTION, resource)) === "auto";
 }
 
-export function setOutputFormatConfig(value: OutputFormatType): Thenable<void> {
-  return vscode.workspace.getConfiguration(APP_CONFIG_SECTION).update(requiredConfigSections.outputFormat, value, true);
+export function setOutputFormatConfig(value: OutputFormatType, resource?: vscode.Uri): Thenable<void> {
+  const config = vscode.workspace.getConfiguration(APP_CONFIG_SECTION, resource);
+  if (!resource) return config.update(requiredConfigSections.outputFormat, value, true);
+
+  const inspected = config.inspect<OutputFormatType>(requiredConfigSections.outputFormat);
+  const target =
+    inspected?.workspaceFolderValue !== undefined
+      ? vscode.ConfigurationTarget.WorkspaceFolder
+      : inspected?.workspaceValue !== undefined
+        ? vscode.ConfigurationTarget.Workspace
+        : vscode.ConfigurationTarget.Global;
+  return config.update(requiredConfigSections.outputFormat, value, target);
 }
 
 function getColorSchemeSetting(config: vscode.WorkspaceConfiguration): ColorSchemeSetting {

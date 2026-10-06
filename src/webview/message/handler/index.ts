@@ -1,4 +1,5 @@
 import { renderNoNewlineMarkers } from "./no-newline";
+import { getRenderedFileWrappers, linkRenderedFileSummaries } from "./rendered-file-wrappers";
 import { SyntaxHighlightingController } from "./syntax-highlighting";
 import { FindController } from "./find";
 import { ContextFoldingController } from "./context-folding";
@@ -58,6 +59,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   private currentDiffHashes: Record<string, string> = {};
   private currentUiState: WebviewUiState;
   private currentDiffFilesByPath: Record<string, DiffFile> = {};
+  private viewedRequestIds = new Map<string, number>();
   private fileBindings: FileDomBinding[] = [];
   private diffContainerHandlersRegistered = false;
   private readonly horizontalScrollbarController: HorizontalScrollbarController;
@@ -101,6 +103,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     }
 
     const generation = ++this.updateGeneration;
+    this.viewedRequestIds.clear();
     this.currentRenderId = payload.renderId;
     this.rendering = true;
     this.pendingSyntax = undefined;
@@ -139,11 +142,12 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         highlight: false,
       });
       diff2html.draw();
+      linkRenderedFileSummaries(diffContainer, payload.diffFiles);
       renderNoNewlineMarkers(diffContainer, payload.diffFiles);
       await this.contextFoldingController.render(diffContainer, payload.diffFiles);
       if (generation !== this.updateGeneration) return;
 
-      this.syntaxHighlightingController.render(diffContainer, payload.syntax);
+      this.syntaxHighlightingController.render(diffContainer, payload.syntax, payload.diffFiles);
       this.fileBindings = this.enhanceRenderedDiff(diffContainer, payload.diffFiles);
       this.registerDiffContainerHandlers(diffContainer);
       this.horizontalScrollbarController.ensureWindowHandlersRegistered();
@@ -376,13 +380,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   }
 
   private enhanceRenderedDiff(diffContainer: HTMLElement, diffFiles: DiffFile[]): FileDomBinding[] {
-    const fileContainers = diffContainer.querySelectorAll<HTMLElement>(Diff2HtmlCssClassElements.Div__File);
-    return Array.from(fileContainers).flatMap((fileContainer, index) => {
-      const diffFile = diffFiles[index];
-      if (!diffFile) {
-        return [];
-      }
-
+    return getRenderedFileWrappers(diffContainer, diffFiles).flatMap(({ file: diffFile, wrapper: fileContainer }) => {
       const viewModel = buildDiffFileViewModel(diffFile, this.accessiblePaths);
       fileContainer.dataset.diffPath = viewModel.primaryPath;
       this.enhanceFileNameLink(fileContainer, viewModel);
@@ -511,7 +509,13 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       return;
     }
 
+    const generation = this.updateGeneration;
+    const requestId = (this.viewedRequestIds.get(fileName) ?? 0) + 1;
+    this.viewedRequestIds.set(fileName, requestId);
     const viewedSha1 = viewed ? await this.getOrCreateDiffHash(fileName) : null;
+    // Hashing can finish after an uncheck, Expand all, or a new diff render.
+    // Only the latest action on the currently rendered file may be persisted.
+    if (generation !== this.updateGeneration || this.viewedRequestIds.get(fileName) !== requestId) return;
 
     this.args.postMessageToExtensionFn({
       kind: "toggleFileViewed",

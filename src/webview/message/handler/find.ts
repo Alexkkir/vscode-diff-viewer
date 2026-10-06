@@ -44,6 +44,9 @@ export function findTextRanges(root: HTMLElement, query: string, matchCase = fal
 }
 
 export class FindController {
+  // Keep all matches navigable, but avoid asking Chromium to paint hundreds of
+  // thousands of off-screen ranges on every keystroke or content update.
+  private static readonly maxPaintedMatches = 2000;
   private panel: HTMLElement | undefined;
   private input!: HTMLInputElement;
   private count!: HTMLElement;
@@ -92,7 +95,11 @@ export class FindController {
   }
 
   private paint(): void {
-    CSS.highlights.set("diff-find", new Highlight(...this.ranges));
+    const first = Math.max(0, this.index - Math.floor(FindController.maxPaintedMatches / 2));
+    const last = Math.min(this.ranges.length, first + FindController.maxPaintedMatches);
+    const matches = new Highlight();
+    for (let index = first; index < last; index++) matches.add(this.ranges[index]);
+    CSS.highlights.set("diff-find", matches);
     const current = this.ranges[this.index];
     CSS.highlights.set("diff-find-current", new Highlight(...(current ? [current] : [])));
     this.count.textContent = this.input.value ? `${current ? this.index + 1 : 0} / ${this.ranges.length}` : "";

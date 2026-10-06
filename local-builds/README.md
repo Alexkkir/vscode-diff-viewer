@@ -1,3 +1,13 @@
+# Latest local build: 1.8.14
+
+Install `diff-viewer-1.8.14-review-fixes.vsix`, then run **Developer: Reload Window**.
+
+This build includes the fixes from a review of alignment, parsing, source identity, editor lifecycle, review state, syntax and scrolling. The [review report](review-1.8.14.md) records all 13 reproduced issues and the regression coverage. Fixes include preserving smaller valid diffs, preventing wrong-file links/colors/EOF markers, keeping Viewed state consistent across quick actions, handling quoted Git paths and folder-specific configuration, respecting custom token colors, and avoiding large-search crashes and asymmetric-scroll rollback.
+
+Validation: 605 tests, lint, TypeScript, formatting, production build, 33 browser scenarios and eight isolated VS Code regressions passed. Large lexical work yields to the extension-host event loop and can be canceled; total processing time is not eliminated. Find retains all results and navigation while rendering at most 2,000 matching highlights at a time. All prior user-facing features remain included.
+
+Build with the commands below using output version 1.8.14. The report includes browser, desktop and benchmark commands; packaging uses `npx vsce package --no-dependencies --githubBranch main -o /tmp/diff-viewer-1.8.14-review-fixes.vsix` after the production build.
+
 # Latest local build: 1.8.13
 
 Install `diff-viewer-1.8.13-block-alignment.vsix`, then run **Developer: Reload Window**.

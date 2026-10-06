@@ -1,6 +1,8 @@
 import type { FileSyntax, SyntaxToken } from "../../../shared/syntax";
 import { closeTags, getLanguage, nodeStream, mergeStreams } from "diff2html/lib/ui/js/highlight.js-helpers";
 import { hljs } from "diff2html/lib/ui/js/highlight.js-slim";
+import type { DiffFile } from "diff2html/lib/types";
+import { getRenderedFileWrappers } from "./rendered-file-wrappers";
 
 interface CodeLine {
   element: HTMLElement;
@@ -38,9 +40,15 @@ export class SyntaxHighlightingController {
 
   constructor(private readonly args: { getEnabled: () => boolean; setEnabled: (enabled: boolean) => void }) {}
 
-  public render(container: HTMLElement, syntax?: Array<FileSyntax | null>): void {
+  public render(container: HTMLElement, syntax?: Array<FileSyntax | null>, files?: readonly DiffFile[]): void {
     this.lines = [];
-    container.querySelectorAll<HTMLElement>(".d2h-file-wrapper").forEach((file, fileIndex) => {
+    const wrappers = files
+      ? getRenderedFileWrappers(container, files)
+      : Array.from(container.querySelectorAll<HTMLElement>(".d2h-file-wrapper"), (wrapper, fileIndex) => ({
+          wrapper,
+          fileIndex,
+        }));
+    wrappers.forEach(({ wrapper: file, fileIndex }) => {
       // Revision-labelled diffs append metadata to the extension in data-lang.
       const extension = (file.dataset.lang ?? "").replace(/[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i, "");
       file.dataset.lang = extension;
