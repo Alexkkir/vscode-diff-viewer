@@ -21,12 +21,15 @@ export function buildDiffFileViewModel(diffFile: DiffFile, accessiblePaths: Read
 }
 
 export function buildDiffFileMap(diffFiles: DiffFile[], accessiblePaths: ReadonlySet<string>): DiffFileHashMap {
-  return Object.fromEntries(
-    diffFiles.flatMap((diffFile) => {
-      const filePath = buildDiffFileViewModel(diffFile, accessiblePaths).primaryPath;
-      return filePath ? [[filePath, diffFile] as const] : [];
-    }),
-  );
+  const byPath = new Map<string, DiffFileHashMap[string]>();
+  for (const diffFile of diffFiles) {
+    const filePath = buildDiffFileViewModel(diffFile, accessiblePaths).primaryPath;
+    if (!filePath) continue;
+    const previous = byPath.get(filePath);
+    if (Array.isArray(previous)) previous.push(diffFile);
+    else byPath.set(filePath, previous ? [previous, diffFile] : diffFile);
+  }
+  return Object.fromEntries(byPath);
 }
 
 export async function buildDiffHashes(args: {
@@ -41,7 +44,7 @@ export async function buildDiffHashes(args: {
         .filter((filePath): filePath is string => filePath.length > 0);
 
   const entries = await Promise.all(
-    targetPaths.map(async (fileName) => {
+    [...new Set(targetPaths)].map(async (fileName) => {
       if (!fileName) {
         return undefined;
       }

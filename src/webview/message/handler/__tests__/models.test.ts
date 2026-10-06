@@ -97,7 +97,31 @@ describe("message/handler/models", () => {
     });
 
     expect(Object.keys(currentDiffFilesByPath)).toEqual(["src/file.ts", "src/added.ts"]);
-    expect(hashes["src/file.ts"]).toContain("sha:");
-    expect(hashes["src/added.ts"]).toContain("sha:");
+    expect(hashes["src/file.ts"]).toBe(`sha:${JSON.stringify(diffFiles[0])}`);
+    expect(hashes["src/added.ts"]).toBe(`sha:${JSON.stringify(diffFiles[1])}`);
+  });
+
+  it.each([false, true])("includes every section of a repeated path in its hash (deferred: %s)", async (defer) => {
+    const first = createDiffFile({ oldName: "same.ts", newName: "same.ts", addedLines: 1 });
+    const last = createDiffFile({ oldName: "same.ts", newName: "same.ts", addedLines: 2 });
+    const accessiblePaths = new Set<string>();
+    const hash = async (diffFiles: DiffFile[]) => {
+      const currentDiffFilesByPath = buildDiffFileMap(diffFiles, accessiblePaths);
+      const payload = {
+        config: {} as never,
+        diffFiles,
+        accessiblePaths: [],
+        viewedState: { "same.ts": "previous-hash" },
+        collapseAll: false,
+        performance: { isLargeDiff: defer, deferViewedStateHashing: defer },
+      };
+      return buildDiffHashes({ payload, currentDiffFilesByPath, accessiblePaths });
+    };
+    const before = await hash([first, last]);
+    expect(before["same.ts"]).toBe(`sha:${JSON.stringify([first, last])}`);
+    expect(mockGetSha1Hash).toHaveBeenCalledTimes(1);
+    expect(buildDiffFileMap([first, last, first], accessiblePaths)["same.ts"]).toEqual([first, last, first]);
+    const after = await hash([{ ...first, addedLines: 3 }, last]);
+    expect(after["same.ts"]).not.toBe(before["same.ts"]);
   });
 });

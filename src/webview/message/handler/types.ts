@@ -27,4 +27,6 @@ export interface WebviewStateAdapter {
   setState: (state: WebviewUiState) => void;
 }
 
-export type DiffFileHashMap = Record<string, DiffFile>;
+// Preserve the existing single-file hash representation while including every
+// section when a patch contains several diffs for the same path.
+export type DiffFileHashMap = Record<string, DiffFile | DiffFile[]>;

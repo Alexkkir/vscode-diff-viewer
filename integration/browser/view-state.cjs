@@ -71,13 +71,14 @@ const server = http.createServer((request, response) => {
   }
 });
 const wide = "wide_column_".repeat(40);
-function patch(revision = 1, count = 5) {
+function patch(revision = 1, count = 5, inserted = 0) {
   return Array.from({ length: count }, (_, i) =>
     [
       `diff --git a/file${i}.py b/file${i}.py`,
       `--- a/file${i}.py`,
       `+++ b/file${i}.py`,
-      "@@ -1,280 +1,280 @@",
+      `@@ -1,280 +1,${280 + inserted} @@`,
+      ...Array.from({ length: inserted }, (_, n) => `+file_${i}_inserted_${n}_${wide}`),
       ...Array.from({ length: 280 }, (_, n) =>
         n === 70 || n === 210
           ? `-file_${i}_line_${n}_before_${wide}\n+file_${i}_line_${n}_after_${revision}_${wide}`
@@ -224,6 +225,30 @@ async function position(page) {
       });
       await page.close();
 
+      const shifted = await browser.newPage({ viewport: { width: 1300, height: 800 } });
+      await shifted.goto(`http://127.0.0.1:${server.address().port}/`);
+      await send(shifted, payload(format));
+      await shifted.evaluate(() => {
+        const source = Array.from(document.querySelectorAll(".d2h-code-line-ctn")).find((element) =>
+          element.textContent.startsWith("file_3_line_100_"),
+        );
+        window.scrollTo(0, scrollY + source.getBoundingClientRect().top - 60);
+      });
+      await settle(shifted);
+      const beforeInsertion = await snapshot(shifted);
+      assert(beforeInsertion.anchor.startsWith("file_3_line_100_"), "Insertion fixture must show the target source");
+      await shifted.screenshot({ path: path.join(artifactDirectory, `${format}-before-insertion.png`) });
+      const withInsertion = payload(format, 3);
+      withInsertion.diffFiles = parse(patch(1, 5, 20));
+      await send(shifted, withInsertion);
+      const afterInsertion = await snapshot(shifted);
+      await shifted.screenshot({ path: path.join(artifactDirectory, `${format}-after-insertion.png`) });
+      assert.equal(afterInsertion.anchor, beforeInsertion.anchor, "Inserted lines must not change the viewed source");
+      assert.equal(afterInsertion.anchorY, beforeInsertion.anchorY, "Inserted lines must preserve the source offset");
+      assert(afterInsertion.y > beforeInsertion.y, "Insertion fixture must move content before the viewport");
+      results.push({ format, insertion: { before: beforeInsertion, after: afterInsertion } });
+      await shifted.close();
+
       const large = await browser.newPage({ viewport: { width: 1300, height: 800 } });
       await large.goto(`http://127.0.0.1:${server.address().port}/`);
       await send(large, payload(format, 1, "dark", true));
@@ -258,7 +283,7 @@ async function position(page) {
       await large.close();
     }
     fs.writeFileSync(path.join(artifactDirectory, "view-state-results.json"), JSON.stringify(results, null, 2));
-    for (const r of results.filter((result) => !result.large))
+    for (const r of results.filter((result) => !result.large && !result.insertion))
       for (const [before, after] of [
         ["before", "identical"],
         ["beforeTheme", "theme"],

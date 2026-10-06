@@ -1,3 +1,11 @@
+# Latest local build: 1.8.17
+
+Install `diff-viewer-1.8.17-viewed-anchors.vsix`, then run **Developer: Reload Window**.
+
+The visible-line anchor now verifies source text and retains both old/new coordinates. Inserting lines above the viewport keeps the previously read text at the same position rather than following a reused line number. Pending Viewed checks now survive a redraw of unchanged content; changed content stays open, and later uncheck/Expand all actions still win. Hashes for repeated paths include every section so a change in an earlier section cannot remain incorrectly marked viewed.
+
+The [report](viewed-anchors-1.8.17.md) describes reproduced failures and regression coverage. Build with the commands below using output version 1.8.17. The browser `view-state.cjs` suite includes insertions above the viewport; `viewed-lifecycle.test.ts` controls asynchronous hashing and overlapping updates with the actual renderer.
+
 # Latest local build: 1.8.16
 
 Install `diff-viewer-1.8.16-refresh-fidelity.vsix`, then run **Developer: Reload Window**.

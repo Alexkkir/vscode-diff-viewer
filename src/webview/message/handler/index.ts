@@ -22,6 +22,7 @@ import { WebviewHandlerTestSupport } from "./testing/support";
 import {
   CHANGED_SINCE_VIEWED,
   DEFAULT_UI_STATE,
+  DiffFileHashMap,
   DiffFileViewModel,
   FILE_ACTION_BUTTON_CLASS,
   FILE_ACTIONS_CLASS,
@@ -43,8 +44,9 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   private currentRenderId: number | undefined;
   private rendering = false;
   private pendingSyntax: UpdateSyntaxPayload | undefined;
-  private pendingInteractions: Array<{ action: WebviewAction } | { path: string; file: DiffFile; viewed: boolean }> =
-    [];
+  private pendingInteractions: Array<
+    { action: WebviewAction } | { path: string; file: DiffFileHashMap[string]; viewed: boolean }
+  > = [];
   private readonly contextFoldingController = new ContextFoldingController({
     getState: () => this.currentUiState.contextExpansions ?? {},
     setState: (contextExpansions) => this.persistUiState({ contextExpansions }),
@@ -61,8 +63,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   private accessiblePaths = new Set<string>();
   private currentDiffHashes: Record<string, string> = {};
   private currentUiState: WebviewUiState;
-  private currentDiffFilesByPath: Record<string, DiffFile> = {};
-  private viewedRequestIds = new Map<string, number>();
+  private currentDiffFilesByPath: DiffFileHashMap = {};
+  private pendingViewedRequests = new Map<string, { file: DiffFileHashMap[string]; viewed: boolean }>();
   private fileBindings: FileDomBinding[] = [];
   private diffContainerHandlersRegistered = false;
   private contextSelection: string | undefined;
@@ -107,7 +109,13 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     }
 
     const generation = ++this.updateGeneration;
-    this.viewedRequestIds.clear();
+    // A check can still be hashing when a refresh begins. Preserve that user
+    // intent before canceling the old async write, just like actions made while
+    // a refresh is already pending. Later queued interactions must win.
+    this.pendingInteractions.unshift(
+      ...Array.from(this.pendingViewedRequests, ([path, request]) => ({ path, ...request })),
+    );
+    this.pendingViewedRequests.clear();
     this.currentRenderId = payload.renderId;
     this.rendering = true;
     this.pendingSyntax = undefined;
@@ -207,17 +215,28 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         if ("action" in interaction) {
           this.performWebviewAction(interaction);
         } else {
-          const binding = this.fileBindings.find((file) => file.filePath === interaction.path);
-          if (!binding?.viewedToggle) continue;
+          const toggles = this.fileBindings.flatMap((file) =>
+            file.filePath === interaction.path && file.viewedToggle ? [file.viewedToggle] : [],
+          );
+          if (!toggles.length) continue;
           const unchanged =
             JSON.stringify(interaction.file) === JSON.stringify(this.currentDiffFilesByPath[interaction.path]);
-          if (unchanged) {
-            binding.viewedToggle.checked = interaction.viewed;
-            this.onViewedToggleChangedHandler(binding.viewedToggle);
-          } else if (interaction.viewed) {
-            this.updateDiff2HtmlFileCollapsed(binding.viewedToggle, false);
-            binding.viewedToggle.classList.add(CHANGED_SINCE_VIEWED);
-            this.getViewedToggleLabel(binding.viewedToggle)?.classList.add(CHANGED_SINCE_VIEWED);
+          if (unchanged || !interaction.viewed) {
+            for (const toggle of toggles) {
+              this.updateDiff2HtmlFileCollapsed(toggle, interaction.viewed);
+              toggle.classList.remove(CHANGED_SINCE_VIEWED);
+              this.getViewedToggleLabel(toggle)?.classList.remove(CHANGED_SINCE_VIEWED);
+            }
+            this.onViewedToggleChangedHandler(toggles[0]);
+          } else {
+            for (const toggle of toggles) {
+              this.updateDiff2HtmlFileCollapsed(toggle, false);
+              toggle.classList.add(CHANGED_SINCE_VIEWED);
+              this.getViewedToggleLabel(toggle)?.classList.add(CHANGED_SINCE_VIEWED);
+            }
+            this.persistUiState({
+              fileCollapsedOverrides: { ...this.currentUiState.fileCollapsedOverrides, [interaction.path]: false },
+            });
           }
         }
       }
@@ -620,13 +639,15 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       return;
     }
 
-    const generation = this.updateGeneration;
-    const requestId = (this.viewedRequestIds.get(fileName) ?? 0) + 1;
-    this.viewedRequestIds.set(fileName, requestId);
+    const file = this.currentDiffFilesByPath[fileName];
+    if (!file) return;
+    const request = { file, viewed };
+    this.pendingViewedRequests.set(fileName, request);
     const viewedSha1 = viewed ? await this.getOrCreateDiffHash(fileName) : null;
     // Hashing can finish after an uncheck, Expand all, or a new diff render.
     // Only the latest action on the currently rendered file may be persisted.
-    if (generation !== this.updateGeneration || this.viewedRequestIds.get(fileName) !== requestId) return;
+    if (this.pendingViewedRequests.get(fileName) !== request) return;
+    this.pendingViewedRequests.delete(fileName);
 
     this.args.postMessageToExtensionFn({
       kind: "toggleFileViewed",

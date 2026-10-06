@@ -193,7 +193,7 @@ describe("MessageToWebviewHandlerImpl", () => {
   });
 
   it.each(["uncheck", "expandAll", "refresh"] as const)(
-    "does not persist a delayed Viewed check after %s",
+    "does not persist an obsolete delayed Viewed hash after %s",
     async (action) => {
       const payload = createUpdatePayload({
         diffFiles: [createMockDiffFile({ oldName: "one.ts", newName: "one.ts" })],
@@ -218,9 +218,15 @@ describe("MessageToWebviewHandlerImpl", () => {
       const viewedMessages = postMessageToExtensionFn.mock.calls
         .map(([message]) => message)
         .filter((message) => message.kind === "toggleFileViewed");
-      expect(viewedMessages).toEqual(
-        action === "refresh" ? [] : [{ kind: "toggleFileViewed", payload: { path: "one.ts", viewedSha1: null } }],
-      );
+      expect(viewedMessages).toEqual([
+        {
+          kind: "toggleFileViewed",
+          payload: {
+            path: "one.ts",
+            viewedSha1: action === "refresh" ? `sha:${JSON.stringify(payload.diffFiles[0])}` : null,
+          },
+        },
+      ]);
     },
   );
 
