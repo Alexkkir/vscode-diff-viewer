@@ -10,7 +10,7 @@ const MIN_SIMILARITY = 0.5;
 const CONTINUITY_BONUS = 0.5;
 
 /** Align a changed run as a whole, rather than anchoring on its closest pair. */
-export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[]): AlignedLineGroup[] {
+export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], language?: string): AlignedLineGroup[] {
   if (!oldLines.length || !newLines.length) return oldLines.length || newLines.length ? [[oldLines, newLines]] : [];
   const width = newLines.length + 1;
   const comparisons = oldLines.length * newLines.length;
@@ -18,8 +18,13 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[]): A
 
   const oldText = oldLines.map((line) => line.content.slice(1).trim());
   const newText = newLines.map((line) => line.content.slice(1).trim());
+  const python = /^(?:py|pyi|pyw|python)$/i.test(language ?? "");
+  const oldCode = python ? oldText.map(pythonCode) : [];
+  const newCode = python ? newText.map(pythonCode) : [];
   const oldDeclarations = oldText.map(declarationShape);
   const newDeclarations = newText.map(declarationShape);
+  const oldImports = oldText.map(importStatement);
+  const newImports = newText.map(importStatement);
   const scores = new Float64Array((oldLines.length + 1) * width);
   const directions = new Uint8Array(scores.length);
   const pairScores = new Float64Array(scores.length).fill(-Infinity);
@@ -33,9 +38,33 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[]): A
     for (let newIndex = 1; newIndex <= newLines.length; newIndex++) {
       const left = oldText[oldIndex - 1];
       const right = newText[newIndex - 1];
-      const compared = similarity(left, right, characterBudget);
+      const oldImport = oldImports[oldIndex - 1];
+      const newImport = newImports[newIndex - 1];
+      // Pair a rewritten import with its header, not with a continuation name
+      // or a nearby comment. Its length can change greatly when unwrapped.
+      const importScore =
+        oldImport && newImport
+          ? oldImport.statement === newImport.statement
+            ? 1
+            : oldImport.module !== undefined && oldImport.module === newImport.module
+              ? 0.9
+              : undefined
+          : oldImport || newImport
+            ? 0
+            : undefined;
+      const unchangedCode = oldCode[oldIndex - 1] !== undefined && oldCode[oldIndex - 1] === newCode[newIndex - 1];
+      const compared = unchangedCode
+        ? { score: 1, work: 0 }
+        : importScore !== undefined
+          ? { score: importScore, work: 0 }
+          : similarity(left, right, characterBudget);
       if (!compared) return [[oldLines, newLines]];
       characterBudget -= compared.work;
+      // A one-character module rename can otherwise outscore the matching
+      // header when that header's imported names moved onto the same line.
+      if (oldImport?.module !== undefined && newImport?.module !== undefined && oldImport.module !== newImport.module) {
+        compared.score = Math.min(compared.score, 0.8);
+      }
       const declaration = oldDeclarations[oldIndex - 1];
       const renamedDeclaration = declaration !== undefined && declaration === newDeclarations[newIndex - 1];
       const score = Math.max(compared.score, renamedDeclaration ? 0.8 : 0);
@@ -95,6 +124,39 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[]): A
   if (oldIndex < oldLines.length) result.push([oldLines.slice(oldIndex), []]);
   if (newIndex < newLines.length) result.push([[], newLines.slice(newIndex)]);
   return result;
+}
+
+function pythonCode(text: string): string | undefined {
+  let quote: string | undefined;
+  for (let index = 0; index < text.length; index++) {
+    const character = text[index];
+    if (quote) {
+      if (character === "\\") index++;
+      else if (character === quote) quote = undefined;
+    } else if (character === '"' || character === "'") {
+      // F-string expressions can reuse the outer quote in modern Python.
+      // Leave them to full-text matching instead of mistaking a nested # for
+      // a comment; syntax highlighting has its own complete tokenizer.
+      const prefix = /[a-z]+$/i.exec(text.slice(0, index))?.[0];
+      if (prefix && /^(?:f|fr|rf)$/i.test(prefix)) return undefined;
+      // Multiline string state is unavailable to line pairing; keep its full
+      // text rather than guessing which hashes might belong to the string.
+      if (text.slice(index, index + 3) === character.repeat(3)) return undefined;
+      quote = character;
+    } else if (character === "#") {
+      return text.slice(0, index).trimEnd() || undefined;
+    }
+  }
+  return quote ? undefined : text || undefined;
+}
+
+function importStatement(text: string): { statement: string; module?: string } | undefined {
+  // Python imports cannot contain string literals. Recognize only their bare
+  // syntax so a long trailing # comment cannot outweigh an unchanged import;
+  // never strip # from arbitrary expressions, strings or comment-only lines.
+  const statement = text.split("#", 1)[0].trimEnd();
+  if (!/^(?:from\s+[\p{L}\p{N}_.]+\s+import\s+|import\s+)[\p{L}\p{N}_.,*() \t]+$/u.test(statement)) return undefined;
+  return { statement, module: /^from\s+([\p{L}\p{N}_.]+)\s+import\s+/u.exec(statement)?.[1] };
 }
 
 function declarationShape(text: string): string | undefined {

@@ -10,18 +10,19 @@ import { alignChangedLines } from "./line-alignment";
 
 type RendererConfig = typeof defaultDiff2HtmlConfig;
 
-function matchLines(oldLines: DiffLine[], newLines: DiffLine[], config: RendererConfig) {
+function matchLines(oldLines: DiffLine[], newLines: DiffLine[], config: RendererConfig, language?: string) {
   const comparisons = oldLines.length * newLines.length;
   const enabled = config.matching === "lines" || config.matching === "words";
   const allowed =
     enabled &&
     comparisons < config.matchingMaxComparisons &&
     [...oldLines, ...newLines].every((line) => line.content.length < config.maxLineSizeInBlockForComparison);
-  return allowed ? alignChangedLines(oldLines, newLines) : [[oldLines, newLines]];
+  return allowed ? alignChangedLines(oldLines, newLines, language) : [[oldLines, newLines]];
 }
 
 class AlignedSideBySideRenderer extends SideBySideRenderer {
   private combined = false;
+  private language?: string;
 
   constructor(
     hogan: HoganJsUtils,
@@ -32,18 +33,20 @@ class AlignedSideBySideRenderer extends SideBySideRenderer {
 
   override generateFileHtml(file: DiffFile) {
     this.combined = file.isCombined;
+    this.language = file.language;
     return super.generateFileHtml(file);
   }
 
   override applyRematchMatching(oldLines: DiffLine[], newLines: DiffLine[], matcher: MatcherFn<DiffLine>) {
     return this.combined
       ? super.applyRematchMatching(oldLines, newLines, matcher)
-      : matchLines(oldLines, newLines, this.alignmentConfig);
+      : matchLines(oldLines, newLines, this.alignmentConfig, this.language);
   }
 }
 
 class AlignedLineByLineRenderer extends LineByLineRenderer {
   private combined = false;
+  private language?: string;
 
   constructor(
     hogan: HoganJsUtils,
@@ -54,13 +57,14 @@ class AlignedLineByLineRenderer extends LineByLineRenderer {
 
   override generateFileHtml(file: DiffFile) {
     this.combined = file.isCombined;
+    this.language = file.language;
     return super.generateFileHtml(file);
   }
 
   override applyRematchMatching(oldLines: DiffLine[], newLines: DiffLine[], matcher: MatcherFn<DiffLine>) {
     return this.combined
       ? super.applyRematchMatching(oldLines, newLines, matcher)
-      : matchLines(oldLines, newLines, this.alignmentConfig);
+      : matchLines(oldLines, newLines, this.alignmentConfig, this.language);
   }
 }
 

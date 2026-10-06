@@ -121,6 +121,37 @@ ins {
 .d2h-wrapper .d2h-code-side-linenumber {
   color: var(--vscode-editorLineNumber-foreground);
 }
+
+/* VS Code diff tints are translucent. Composite them over an opaque editor
+ * background so horizontally scrolled source cannot show through fixed gutters. */
+.d2h-wrapper .d2h-code-linenumber,
+.d2h-wrapper .d2h-code-side-linenumber {
+  --diff-gutter-tint: transparent;
+  background-image: linear-gradient(var(--diff-gutter-tint), var(--diff-gutter-tint));
+}
+.d2h-wrapper .d2h-code-linenumber,
+.d2h-wrapper .d2h-code-side-linenumber,
+.d2h-wrapper .d2h-file-diff .d2h-code-linenumber.d2h-change {
+  background-color: var(--vscode-editor-background, var(--d2h-bg-color));
+}
+.d2h-wrapper .d2h-code-linenumber.d2h-del,
+.d2h-wrapper .d2h-code-side-linenumber.d2h-del {
+  --diff-gutter-tint: var(--d2h-del-bg-color);
+}
+.d2h-wrapper .d2h-code-linenumber.d2h-ins,
+.d2h-wrapper .d2h-code-side-linenumber.d2h-ins {
+  --diff-gutter-tint: var(--d2h-ins-bg-color);
+}
+.d2h-wrapper .d2h-code-linenumber.d2h-info,
+.d2h-wrapper .d2h-code-side-linenumber.d2h-info {
+  --diff-gutter-tint: var(--d2h-info-bg-color);
+}
+.d2h-wrapper .d2h-code-linenumber.d2h-del.d2h-change {
+  --diff-gutter-tint: var(--d2h-change-del-color);
+}
+.d2h-wrapper .d2h-code-linenumber.d2h-ins.d2h-change {
+  --diff-gutter-tint: var(--d2h-change-ins-color);
+}
 .d2h-code-line-ctn.hljs {
   color: var(--vscode-editor-foreground);
 }

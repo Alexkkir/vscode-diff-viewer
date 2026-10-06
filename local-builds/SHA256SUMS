@@ -6,6 +6,7 @@ ac344cd6c589859fefae9ae0d987aab2b372cd4a500affc1e00869eff3b30153  diff-viewer-1.
 e1fd149d2e23f1a73230f0e899fb6eb2f0ef15059acac7bc5f33b1b518022169  diff-viewer-1.8.1-diagonal-gaps.vsix
 8ee4117da28da14d8abfc10110a7e98bbccb6745bf8afe6beb6f685e7e2f02fa  diff-viewer-1.8.10-blank-context.vsix
 7b6e5ee1ea8336a07c4b97dcf6ef08a429e2089c9de86d13f5294a008b0659ee  diff-viewer-1.8.11-expand-all.vsix
+6507be1d40a315e1884fd04ac7ee104b51c8de4671365b1303033adcac50088c  diff-viewer-1.8.12-import-alignment.vsix
 7a80e9e64135be66b00ff85396aa2fe2f4d81817d73061144c25dd79dd6c083f  diff-viewer-1.8.2-fstring-context.vsix
 b2cd9f3c6cd0f6b07c2010334d3ffcf0c895aa4e830eb6f34e2ce94e868f1827  diff-viewer-1.8.3-semantic-colors.vsix
 7aa1084fb57ee20264c3233fbec4e0376fa7d7102d746e4a782badce2f633c65  diff-viewer-1.8.4-expand-context.vsix

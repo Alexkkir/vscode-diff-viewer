@@ -1,3 +1,15 @@
+# Latest local build: 1.8.12
+
+Install `diff-viewer-1.8.12-import-alignment.vsix`, then run **Developer: Reload Window**.
+
+Short imports and ordinary Python statements now stay paired when only a long trailing comment changes. Comment recognition respects quotes and escapes and skips ambiguous f-strings/triple-quoted strings. A multiline `from` import rewritten on one line aligns with its original header, preferring the exact module over a similar neighboring import or a continuation line. Full source text remains available for inline highlighting. Existing opt-out and comparison limits remain honored.
+
+The fixed line-number columns now composite translucent theme diff colors over an opaque editor background, preventing horizontally scrolled code from showing through. This applies to side-by-side and unified layouts while retaining insertion/deletion colors and diagonal gaps.
+
+Validation: 551 unit tests, lint, TypeScript, formatting and production build passed. Chromium checked five affected files from the exact external patch in both layouts (nine expected line pairs per layout), preserving full source projections and row geometry. Six existing browser alignment scenarios passed. Dark/light themes in both layouts retained identical pixels in all 76 tested line-number cells after local scrolling and global scrollbar interaction. Screenshots were visually checked. Private input and private screenshots are not included in the repository.
+
+Build with the commands below using output version 1.8.12. Regressions: `node integration/browser/line-alignment.cjs` and `node integration/browser/scroll-gutter.cjs` after a production build (requires Playwright). External fixture configuration is documented under 1.8.10; the harness now also recognizes paired replacement rows in unified layout.
+
 # Latest local build: 1.8.11
 
 Install `diff-viewer-1.8.11-expand-all.vsix`, then run **Developer: Reload Window**.

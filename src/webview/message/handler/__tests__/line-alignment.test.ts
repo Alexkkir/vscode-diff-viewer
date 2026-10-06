@@ -28,6 +28,131 @@ export const newRegistration = [
 ];
 
 describe("changed line alignment", () => {
+  it.each(["py", "python", "pyi"])("pairs unchanged Python code when annotations are removed (%s)", (language) => {
+    const statements = [
+      "if len(config) > 0:",
+      '    params["config"] = decode(config[0].read_text())',
+      '    value = "# literal"',
+      "    value = 'it\\'s # literal'",
+    ];
+    const before = lines(
+      LineType.DELETE,
+      statements.map((line) => `${line}  # checker: ignore[invalid-argument-type]`),
+    );
+    const after = lines(LineType.INSERT, statements);
+    const result = alignChangedLines(before, after, language);
+    expect(result).toEqual(before.map((line, index) => [[line], [after[index]]]));
+  });
+
+  it.each([
+    ['value = "# this is a very long string literal"', 'value = "# x"', "py"],
+    ['value = """some # long literal content"""', 'value = """x"""', "py"],
+    ['value = f"{mapping["# this is a very long dictionary string key"]}"', 'value = f"{mapping["# x"]}"', "py"],
+    ["# this is a very long comment", "# x", "py"],
+    ["if (ready) {} # a long non-Python suffix", "if (ready) {}", "js"],
+  ])("does not discard string content, whole comments, or non-Python suffixes", (old, next, language) => {
+    const before = lines(LineType.DELETE, [old]);
+    const after = lines(LineType.INSERT, [next]);
+    expect(alignChangedLines(before, after, language)).toEqual([
+      [before, []],
+      [[], after],
+    ]);
+  });
+
+  it.each([
+    "import widgets",
+    "import widgets as ui",
+    "import widgets, tools",
+    "from .widgets import Widget",
+    "from .. import Widget",
+    "from widgets import (",
+    "from widgets import *",
+  ])("pairs an unchanged import with a long added or removed comment: %s", (statement) => {
+    const withComment = `${statement}  # checker: ignore[unresolved-import, missing-module]`;
+    for (const [old, next] of [
+      [withComment, statement],
+      [statement, withComment],
+    ]) {
+      const before = lines(LineType.DELETE, [old]);
+      const after = lines(LineType.INSERT, [next]);
+      expect(alignChangedLines(before, after)).toEqual([[before, after]]);
+    }
+  });
+
+  it("keeps import identity when several trailing comments are removed together", () => {
+    const before = lines(LineType.DELETE, [
+      "import obsolete  # checker: ignore[unresolved-import]",
+      "import widgets  # checker: ignore[unresolved-import]",
+      "from helpers import run  # checker: ignore[unresolved-import]",
+    ]);
+    const after = lines(LineType.INSERT, ["import widgets", "from helpers import run"]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [[before[0]], []],
+      [[before[1]], [after[0]]],
+      [[before[2]], [after[1]]],
+    ]);
+  });
+
+  it.each([false, true])("aligns an unwrapped import with its header in either direction (reverse=%s)", (reverse) => {
+    const multiline = [
+      "# TODO remove compatibility annotations after the migration",
+      "from .registry import (  # checker: ignore[unresolved-import]",
+      "    FACTORY,",
+      "    ModelType,",
+      "    Model,",
+      "    TranslationConfig,",
+      "    LegacyConfig,",
+      ")",
+    ];
+    const single = ["from .registry import FACTORY, ModelType, Model"];
+    const before = lines(LineType.DELETE, reverse ? single : multiline);
+    const after = lines(LineType.INSERT, reverse ? multiline : single);
+    const result = alignChangedLines(before, after);
+    const pairs = result.filter(([old, next]) => old.length && next.length);
+    expect(pairs).toEqual(reverse ? [[[before[0]], [after[1]]]] : [[[before[1]], [after[0]]]]);
+    expect(result.flatMap(([old]) => old)).toEqual(before);
+    expect(result.flatMap(([, next]) => next)).toEqual(after);
+  });
+
+  it("prefers the matching from-module over similar names in another import or its continuation", () => {
+    const before = lines(LineType.DELETE, [
+      "from .unrelated import FACTORY, ModelType, Model",
+      "from .registry import (",
+      "    FACTORY, ModelType, Model,",
+      ")",
+    ]);
+    const after = lines(LineType.INSERT, ["from .registry import FACTORY, ModelType, Model"]);
+    expect(alignChangedLines(before, after).filter(([old, next]) => old.length && next.length)).toEqual([
+      [[before[1]], [after[0]]],
+    ]);
+  });
+
+  it("prefers the exact from-module even when another long module differs by only one letter", () => {
+    const before = lines(LineType.DELETE, [
+      "from .feature_registry_cache_primary import Model, ModelType, Factory",
+      "from .feature_registry_cache_primars import (",
+      "    Model, ModelType, Factory,",
+      ")",
+    ]);
+    const after = lines(LineType.INSERT, ["from .feature_registry_cache_primars import Model, ModelType, Factory"]);
+    expect(alignChangedLines(before, after, "py").filter(([old, next]) => old.length && next.length)).toEqual([
+      [[before[1]], [after[0]]],
+    ]);
+  });
+
+  it.each([
+    ['text = "import widgets # a long string literal"', 'text = "import widgets'],
+    ['import "widgets#this-is-a-long-string-specifier"', 'import "widgets"'],
+    ["# import widgets and a very long explanation", "# import widgets"],
+  ])("does not treat hashes inside strings or whole comments as import suffixes", (old, next) => {
+    const before = lines(LineType.DELETE, [old]);
+    const after = lines(LineType.INSERT, [next]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [before, []],
+      [[], after],
+    ]);
+  });
+
   it("keeps a related declaration and docstring together instead of anchoring on a moved URL", () => {
     const before = lines(LineType.DELETE, oldRegistration, 569);
     const after = lines(LineType.INSERT, newRegistration, 569);

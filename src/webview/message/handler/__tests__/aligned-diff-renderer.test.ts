@@ -24,6 +24,70 @@ const patch = [
 ].join("\n");
 
 describe("aligned diff renderer", () => {
+  it.each(["side-by-side", "line-by-line"] as const)(
+    "uses Python comment pairing without altering source text (%s)",
+    (outputFormat) => {
+      const patch = [
+        "--- a/config.py",
+        "+++ b/config.py",
+        "@@ -1,2 +1,2 @@",
+        "-if len(config) > 0:  # checker: ignore[invalid-argument-type]",
+        '-    params["config"] = decode(config[0].read_text())  # checker: ignore[invalid-index]',
+        "+if len(config) > 0:",
+        '+    params["config"] = decode(config[0].read_text())',
+        "",
+      ].join("\n");
+      const files = parse(patch);
+      const root = document.createElement("div");
+      root.innerHTML = renderAlignedDiffHtml(files, { outputFormat, matching: "lines" });
+      const source = Array.from(root.querySelectorAll(".d2h-code-line-ctn"));
+      expect(source.map((line) => line.textContent).sort()).toEqual(
+        files[0].blocks[0].lines.map((line) => line.content.slice(1)).sort(),
+      );
+      expect(root.querySelectorAll("del")).toHaveLength(2);
+      expect(
+        Array.from(root.querySelectorAll("del")).every((span) => span.textContent?.trim().startsWith("# checker:")),
+      ).toBe(true);
+      expect(root.querySelectorAll("ins")).toHaveLength(0);
+      if (outputFormat === "side-by-side") {
+        const panes = root.querySelectorAll(".d2h-diff-tbody");
+        expect(panes[0].querySelectorAll("tr")).toHaveLength(3);
+        expect(panes[1].querySelectorAll("tr")).toHaveLength(3);
+      }
+    },
+  );
+
+  it.each(["lines", "words"] as const)(
+    "pairs comment-only import edits and highlights only the comment (%s)",
+    (matching) => {
+      const files = parse(
+        [
+          "--- a/example.py",
+          "+++ b/example.py",
+          "@@ -1,2 +1,2 @@",
+          "-import widgets  # checker: ignore[unresolved-import]",
+          "+import widgets",
+          " import tools",
+          "",
+        ].join("\n"),
+      );
+      const root = document.createElement("div");
+      root.innerHTML = renderAlignedDiffHtml(files, { outputFormat: "side-by-side", matching });
+      const tables = root.querySelectorAll(".d2h-diff-tbody");
+      const left = Array.from(tables[0].querySelectorAll("tr"));
+      const right = Array.from(tables[1].querySelectorAll("tr"));
+      const oldIndex = left.findIndex((row) =>
+        row.querySelector(".d2h-code-line-ctn")?.textContent?.startsWith("import widgets"),
+      );
+      const newIndex = right.findIndex(
+        (row) => row.querySelector(".d2h-code-line-ctn")?.textContent === "import widgets",
+      );
+      expect(oldIndex).toBe(newIndex);
+      expect(left[oldIndex].querySelector("del")?.textContent?.trim()).toBe("# checker: ignore[unresolved-import]");
+      expect(right[newIndex].querySelector("ins")).toBeNull();
+    },
+  );
+
   it.each(["lines", "words"] as const)("aligns related rows and preserves inline %s differences", (matching) => {
     const root = document.createElement("div");
     const files = parse(patch);

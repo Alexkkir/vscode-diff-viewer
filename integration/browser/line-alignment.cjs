@@ -335,7 +335,17 @@ const server = http.createServer((request, response) => {
           // contain no source text, source paths, or raw browser error strings.
           const equal = (left, right) => JSON.stringify(left) === JSON.stringify(right);
           const oldRow = (number) => snapshot.rows[0].find((row) => row.old === number);
-          const rightAt = (row) => row && (format === "side-by-side" ? snapshot.rows[1][row.index] : row);
+          const rightAt = (row) => {
+            if (!row) return undefined;
+            if (format === "side-by-side") return snapshot.rows[1][row.index];
+            if (row.new) return row;
+            // Unified context uses one row, but a matched replacement uses
+            // adjacent deletion/insertion rows carrying inline change markup.
+            const next = snapshot.rows[0][row.index + 1];
+            return row.kind.includes("d2h-change") && next?.kind.includes("d2h-change") && next.new && !next.old
+              ? next
+              : row;
+          };
           const modelProjectionPreserved = {};
           const renderedProjectionPreserved = {};
           for (const side of ["old", "new"]) {

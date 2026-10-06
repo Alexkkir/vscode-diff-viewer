@@ -54,6 +54,8 @@ The filename in each available file header is a link (mouse click or Enter); rev
 
 Related changed lines are matched in order as a whole when `diffviewer.matching` is `lines` or `words`, so a moved comment or URL does not displace an otherwise matching decorator and class. Within each available hunk, exact context is realigned to prefer the first coherent copy of repeated code. Blank separators are preserved but do not drive the choice between repeated code blocks. This avoids showing a surviving constructor as deleted just because the patch matched it to a later removed class. Work is bounded; missing context is never fetched or invented, and the original patch file remains unchanged.
 
+Python lines with unchanged code stay paired when a trailing comment is added or removed. A multiline `from ... import (...)` rewritten as one line aligns with its original import header. Quoted hashes remain part of strings; ambiguous f-strings and multiline strings retain full-text matching. Fixed line-number columns use an opaque background so changed code cannot show through them during horizontal scrolling.
+
 A missing final newline is shown as `\ No newline at end of file` beside the affected old/new source line. Arc revision labels are excluded from displayed filenames, preventing ordinary edits from appearing as renames.
 
 ### Large diffs and refresh
