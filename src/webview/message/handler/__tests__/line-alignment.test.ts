@@ -519,3 +519,136 @@ describe("assignment target anchors", () => {
     ).toEqual([]);
   });
 });
+
+describe("standalone identifier literal alignment", () => {
+  function aligned(old: string[], next: string[]) {
+    const before = lines(LineType.DELETE, old);
+    const after = lines(LineType.INSERT, next);
+    Object.assign(before[0], { noNewline: true });
+    const snapshot = JSON.stringify([before, after]);
+    const groups = alignChangedLines(before, after, "py");
+    const oldProjection = groups.flatMap(([left]) => left);
+    const newProjection = groups.flatMap(([, right]) => right);
+    expect(oldProjection).toEqual(before);
+    expect(newProjection).toEqual(after);
+    oldProjection.forEach((line, index) => expect(line).toBe(before[index]));
+    newProjection.forEach((line, index) => expect(line).toBe(after[index]));
+    expect(JSON.stringify([before, after])).toBe(snapshot);
+    return { before, after, groups, pairs: groups.filter(([left, right]) => left.length && right.length) };
+  }
+
+  it.each([false, true])(
+    "pairs reordered key components and leaves the additional option separate (reverse=%s)",
+    (reverse) => {
+      const old = ['            "yt-pool-promptilka",', '            "gpu-trees-promptilka",'];
+      const next = [
+        '            "promptilka-pool",',
+        '            "promptilka-gpu-trees",',
+        '            "promptilka-system-prompt",',
+      ];
+      const { groups, before, after } = aligned(reverse ? next : old, reverse ? old : next);
+      expect(groups).toEqual([
+        [[before[0]], [after[0]]],
+        [[before[1]], [after[1]]],
+        reverse ? [[before[2]], []] : [[], [after[2]]],
+      ]);
+    },
+  );
+
+  it("does not let an inserted namespace-sharing entry before the renamed options steal either match", () => {
+    const { pairs, before, after } = aligned(
+      ['    "yt-pool-promptilka",', '    "gpu-trees-promptilka",'],
+      ['    "promptilka-system-prompt",', '    "promptilka-pool",', '    "promptilka-gpu-trees",'],
+    );
+    expect(pairs).toEqual([
+      [[before[0]], [after[1]]],
+      [[before[1]], [after[2]]],
+    ]);
+  });
+
+  it.each([
+    ['"worker_pool_render",', '"render/worker-pool",'],
+    ["'worker-pool-render',", "'render-pool-worker',"],
+    ['"src/client/retry-policy.ts",', '"policy/retry/client.ts",'],
+    ['"/lib/worker/parser",', '"../parser/lib/worker",'],
+    ['"alpha.beta.gamma"', '"gamma.beta.alpha"'],
+  ])("recognizes generic delimited keys and paths (%s)", (old, next) => {
+    const { pairs, before, after } = aligned([old], [next]);
+    expect(pairs).toEqual([[before, after]]);
+  });
+
+  it("prefers an exact literal over the same components in another order", () => {
+    const { pairs, before, after } = aligned(['"alpha-beta-gamma",'], ['"gamma-beta-alpha",', '"alpha-beta-gamma",']);
+    expect(pairs).toEqual([[[before[0]], [after[1]]]]);
+  });
+
+  it("keeps list-row order when component-based candidates cross", () => {
+    const { pairs, before, after } = aligned(['"alpha-beta",', '"gamma-delta",'], ['"delta-gamma",', '"beta-alpha",']);
+    expect(pairs).toHaveLength(1);
+    const [[old], [next]] = pairs[0];
+    expect(old === before[0] ? next === after[1] : next === after[0]).toBe(true);
+  });
+
+  it("uses exact values to distinguish duplicate component sets", () => {
+    const { pairs, before, after } = aligned(['"alpha-beta",', '"beta-alpha",'], ['"alpha-beta",']);
+    expect(pairs).toEqual([[[before[0]], [after[0]]]]);
+  });
+
+  it.each([
+    ["a-b-c", "c-b-a-unrelated"],
+    ["v1-alpha", "alpha-v1-extra"],
+    ["123-456", "456-123-extra"],
+    ["alpha-beta", "gamma-alpha-zeta-beta-delta"],
+    [[...Array(10).fill("alpha"), "beta"].join("-"), [...Array(10).fill("beta"), "alpha"].join("-")],
+  ])("does not boost weak components or insufficient multiset overlap (%s)", (old, next) => {
+    expect(aligned([`"${old}",`], [`"${next}",`]).pairs).toEqual([]);
+  });
+
+  it.each(["# ", "// ", "f", "r", "b"])(
+    "retains lexical matching for excluded comment or string prefixes (%s)",
+    (prefix) => {
+      const { pairs, before, after } = aligned(
+        [`${prefix}"alpha-beta-gamma",`],
+        [`${prefix}"gamma-beta-alpha",`, `${prefix}"alpha-beta-omega",`],
+      );
+      expect(pairs).toEqual([[[before[0]], [after[1]]]]);
+    },
+  );
+
+  it.each([
+    ['"alpha beta gamma",', ['"gamma beta alpha",', '"alpha beta omega",']],
+    [
+      '"https://alpha.example/beta/gamma",',
+      ['"https://gamma.example/beta/alpha",', '"https://alpha.example/beta/omega",'],
+    ],
+    ['"""alpha-beta-gamma""",', ['"""gamma-beta-alpha""",', '"""alpha-beta-omega""",']],
+    ['"alpha-beta-gamma",', ["'gamma-beta-alpha',", '"alpha-beta-omega",']],
+    ['    "alpha-beta-gamma",', ['\t"gamma-beta-alpha",', '    "alpha-beta-omega",']],
+  ])(
+    "does not give prose, URLs, triple quotes, changed quotes or indentation structural priority (%s)",
+    (old, next) => {
+      const { pairs, before, after } = aligned([old], next);
+      expect(pairs).toEqual([[[before[0]], [after[1]]]]);
+    },
+  );
+
+  it("does not let a literal anchor extend into unrelated neighboring code", () => {
+    const { pairs, before, after } = aligned(
+      ['"alpha-beta-gamma",', "if not exists(value):"],
+      ['"gamma-beta-alpha",', "while other is None:"],
+    );
+    expect(pairs).toEqual([[[before[0]], [after[0]]]]);
+  });
+
+  it("does not add component-based work for more than 32 components", () => {
+    const old = [...Array(17).fill("alpha"), ...Array(16).fill("omega")].join("-");
+    const next = [...Array(16).fill("omega"), ...Array(17).fill("alpha")].join("-");
+    expect(aligned([`"${old}",`], [`"${next}",`]).pairs).toEqual([]);
+  });
+
+  it("retains the work-budget fallback for unusually long quoted identifiers", () => {
+    const before = lines(LineType.DELETE, [`"alpha-${"a".repeat(3000)}",`]);
+    const after = lines(LineType.INSERT, [`"${"b".repeat(3000)}-alpha",`, '"extra-key",']);
+    expect(alignChangedLines(before, after)).toEqual([[before, after]]);
+  });
+});

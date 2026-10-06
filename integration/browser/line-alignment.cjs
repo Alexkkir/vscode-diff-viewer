@@ -182,7 +182,38 @@ function optionFixture(reverse) {
   };
 }
 
+function listFixture(reverse) {
+  const old = ['    "yt-pool-promptilka",', '    "gpu-trees-promptilka",'];
+  const next = ['    "promptilka-pool",', '    "promptilka-gpu-trees",', '    "promptilka-system-prompt",'];
+  const before = reverse ? next : old;
+  const after = reverse ? old : next;
+  return {
+    name: `renamed-option-list${reverse ? "-reverse" : ""}`,
+    patch: [
+      "--- options.py",
+      "+++ options.py",
+      `@@ -1,${before.length + 3} +1,${after.length + 3} @@`,
+      " option_names = [",
+      ...before.map((line) => `-${line}`),
+      ...after.map((line) => `+${line}`),
+      '     "unchanged-option",',
+      " ]",
+      "",
+    ].join("\n"),
+    pairs: [
+      [2, 2],
+      [3, 3],
+    ],
+    matchingModes: ["lines", "words", "none"],
+    verifyUnifiedPairs: true,
+    added: reverse ? [] : [4],
+    removed: reverse ? [4] : [],
+  };
+}
+
 const cases = [
+  listFixture(false),
+  listFixture(true),
   optionFixture(false),
   optionFixture(true),
   {
@@ -621,7 +652,7 @@ const server = http.createServer((request, response) => {
       return;
     }
     console.log(
-      "Line alignment browser checks passed: moved URL, repeated constructors, combined class sequence, changed guard/return and translated keyword arguments in both layouts; source projections and geometry preserved; screenshots:",
+      "Line alignment browser checks passed: moved URL, repeated constructors, combined class sequence, changed guard/return, translated keyword arguments and renamed list entries in both layouts; source projections and geometry preserved; screenshots:",
       artifactDirectory,
     );
   } catch (error) {

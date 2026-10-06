@@ -76,6 +76,40 @@ export function replacementCase(
 const constructor = (value: string) => ["    def __init__(self):", `        super().__init__(value="${value}")`];
 
 export const diffContractCorpus: DiffContractCase[] = [
+  replacementCase(
+    "reordered-option-name-components",
+    ['    "yt-pool-promptilka",', '    "gpu-trees-promptilka",'],
+    ['    "promptilka-pool",', '    "promptilka-gpu-trees",', '    "promptilka-system-prompt",'],
+    {
+      pairs: [
+        [1, 1],
+        [2, 2],
+      ],
+    },
+  ),
+  replacementCase(
+    "reordered-option-name-components-reverse",
+    ['    "promptilka-pool",', '    "promptilka-gpu-trees",', '    "promptilka-system-prompt",'],
+    ['    "yt-pool-promptilka",', '    "gpu-trees-promptilka",'],
+    {
+      pairs: [
+        [1, 1],
+        [2, 2],
+      ],
+      removed: [3],
+    },
+  ),
+  replacementCase(
+    "reordered-option-name-components-insert-first",
+    ['    "yt-pool-promptilka",', '    "gpu-trees-promptilka",'],
+    ['    "promptilka-system-prompt",', '    "promptilka-pool",', '    "promptilka-gpu-trees",'],
+    {
+      pairs: [
+        [1, 2],
+        [2, 3],
+      ],
+    },
+  ),
   replacementCase("translated-keyword-argument", ['    name="Params",'], ['    name="Основное",', '    code="main",'], {
     pairs: [[1, 1]],
   }),

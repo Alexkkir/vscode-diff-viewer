@@ -1,3 +1,15 @@
+# Latest local build: 1.8.21
+
+Install `diff-viewer-1.8.21-list-alignment.vsix`, then run **Developer: Reload Window**.
+
+Renamed standalone string entries can now align by shared name components even when those components move: `yt-pool-promptilka` pairs with `promptilka-pool`, and `gpu-trees-promptilka` with `promptilka-gpu-trees`. The extra `promptilka-system-prompt` remains a separate addition. Source text and ordering are preserved.
+
+The extra similarity is limited to short quoted identifier/path entries with enough distinct shared components. One common namespace, prose, comments, URLs and interpolated strings do not gain this priority. Existing matching limits remain in effect. See [report](list-alignment-1.8.21.md).
+
+Validation: 975 unit tests, TypeScript, ESLint, formatting, production build and all 32 browser scenarios passed.
+
+Use the build commands below with output version 1.8.21. Run `node integration/browser/line-alignment.cjs` after building to repeat the visual regressions, including the translated argument fix from 1.8.20.
+
 # Latest local build: 1.8.20
 
 Install `diff-viewer-1.8.20-argument-alignment.vsix`, then run **Developer: Reload Window**.

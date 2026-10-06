@@ -6,6 +6,8 @@ export type AlignedLineGroup = [DiffLine[], DiffLine[]];
 // independent ceiling bounds work if those user settings are unusually large.
 const MAX_COMPARISONS = 100_000;
 const MAX_CHARACTER_COMPARISONS = 5_000_000;
+const MAX_LITERAL_COMPONENTS = 32;
+const MAX_LITERAL_LENGTH = 256;
 const MIN_SIMILARITY = 0.5;
 const MIN_NEIGHBOR_SIMILARITY = 0.3;
 const CONTINUITY_BONUS = 0.5;
@@ -40,6 +42,14 @@ const CALL = new RegExp(`^(?:new\\s+)?${MEMBER}\\s*\\(`, "u");
 
 type LinePair = [number, number];
 
+interface LiteralIdentifier {
+  indentation: string;
+  quote: string;
+  components: Map<string, number>;
+  strongComponents: Set<string>;
+  count: number;
+}
+
 interface CodeShape {
   indentation: string;
   identifiers: Set<string>;
@@ -65,6 +75,8 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   const newAssignments = newLines.map((line) => assignmentKey(line, python));
   const oldAssignmentCounts = countKeys(oldAssignments);
   const newAssignmentCounts = countKeys(newAssignments);
+  const oldLiterals = oldLines.map(literalIdentifier);
+  const newLiterals = newLines.map(literalIdentifier);
   const scores = new Float64Array((oldLines.length + 1) * width);
   const similarities = new Float64Array(scores.length);
   const directions = new Uint8Array(scores.length);
@@ -106,6 +118,9 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
           : oldImport || newImport
             ? 0
             : undefined;
+      const literal = literalSimilarity(oldLiterals[oldIndex - 1], newLiterals[newIndex - 1]);
+      characterBudget -= literal.work;
+      if (characterBudget < 0) return [[oldLines, newLines]];
       const unchangedCode = oldCode[oldIndex - 1] !== undefined && oldCode[oldIndex - 1] === newCode[newIndex - 1];
       const compared = incompatibleAssignment
         ? { score: -1, work: 0 }
@@ -125,7 +140,7 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
       const renamedDeclaration = declaration !== undefined && declaration === newDeclarations[newIndex - 1];
       const score = incompatibleAssignment
         ? -1
-        : Math.max(compared.score, renamedDeclaration || uniqueAssignment ? 0.8 : 0);
+        : Math.max(compared.score, renamedDeclaration || uniqueAssignment ? 0.8 : 0, literal.score);
       similarities[oldIndex * width + newIndex] = score;
       const weight =
         score > MIN_SIMILARITY ? (score - MIN_SIMILARITY) * Math.min(1, Math.min(left.length, right.length) / 10) : 0;
@@ -249,6 +264,44 @@ function pairCoherentReplacement(
     newStart = newEnd + 1;
   }
   return pairs;
+}
+
+/** A standalone list key/path, not a string expression, comment or prose. */
+function literalIdentifier(line: DiffLine): LiteralIdentifier | undefined {
+  const source = line.content.slice(1);
+  if (source.length > MAX_LITERAL_LENGTH) return undefined;
+  const match = /^([ \t]*)(["'])((?:(?:\.{1,2})?\/)?[\p{L}\p{N}]+(?:[-_./][\p{L}\p{N}]+)+)\2[ \t]*,?[ \t]*$/u.exec(
+    source,
+  );
+  if (!match) return undefined;
+  const tokens = match[3].split(/[-_./]/).filter(Boolean);
+  if (tokens.length > MAX_LITERAL_COMPONENTS) return undefined;
+  return {
+    indentation: match[1],
+    quote: match[2],
+    components: countKeys(tokens),
+    strongComponents: new Set(tokens.filter((token) => token.length >= 3 && /\p{L}/u.test(token))),
+    count: tokens.length,
+  };
+}
+
+function literalSimilarity(left?: LiteralIdentifier, right?: LiteralIdentifier): { score: number; work: number } {
+  if (!left || !right || left.indentation !== right.indentation || left.quote !== right.quote)
+    return { score: 0, work: 0 };
+  let shared = 0;
+  let strong = 0;
+  let work = 0;
+  for (const [component, count] of left.components) {
+    work++;
+    const overlap = Math.min(count, right.components.get(component) ?? 0);
+    shared += overlap;
+    if (overlap && left.strongComponents.has(component)) strong++;
+  }
+  const dice = (2 * shared) / (left.count + right.count);
+  // One repeated namespace, numeric versions and short path segments are not
+  // enough evidence. Multiset overlap also retains repeated-component counts.
+  // Keep exact text matches stronger than any component-based rename.
+  return { score: strong >= 2 && dice >= 2 / 3 ? 0.7 + 0.2 * dice : 0, work };
 }
 
 function assignmentKey(line: DiffLine, python: boolean): string | undefined {

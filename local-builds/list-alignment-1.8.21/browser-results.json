@@ -1,0 +1,6570 @@
+[
+  {
+    "fixture": "renamed-option-list",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "side-by-side",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "side-by-side",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 5,
+            "new": 6,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "line-by-line",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 5,
+            "new": 6,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list",
+    "format": "line-by-line",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 5,
+            "new": 6,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "side-by-side",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "side-by-side",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 5,
+            "new": 4,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 5,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "line-by-line",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 5,
+            "new": 4,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 5,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "renamed-option-list-reverse",
+    "format": "line-by-line",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "option_names = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    \"promptilka-pool\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    \"promptilka-gpu-trees\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"promptilka-system-prompt\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    \"yt-pool-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"gpu-trees-promptilka\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 5,
+            "new": 4,
+            "text": "    \"unchanged-option\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 5,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "options.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        code=\"main\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 11,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 12,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "side-by-side",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        code=\"main\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 11,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 12,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "side-by-side",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        code=\"main\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 11,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 12,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 5,
+            "new": 6,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 7,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        code=\"main\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 8,
+            "new": 10,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 9,
+            "new": 11,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 10,
+            "new": 12,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "line-by-line",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 5,
+            "new": 6,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 7,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        code=\"main\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 8,
+            "new": 10,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 9,
+            "new": 11,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 10,
+            "new": 12,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups",
+    "format": "line-by-line",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 5,
+            "new": 6,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 7,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        code=\"main\",",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 8,
+            "new": 10,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 9,
+            "new": 11,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 10,
+            "new": 12,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "        code=\"main\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "side-by-side",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "        code=\"main\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "side-by-side",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "        code=\"main\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 4,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 5,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 6,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "        code=\"main\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 10,
+            "new": 8,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 11,
+            "new": 9,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 12,
+            "new": 10,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "line-by-line",
+    "matching": "words",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 4,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 5,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 6,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "        code=\"main\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 10,
+            "new": 8,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 11,
+            "new": 9,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 12,
+            "new": 10,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "translated-option-groups-reverse",
+    "format": "line-by-line",
+    "matching": "none",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "groups = [",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "        name=\"Входы и выходы\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        code=\"inputs_and_outputs\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "        name=\"Inputs and Outputs\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 4,
+            "text": "        option_names=[\"source\", \"output\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 5,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 6,
+            "text": "    OptionGroupLeaf(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        name=\"Основное\",",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "        code=\"main\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "        name=\"Params\",",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 10,
+            "new": 8,
+            "text": "        option_names=[\"model\", \"revision\"],",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 11,
+            "new": 9,
+            "text": "    ),",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 12,
+            "new": 10,
+            "text": "]",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "settings.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "full-class-sequence",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "# setup",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_heavy\")",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "class HeavyModel(Model):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"\"\"Heavy service from",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    quality/image/service/light.\"\"\"",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "            model=\"heavy\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "            system=\"heavy\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "            mode=\"heavy\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "            size=6,",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 13,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 14,
+            "new": 0,
+            "text": "# maximum image size matches",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 15,
+            "top": 351,
+            "height": 21,
+            "old": 15,
+            "new": 0,
+            "text": "# https://example.invalid/source/generator.py?rev=123456789",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 16,
+            "top": 372,
+            "height": 21,
+            "old": 16,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_light\")",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 17,
+            "top": 393,
+            "height": 21,
+            "old": 17,
+            "new": 0,
+            "text": "class LightModel(Model):",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 18,
+            "top": 414,
+            "height": 21,
+            "old": 18,
+            "new": 0,
+            "text": "    \"\"\"Emulates the image-light service from",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 19,
+            "top": 435,
+            "height": 21,
+            "old": 19,
+            "new": 0,
+            "text": "    quality/image/service/light.\"\"\"",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 20,
+            "top": 456,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 21,
+            "top": 477,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 22,
+            "top": 498,
+            "height": 21,
+            "old": 20,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 23,
+            "top": 519,
+            "height": 21,
+            "old": 21,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 24,
+            "top": 540,
+            "height": 21,
+            "old": 22,
+            "new": 0,
+            "text": "            model=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 25,
+            "top": 561,
+            "height": 21,
+            "old": 23,
+            "new": 0,
+            "text": "            system=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 26,
+            "top": 582,
+            "height": 21,
+            "old": 24,
+            "new": 0,
+            "text": "            mode=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 27,
+            "top": 603,
+            "height": 21,
+            "old": 25,
+            "new": 0,
+            "text": "            size=6,",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 28,
+            "top": 624,
+            "height": 21,
+            "old": 26,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 29,
+            "top": 645,
+            "height": 21,
+            "old": 27,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 30,
+            "top": 666,
+            "height": 21,
+            "old": 28,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_1mp\")",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 31,
+            "top": 687,
+            "height": 21,
+            "old": 29,
+            "new": 0,
+            "text": "class SmallModel(Model):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 32,
+            "top": 708,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 33,
+            "top": 729,
+            "height": 21,
+            "old": 30,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 34,
+            "top": 750,
+            "height": 21,
+            "old": 31,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 35,
+            "top": 771,
+            "height": 21,
+            "old": 32,
+            "new": 0,
+            "text": "            model=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 36,
+            "top": 792,
+            "height": 21,
+            "old": 33,
+            "new": 0,
+            "text": "            system=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 37,
+            "top": 813,
+            "height": 21,
+            "old": 34,
+            "new": 0,
+            "text": "            mode=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 38,
+            "top": 834,
+            "height": 21,
+            "old": 35,
+            "new": 0,
+            "text": "            size=1,",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 39,
+            "top": 855,
+            "height": 21,
+            "old": 36,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 40,
+            "top": 876,
+            "height": 21,
+            "old": 37,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 41,
+            "top": 897,
+            "height": 21,
+            "old": 38,
+            "new": 0,
+            "text": "class TestOne(Model):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 42,
+            "top": 918,
+            "height": 21,
+            "old": 39,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 43,
+            "top": 939,
+            "height": 21,
+            "old": 40,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 44,
+            "top": 960,
+            "height": 21,
+            "old": 41,
+            "new": 0,
+            "text": "            model=\"test_one\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 45,
+            "top": 981,
+            "height": 21,
+            "old": 42,
+            "new": 0,
+            "text": "            system=\"test_one\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 46,
+            "top": 1002,
+            "height": 21,
+            "old": 43,
+            "new": 0,
+            "text": "            mode=\"test_one\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 47,
+            "top": 1023,
+            "height": 21,
+            "old": 44,
+            "new": 0,
+            "text": "            size=1,",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 48,
+            "top": 1044,
+            "height": 21,
+            "old": 45,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 49,
+            "top": 1065,
+            "height": 21,
+            "old": 46,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 50,
+            "top": 1086,
+            "height": 21,
+            "old": 47,
+            "new": 0,
+            "text": "class TestTwo(Model):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 51,
+            "top": 1107,
+            "height": 21,
+            "old": 48,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 52,
+            "top": 1128,
+            "height": 21,
+            "old": 49,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 53,
+            "top": 1149,
+            "height": 21,
+            "old": 50,
+            "new": 0,
+            "text": "            model=\"test_two\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 54,
+            "top": 1170,
+            "height": 21,
+            "old": 51,
+            "new": 0,
+            "text": "            system=\"test_two\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 55,
+            "top": 1191,
+            "height": 21,
+            "old": 52,
+            "new": 0,
+            "text": "            mode=\"test_two\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 56,
+            "top": 1212,
+            "height": 21,
+            "old": 53,
+            "new": 0,
+            "text": "            size=1,",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 57,
+            "top": 1233,
+            "height": 21,
+            "old": 54,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-del"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "# setup",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 15,
+            "top": 351,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 16,
+            "top": 372,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "@FACTORY.register(\"image_light_6mp\")",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 17,
+            "top": 393,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "class Config_Light_6mp(Model):",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 18,
+            "top": 414,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"\"\"Legacy version for the image-light service from",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 19,
+            "top": 435,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    quality/image/service/light.",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 20,
+            "top": 456,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    https://example.invalid/source/generator.py?rev=123456789",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 21,
+            "top": 477,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    \"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 22,
+            "top": 498,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "    def __init__(self):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 23,
+            "top": 519,
+            "height": 21,
+            "old": 0,
+            "new": 9,
+            "text": "        super().__init__(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 24,
+            "top": 540,
+            "height": 21,
+            "old": 0,
+            "new": 10,
+            "text": "            model=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 25,
+            "top": 561,
+            "height": 21,
+            "old": 0,
+            "new": 11,
+            "text": "            system=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 26,
+            "top": 582,
+            "height": 21,
+            "old": 0,
+            "new": 12,
+            "text": "            mode=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 27,
+            "top": 603,
+            "height": 21,
+            "old": 0,
+            "new": 13,
+            "text": "            size=6.1,",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 28,
+            "top": 624,
+            "height": 21,
+            "old": 0,
+            "new": 14,
+            "text": "        )",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 29,
+            "top": 645,
+            "height": 21,
+            "old": 0,
+            "new": 15,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 30,
+            "top": 666,
+            "height": 21,
+            "old": 0,
+            "new": 16,
+            "text": "@FACTORY.register(\"image_1mp\")",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 31,
+            "top": 687,
+            "height": 21,
+            "old": 0,
+            "new": 17,
+            "text": "class SmallModel(Model):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 32,
+            "top": 708,
+            "height": 21,
+            "old": 0,
+            "new": 18,
+            "text": "    \"\"\"Legacy small model.\"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 33,
+            "top": 729,
+            "height": 21,
+            "old": 0,
+            "new": 19,
+            "text": "    def __init__(self):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 34,
+            "top": 750,
+            "height": 21,
+            "old": 0,
+            "new": 20,
+            "text": "        super().__init__(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 35,
+            "top": 771,
+            "height": 21,
+            "old": 0,
+            "new": 21,
+            "text": "            model=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 36,
+            "top": 792,
+            "height": 21,
+            "old": 0,
+            "new": 22,
+            "text": "            system=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 37,
+            "top": 813,
+            "height": 21,
+            "old": 0,
+            "new": 23,
+            "text": "            mode=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 38,
+            "top": 834,
+            "height": 21,
+            "old": 0,
+            "new": 24,
+            "text": "            size=1,",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 39,
+            "top": 855,
+            "height": 21,
+            "old": 0,
+            "new": 25,
+            "text": "        )",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 40,
+            "top": 876,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 41,
+            "top": 897,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 42,
+            "top": 918,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 43,
+            "top": 939,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 44,
+            "top": 960,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 45,
+            "top": 981,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 46,
+            "top": 1002,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 47,
+            "top": 1023,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 48,
+            "top": 1044,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 49,
+            "top": 1065,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 50,
+            "top": 1086,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 51,
+            "top": 1107,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 52,
+            "top": 1128,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 53,
+            "top": 1149,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 54,
+            "top": 1170,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 55,
+            "top": 1191,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 56,
+            "top": 1212,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 57,
+            "top": 1233,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          }
+        ]
+      ],
+      "header": "sample.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "full-class-sequence",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "# setup",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_heavy\")",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "class HeavyModel(Model):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "    \"\"\"Heavy service from",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "    quality/image/service/light.\"\"\"",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "            model=\"heavy\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "            system=\"heavy\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "            mode=\"heavy\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "            size=6,",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 13,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 14,
+            "new": 0,
+            "text": "# maximum image size matches",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 15,
+            "top": 351,
+            "height": 21,
+            "old": 15,
+            "new": 0,
+            "text": "# https://example.invalid/source/generator.py?rev=123456789",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 16,
+            "top": 372,
+            "height": 21,
+            "old": 16,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_light\")",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 17,
+            "top": 393,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "@FACTORY.register(\"image_light_6mp\")",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 18,
+            "top": 414,
+            "height": 21,
+            "old": 17,
+            "new": 0,
+            "text": "class LightModel(Model):",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 19,
+            "top": 435,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "class Config_Light_6mp(Model):",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 20,
+            "top": 456,
+            "height": 21,
+            "old": 18,
+            "new": 0,
+            "text": "    \"\"\"Emulates the image-light service from",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 21,
+            "top": 477,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"\"\"Legacy version for the image-light service from",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 22,
+            "top": 498,
+            "height": 21,
+            "old": 19,
+            "new": 0,
+            "text": "    quality/image/service/light.\"\"\"",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 23,
+            "top": 519,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    quality/image/service/light.",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 24,
+            "top": 540,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    https://example.invalid/source/generator.py?rev=123456789",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 25,
+            "top": 561,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    \"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 26,
+            "top": 582,
+            "height": 21,
+            "old": 20,
+            "new": 8,
+            "text": "    def __init__(self):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 27,
+            "top": 603,
+            "height": 21,
+            "old": 21,
+            "new": 9,
+            "text": "        super().__init__(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 28,
+            "top": 624,
+            "height": 21,
+            "old": 22,
+            "new": 10,
+            "text": "            model=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 29,
+            "top": 645,
+            "height": 21,
+            "old": 23,
+            "new": 11,
+            "text": "            system=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 30,
+            "top": 666,
+            "height": 21,
+            "old": 24,
+            "new": 12,
+            "text": "            mode=\"light\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 31,
+            "top": 687,
+            "height": 21,
+            "old": 25,
+            "new": 0,
+            "text": "            size=6,",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 32,
+            "top": 708,
+            "height": 21,
+            "old": 0,
+            "new": 13,
+            "text": "            size=6.1,",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 33,
+            "top": 729,
+            "height": 21,
+            "old": 26,
+            "new": 14,
+            "text": "        )",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 34,
+            "top": 750,
+            "height": 21,
+            "old": 27,
+            "new": 15,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 35,
+            "top": 771,
+            "height": 21,
+            "old": 28,
+            "new": 16,
+            "text": "@FACTORY.register(\"image_1mp\")",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 36,
+            "top": 792,
+            "height": 21,
+            "old": 29,
+            "new": 17,
+            "text": "class SmallModel(Model):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 37,
+            "top": 813,
+            "height": 21,
+            "old": 0,
+            "new": 18,
+            "text": "    \"\"\"Legacy small model.\"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 38,
+            "top": 834,
+            "height": 21,
+            "old": 30,
+            "new": 19,
+            "text": "    def __init__(self):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 39,
+            "top": 855,
+            "height": 21,
+            "old": 31,
+            "new": 20,
+            "text": "        super().__init__(",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 40,
+            "top": 876,
+            "height": 21,
+            "old": 32,
+            "new": 21,
+            "text": "            model=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 41,
+            "top": 897,
+            "height": 21,
+            "old": 33,
+            "new": 22,
+            "text": "            system=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 42,
+            "top": 918,
+            "height": 21,
+            "old": 34,
+            "new": 23,
+            "text": "            mode=\"small\",",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 43,
+            "top": 939,
+            "height": 21,
+            "old": 35,
+            "new": 24,
+            "text": "            size=1,",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 44,
+            "top": 960,
+            "height": 21,
+            "old": 36,
+            "new": 25,
+            "text": "        )",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 45,
+            "top": 981,
+            "height": 21,
+            "old": 37,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 46,
+            "top": 1002,
+            "height": 21,
+            "old": 38,
+            "new": 0,
+            "text": "class TestOne(Model):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 47,
+            "top": 1023,
+            "height": 21,
+            "old": 39,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 48,
+            "top": 1044,
+            "height": 21,
+            "old": 40,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 49,
+            "top": 1065,
+            "height": 21,
+            "old": 41,
+            "new": 0,
+            "text": "            model=\"test_one\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 50,
+            "top": 1086,
+            "height": 21,
+            "old": 42,
+            "new": 0,
+            "text": "            system=\"test_one\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 51,
+            "top": 1107,
+            "height": 21,
+            "old": 43,
+            "new": 0,
+            "text": "            mode=\"test_one\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 52,
+            "top": 1128,
+            "height": 21,
+            "old": 44,
+            "new": 0,
+            "text": "            size=1,",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 53,
+            "top": 1149,
+            "height": 21,
+            "old": 45,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 54,
+            "top": 1170,
+            "height": 21,
+            "old": 46,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 55,
+            "top": 1191,
+            "height": 21,
+            "old": 47,
+            "new": 0,
+            "text": "class TestTwo(Model):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 56,
+            "top": 1212,
+            "height": 21,
+            "old": 48,
+            "new": 0,
+            "text": "    def __init__(self):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 57,
+            "top": 1233,
+            "height": 21,
+            "old": 49,
+            "new": 0,
+            "text": "        super().__init__(",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 58,
+            "top": 1254,
+            "height": 21,
+            "old": 50,
+            "new": 0,
+            "text": "            model=\"test_two\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 59,
+            "top": 1275,
+            "height": 21,
+            "old": 51,
+            "new": 0,
+            "text": "            system=\"test_two\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 60,
+            "top": 1296,
+            "height": 21,
+            "old": 52,
+            "new": 0,
+            "text": "            mode=\"test_two\",",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 61,
+            "top": 1317,
+            "height": 21,
+            "old": 53,
+            "new": 0,
+            "text": "            size=1,",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 62,
+            "top": 1338,
+            "height": 21,
+            "old": 54,
+            "new": 0,
+            "text": "        )",
+            "kind": "d2h-del"
+          }
+        ]
+      ],
+      "header": "sample.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "moved-url",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "before",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "# maximum image size matches",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "# https://example.invalid/source/service/manager/editing/generator.py?rev=123456789",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_light\")",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "class LightModel(Model):",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    \"\"\"Emulates the image-light service from",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    quality/image/service/light.\"\"\"",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "after",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "before",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "@FACTORY.register(\"image_light_6mp\")",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "class Config_Light_6mp(Model):",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"\"\"Legacy version for the image-light service from",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    quality/image/service/light.",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    https://example.invalid/source/service/manager/editing/generator.py?rev=123456789",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    \"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 8,
+            "text": "after",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "example.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "moved-url",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "before",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "# maximum image size matches",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "# https://example.invalid/source/service/manager/editing/generator.py?rev=123456789",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "@FACTORY.register(\"image_light\")",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "@FACTORY.register(\"image_light_6mp\")",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "class LightModel(Model):",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "class Config_Light_6mp(Model):",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "    \"\"\"Emulates the image-light service from",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    \"\"\"Legacy version for the image-light service from",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    quality/image/service/light.\"\"\"",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "    quality/image/service/light.",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 6,
+            "text": "    https://example.invalid/source/service/manager/editing/generator.py?rev=123456789",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 0,
+            "new": 7,
+            "text": "    \"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 14,
+            "top": 330,
+            "height": 21,
+            "old": 8,
+            "new": 8,
+            "text": "after",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "example.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "repeated-constructors",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 0,
+            "text": "@task",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 0,
+            "text": "class Worker:",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 3,
+            "new": 0,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 0,
+            "text": "        self.value = value",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "class TestOne:",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        self.value = value",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "class TestTwo:",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "        self.value = value",
+            "kind": "d2h-del"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 1,
+            "text": "@task",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 2,
+            "text": "class Worker:",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"\"\"Stores a value.\"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 4,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 5,
+            "text": "        self.value = value",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx d2h-emptyplaceholder"
+          }
+        ]
+      ],
+      "header": "worker.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "repeated-constructors",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 1,
+            "new": 1,
+            "text": "@task",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 2,
+            "new": 2,
+            "text": "class Worker:",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 3,
+            "text": "    \"\"\"Stores a value.\"\"\"",
+            "kind": "d2h-ins"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 3,
+            "new": 4,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 4,
+            "new": 5,
+            "text": "        self.value = value",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 5,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 6,
+            "new": 0,
+            "text": "class TestOne:",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 7,
+            "new": 0,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 8,
+            "new": 0,
+            "text": "        self.value = value",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 9,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 10,
+            "new": 0,
+            "text": "class TestTwo:",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 11,
+            "new": 0,
+            "text": "    def __init__(self, value):",
+            "kind": "d2h-del"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 12,
+            "new": 0,
+            "text": "        self.value = value",
+            "kind": "d2h-del"
+          }
+        ]
+      ],
+      "header": "worker.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "changed-guard-and-return",
+    "format": "side-by-side",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 51,
+            "new": 0,
+            "text": "def pick_optional(value):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 52,
+            "new": 0,
+            "text": "    \"\"\"Select a value for the next operation.\"\"\"",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 53,
+            "new": 0,
+            "text": "    value = normalize(value)",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 54,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 55,
+            "new": 0,
+            "text": "    # Keep the guard next to its early return.",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 56,
+            "new": 0,
+            "text": "    record_request(value)",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 57,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 58,
+            "new": 0,
+            "text": "    if not exists(value):",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 59,
+            "new": 0,
+            "text": "        return value",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 60,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 61,
+            "new": 0,
+            "text": "    return transform(value)",
+            "kind": "d2h-cntx"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 0,
+            "new": 51,
+            "text": "def pick_optional(value):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 0,
+            "new": 52,
+            "text": "    \"\"\"Select a value for the next operation.\"\"\"",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 0,
+            "new": 53,
+            "text": "    value = normalize(value)",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 0,
+            "new": 54,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 0,
+            "new": 55,
+            "text": "    # Keep the guard next to its early return.",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 0,
+            "new": 56,
+            "text": "    record_request(value)",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 0,
+            "new": 57,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 0,
+            "new": 58,
+            "text": "    if value is None:",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 59,
+            "text": "        return None",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 0,
+            "new": 60,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 61,
+            "text": "    return transform(value)",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "selection.py"
+    },
+    "errors": []
+  },
+  {
+    "fixture": "changed-guard-and-return",
+    "format": "line-by-line",
+    "matching": "lines",
+    "snapshot": {
+      "rows": [
+        [
+          {
+            "index": 0,
+            "top": 36,
+            "height": 21,
+            "old": 0,
+            "new": 0,
+            "text": "",
+            "kind": "d2h-info"
+          },
+          {
+            "index": 1,
+            "top": 57,
+            "height": 21,
+            "old": 51,
+            "new": 51,
+            "text": "def pick_optional(value):",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 2,
+            "top": 78,
+            "height": 21,
+            "old": 52,
+            "new": 52,
+            "text": "    \"\"\"Select a value for the next operation.\"\"\"",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 3,
+            "top": 99,
+            "height": 21,
+            "old": 53,
+            "new": 53,
+            "text": "    value = normalize(value)",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 4,
+            "top": 120,
+            "height": 21,
+            "old": 54,
+            "new": 54,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 5,
+            "top": 141,
+            "height": 21,
+            "old": 55,
+            "new": 55,
+            "text": "    # Keep the guard next to its early return.",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 6,
+            "top": 162,
+            "height": 21,
+            "old": 56,
+            "new": 56,
+            "text": "    record_request(value)",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 7,
+            "top": 183,
+            "height": 21,
+            "old": 57,
+            "new": 57,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 8,
+            "top": 204,
+            "height": 21,
+            "old": 58,
+            "new": 0,
+            "text": "    if not exists(value):",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 9,
+            "top": 225,
+            "height": 21,
+            "old": 0,
+            "new": 58,
+            "text": "    if value is None:",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 10,
+            "top": 246,
+            "height": 21,
+            "old": 59,
+            "new": 0,
+            "text": "        return value",
+            "kind": "d2h-del d2h-change"
+          },
+          {
+            "index": 11,
+            "top": 267,
+            "height": 21,
+            "old": 0,
+            "new": 59,
+            "text": "        return None",
+            "kind": "d2h-ins d2h-change"
+          },
+          {
+            "index": 12,
+            "top": 288,
+            "height": 21,
+            "old": 60,
+            "new": 60,
+            "text": "",
+            "kind": "d2h-cntx"
+          },
+          {
+            "index": 13,
+            "top": 309,
+            "height": 21,
+            "old": 61,
+            "new": 61,
+            "text": "    return transform(value)",
+            "kind": "d2h-cntx"
+          }
+        ]
+      ],
+      "header": "selection.py"
+    },
+    "errors": []
+  }
+]
