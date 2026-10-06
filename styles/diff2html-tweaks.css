@@ -207,9 +207,9 @@ body.vscode-high-contrast {
   color: var(--syntax-comment);
 }
 
-/* Missing counterpart rows use the same 8px diagonal pattern as VS Code.
- * Actual blank source lines and the line-number gutter remain unstriped. */
-.d2h-wrapper .d2h-files-diff td.d2h-emptyplaceholder:not(.d2h-code-side-linenumber) {
+/* One scrolling surface keeps the 8px diagonal pattern continuous across
+ * missing rows, including fractional line heights and EOF annotations. */
+.d2h-wrapper .d2h-files-diff .d2h-diff-table {
   background-image: linear-gradient(
     -45deg,
     var(--vscode-diffEditor-diagonalFill, #80808055) 12.5%,
@@ -221,12 +221,28 @@ body.vscode-high-contrast {
     transparent 100%
   );
   background-size: 8px 8px;
-  /* Keep stripes attached to their cells: a viewport-fixed image repaints
-   * large offscreen surfaces on every vertical scroll. */
+  /* A viewport-fixed image repaints large surfaces on every vertical scroll. */
   background-attachment: scroll;
 }
+/* Real source (including blank lines), headers and gutters cover the pattern.
+ * Composite translucent diff tints over an opaque editor background. */
+.d2h-wrapper .d2h-files-diff td:is(.d2h-cntx, .d2h-del, .d2h-ins, .d2h-info):not(.d2h-code-side-linenumber) {
+  background-color: var(--vscode-editor-background, var(--d2h-bg-color));
+  background-image: linear-gradient(var(--diff-cell-tint, transparent), var(--diff-cell-tint, transparent));
+}
+.d2h-wrapper .d2h-files-diff td.d2h-del {
+  --diff-cell-tint: var(--d2h-del-bg-color);
+}
+.d2h-wrapper .d2h-files-diff td.d2h-ins {
+  --diff-cell-tint: var(--d2h-ins-bg-color);
+}
+.d2h-wrapper .d2h-files-diff td.d2h-info {
+  --diff-cell-tint: var(--d2h-info-bg-color);
+}
+.d2h-wrapper .d2h-files-diff td.d2h-emptyplaceholder:not(.d2h-code-side-linenumber),
 .d2h-wrapper .d2h-files-diff .d2h-code-side-line.d2h-code-side-emptyplaceholder {
   background-color: transparent;
+  background-image: none;
 }
 
 /* EOF annotations are outside source text and share their row's folding state.

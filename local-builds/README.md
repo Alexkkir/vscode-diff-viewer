@@ -1,3 +1,13 @@
+# Latest local build: 1.8.19
+
+Install `diff-viewer-1.8.19-continuous-stripes.vsix`, then run **Developer: Reload Window**.
+
+Fixes the row-by-row diagonal seams introduced in 1.8.18. Missing lines reveal one continuous scrolling background for each diff table; real source, blank source lines and gutters remain opaque, preserving translucent insertion/deletion tints. The background is not fixed to the viewport, and no scroll-time measurements were added.
+
+Validation: 32 pixel comparisons across both themes, added/deleted gaps, horizontal/vertical scrolling, font sizes 13–20 and fractional zoom/DPR; the old CSS fails the same test. Existing gutter, context-folding and EOF browser checks pass. A CSS-only A/B on the supplied 6k-line diff showed unchanged SBS scroll p95 (25 ms), paint count and layer count. See [report](diagonal-fill-1.8.19.md).
+
+Rebuild with the commands below using output version 1.8.19. After building, run `node integration/browser/diagonal-fill.cjs`; `DIFF_DIAGONAL_BASELINE_CSS` can point to the old CSS to reproduce the failed pixel comparison.
+
 # Latest local build: 1.8.18
 
 Install `diff-viewer-1.8.18-large-diff.vsix`, then run **Developer: Reload Window**.

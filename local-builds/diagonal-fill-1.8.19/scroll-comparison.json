@@ -1,0 +1,132 @@
+{
+  "mode": "headless-chromium-css-ab",
+  "browser": "145.0.7632.6",
+  "webviewSha256": "dd85b1184d893e17eb085a084605ece1f590b6a2e9bbf48d3112d22fc67b4496",
+  "beforeCssSha256": "c6d6cefe6950be64419c721eb78579811319501369c8320658595349ebea5c27",
+  "afterCssSha256": "025255f4f40fc619b1187c72cd85de79bb9b01ba505c688b239e41b37417ce43",
+  "currentCssMatches": true,
+  "results": [
+    {
+      "format": "line-by-line",
+      "files": 73,
+      "sourceRows": 6438,
+      "before": {
+        "milliseconds": 945,
+        "rows": 6438,
+        "elements": 61008,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 73,
+        "frameCount": 90,
+        "maxFrameGapMs": 39.6,
+        "longTasks": 0,
+        "maxLongTaskMs": 0,
+        "scrollRange": 129042,
+        "frames": 89,
+        "p95FrameGapMs": 17.5,
+        "over34ms": 1,
+        "paint": {
+          "maxLayers": 24,
+          "layers": 11,
+          "drawingLayers": 8,
+          "paints": 249,
+          "paintedArea": 2633096706,
+          "layoutCount": 69,
+          "styleRecalcCount": 70,
+          "layoutMs": 121.6,
+          "scriptMs": 5.1,
+          "taskMs": 844,
+          "heapMB": 8.1
+        }
+      },
+      "after": {
+        "milliseconds": 1058.5,
+        "rows": 6438,
+        "elements": 61008,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 73,
+        "frameCount": 90,
+        "maxFrameGapMs": 58.4,
+        "longTasks": 1,
+        "maxLongTaskMs": 54,
+        "scrollRange": 129042,
+        "frames": 89,
+        "p95FrameGapMs": 25,
+        "over34ms": 1,
+        "paint": {
+          "maxLayers": 24,
+          "layers": 11,
+          "drawingLayers": 8,
+          "paints": 249,
+          "paintedArea": 2633096706,
+          "layoutCount": 69,
+          "styleRecalcCount": 70,
+          "layoutMs": 163.8,
+          "scriptMs": 6,
+          "taskMs": 982.6,
+          "heapMB": 8.2
+        }
+      }
+    },
+    {
+      "format": "side-by-side",
+      "files": 73,
+      "sourceRows": 6438,
+      "before": {
+        "milliseconds": 1159.3,
+        "rows": 12340,
+        "elements": 89744,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 73,
+        "frameCount": 90,
+        "maxFrameGapMs": 33.4,
+        "longTasks": 0,
+        "maxLongTaskMs": 0,
+        "scrollRange": 123414,
+        "frames": 89,
+        "p95FrameGapMs": 25,
+        "over34ms": 0,
+        "paint": {
+          "maxLayers": 49,
+          "layers": 25,
+          "drawingLayers": 18,
+          "paints": 855,
+          "paintedArea": 2510808261,
+          "layoutCount": 73,
+          "styleRecalcCount": 74,
+          "layoutMs": 32.8,
+          "scriptMs": 3.3,
+          "taskMs": 1103.3,
+          "heapMB": 8.8
+        }
+      },
+      "after": {
+        "milliseconds": 1179.9,
+        "rows": 12340,
+        "elements": 89744,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 73,
+        "frameCount": 90,
+        "maxFrameGapMs": 32.5,
+        "longTasks": 0,
+        "maxLongTaskMs": 0,
+        "scrollRange": 123414,
+        "frames": 89,
+        "p95FrameGapMs": 25,
+        "over34ms": 0,
+        "paint": {
+          "maxLayers": 49,
+          "layers": 25,
+          "drawingLayers": 18,
+          "paints": 855,
+          "paintedArea": 2511186369,
+          "layoutCount": 73,
+          "styleRecalcCount": 74,
+          "layoutMs": 33.2,
+          "scriptMs": 4.1,
+          "taskMs": 1120.2,
+          "heapMB": 8.8
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 // Run after build:prod: node integration/browser/large-diff.cjs [output-directory]
 // DIFF_BENCH_ASSETS selects a saved bundle/styles/skeleton root for comparisons.
 // Optional private inputs: DIFF_BENCH_FIXTURE (collapsed), DIFF_BENCH_SCROLL_FIXTURE (expanded).
+// DIFF_BENCH_ONLY=expanded limits a CSS/scroll comparison to the 6k fixture.
 // Reports contain only counts/timings: no patch text, paths, screenshots, or raw traces.
 // Headless Chromium isolates webview work; this does not measure VS Code host/remote FS or GPU smoothness.
 const assert = require("node:assert/strict");
@@ -268,12 +269,13 @@ async function verticalScroll(page) {
   fs.mkdirSync(output, { recursive: true });
   const collapsed = fixture("DIFF_BENCH_FIXTURE", 20000, "collapsed-20k");
   const expanded = fixture("DIFF_BENCH_SCROLL_FIXTURE", 6000, "expanded-6k");
+  const fixtures = process.env.DIFF_BENCH_ONLY === "expanded" ? [expanded] : [collapsed, expanded];
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const browser = await chromium.launch({ headless: true });
   const results = [];
   try {
     for (const format of formats)
-      for (const entry of [collapsed, expanded]) {
+      for (const entry of fixtures) {
         const isCollapsed = entry === collapsed;
         const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
         const errors = [];
