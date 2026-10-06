@@ -28,6 +28,87 @@ export const newRegistration = [
 ];
 
 describe("changed line alignment", () => {
+  const oldCondition = "    if not exists(value):";
+  const newCondition = "    if value is None:";
+
+  it("pairs a rewritten condition with the help of its adjacent changed return", () => {
+    const before = lines(LineType.DELETE, [oldCondition, "        return value"]);
+    const after = lines(LineType.INSERT, [newCondition, "        return None"]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [[before[0]], [after[0]]],
+      [[before[1]], [after[1]]],
+    ]);
+  });
+
+  it("also extends a strong preceding code pair into a moderately similar suffix", () => {
+    const before = lines(LineType.DELETE, ["    result = update(value)", oldCondition]);
+    const after = lines(LineType.INSERT, ["    result = update(None)", newCondition]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [[before[0]], [after[0]]],
+      [[before[1]], [after[1]]],
+    ]);
+  });
+
+  it.each([
+    ["# related old", "# related new"],
+    ['"related old"', '"related new"'],
+    ['f"related old"', 'f"related new"'],
+  ])("does not extend a comment or literal anchor into neighboring code (%s)", (old, next) => {
+    const before = lines(LineType.DELETE, [oldCondition, old]);
+    const after = lines(LineType.INSERT, [newCondition, next]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [[before[0]], []],
+      [[], [after[0]]],
+      [[before[1]], [after[1]]],
+    ]);
+  });
+
+  it("does not force a weak pair without an existing code anchor", () => {
+    const before = lines(LineType.DELETE, [oldCondition]);
+    const after = lines(LineType.INSERT, [newCondition]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [before, []],
+      [[], after],
+    ]);
+  });
+
+  it.each([
+    [oldCondition, `    ${newCondition}`],
+    ["    ax = 1111", "    by = 2222"],
+  ])("requires matching indentation and a shared identifier in a rescued pair (%s)", (old, next) => {
+    const before = lines(LineType.DELETE, [old, "        return value"]);
+    const after = lines(LineType.INSERT, [next, "        return None"]);
+    expect(alignChangedLines(before, after)).toEqual([
+      [[before[0]], []],
+      [[], [after[0]]],
+      [[before[1]], [after[1]]],
+    ]);
+  });
+
+  it.each(["before", "after", "tie"])("uses the stronger boundary without crossing anchors (%s)", (stronger) => {
+    const before = lines(LineType.DELETE, [
+      `start = '${stronger === "after" ? "old" : "same"}'`,
+      oldCondition,
+      oldCondition,
+      `finish = '${stronger === "before" ? "old" : "same"}'`,
+    ]);
+    const after = lines(LineType.INSERT, [
+      `start = '${stronger === "after" ? "new" : "same"}'`,
+      newCondition,
+      `finish = '${stronger === "before" ? "new" : "same"}'`,
+    ]);
+    const snapshot = JSON.stringify([before, after]);
+    const result = alignChangedLines(before, after);
+    expect(result.filter(([old, next]) => old.length && next.length)).toEqual([
+      [[before[0]], [after[0]]],
+      [[before[stronger === "after" ? 2 : 1]], [after[1]]],
+      [[before[3]], [after[2]]],
+    ]);
+    expect(result.flatMap(([old]) => old)).toEqual(before);
+    expect(result.flatMap(([, next]) => next)).toEqual(after);
+    expect(JSON.stringify([before, after])).toBe(snapshot);
+  });
+
   it.each(["py", "python", "pyi"])("pairs unchanged Python code when annotations are removed (%s)", (language) => {
     const statements = [
       "if len(config) > 0:",

@@ -1,3 +1,13 @@
+# Latest local build: 1.8.13
+
+Install `diff-viewer-1.8.13-block-alignment.vsix`, then run **Developer: Reload Window**.
+
+Changed blocks can extend their reliable code matches to adjacent moderately similar lines. This keeps a rewritten condition and its early return on corresponding rows instead of adding artificial gaps. Extension requires equal indentation and shared lexical identifiers, stops at incompatible lines, and cannot cross existing matches. Comment/literal anchors and blocks without a reliable code match do not trigger it. Existing source text, line order, comparison budgets and opt-out settings remain intact.
+
+Build with the commands below using output version 1.8.13. `node integration/browser/line-alignment.cjs` includes the guard/return regression in both layouts alongside previous alignment cases. The fixture reproduces the reported two-line edit using synthetic surrounding code.
+
+Validation: 566 tests, lint, TypeScript, formatting and production build passed. Eight synthetic browser cases and ten checks on previously supplied external files passed with full source projections and paired row geometry preserved. The guard/return screenshot was visually checked; its two source rows are paired without inserted gaps. Another 3,000 generated sequences preserved source order, object identity and input immutability. Private patch contents remain outside the repository.
+
 # Latest local build: 1.8.12
 
 Install `diff-viewer-1.8.12-import-alignment.vsix`, then run **Developer: Reload Window**.

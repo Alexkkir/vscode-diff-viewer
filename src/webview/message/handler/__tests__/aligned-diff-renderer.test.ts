@@ -24,6 +24,53 @@ const patch = [
 ].join("\n");
 
 describe("aligned diff renderer", () => {
+  it.each([
+    ["side-by-side", "lines"],
+    ["side-by-side", "words"],
+    ["line-by-line", "lines"],
+    ["line-by-line", "words"],
+  ] as const)("keeps a rewritten guard with its adjacent return (%s/%s)", (outputFormat, matching) => {
+    const files = parse(
+      [
+        "--- a/example.py",
+        "+++ b/example.py",
+        "@@ -58,2 +58,2 @@",
+        "-    if not exists(value):",
+        "-        return value",
+        "+    if value is None:",
+        "+        return None",
+        "",
+      ].join("\n"),
+    );
+    const original = JSON.stringify(files);
+    const root = document.createElement("div");
+    root.innerHTML = renderAlignedDiffHtml(files, { outputFormat, matching });
+    const tables = root.querySelectorAll(".d2h-diff-tbody");
+    if (outputFormat === "side-by-side") {
+      for (const table of tables) {
+        const rows = Array.from(table.querySelectorAll("tr"));
+        expect(rows).toHaveLength(3);
+        expect(rows.slice(1).map((row) => row.querySelector(".d2h-code-side-linenumber")?.textContent?.trim())).toEqual(
+          ["58", "59"],
+        );
+      }
+      expect(tables[0].querySelector(".d2h-code-line-ctn")?.textContent).toBe("    if not exists(value):");
+      expect(tables[1].querySelector(".d2h-code-line-ctn")?.textContent).toBe("    if value is None:");
+    } else {
+      const rows = Array.from(root.querySelectorAll("tr")).filter((row) => row.querySelector(".d2h-code-line-ctn"));
+      expect(rows.every((row) => row.querySelector("td.d2h-change"))).toBe(true);
+      expect(
+        rows.map((row) => [row.querySelector(".line-num1")?.textContent, row.querySelector(".line-num2")?.textContent]),
+      ).toEqual([
+        ["58", ""],
+        ["", "58"],
+        ["59", ""],
+        ["", "59"],
+      ]);
+    }
+    expect(JSON.stringify(files)).toBe(original);
+  });
+
   it.each(["side-by-side", "line-by-line"] as const)(
     "uses Python comment pairing without altering source text (%s)",
     (outputFormat) => {

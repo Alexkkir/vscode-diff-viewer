@@ -7,7 +7,15 @@ export type AlignedLineGroup = [DiffLine[], DiffLine[]];
 const MAX_COMPARISONS = 100_000;
 const MAX_CHARACTER_COMPARISONS = 5_000_000;
 const MIN_SIMILARITY = 0.5;
+const MIN_NEIGHBOR_SIMILARITY = 0.3;
 const CONTINUITY_BONUS = 0.5;
+
+type LinePair = [number, number];
+
+interface CodeShape {
+  indentation: string;
+  identifiers: Set<string>;
+}
 
 /** Align a changed run as a whole, rather than anchoring on its closest pair. */
 export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], language?: string): AlignedLineGroup[] {
@@ -26,6 +34,7 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   const oldImports = oldText.map(importStatement);
   const newImports = newText.map(importStatement);
   const scores = new Float64Array((oldLines.length + 1) * width);
+  const similarities = new Float64Array(scores.length);
   const directions = new Uint8Array(scores.length);
   const pairScores = new Float64Array(scores.length).fill(-Infinity);
   const weights = new Float64Array(scores.length);
@@ -68,6 +77,7 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
       const declaration = oldDeclarations[oldIndex - 1];
       const renamedDeclaration = declaration !== undefined && declaration === newDeclarations[newIndex - 1];
       const score = Math.max(compared.score, renamedDeclaration ? 0.8 : 0);
+      similarities[oldIndex * width + newIndex] = score;
       const weight =
         score > MIN_SIMILARITY ? (score - MIN_SIMILARITY) * Math.min(1, Math.min(left.length, right.length) / 10) : 0;
       const index = oldIndex * width + newIndex;
@@ -93,7 +103,7 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
     }
   }
 
-  const anchors: Array<[number, number]> = [];
+  const anchors: LinePair[] = [];
   let oldIndex = oldLines.length;
   let newIndex = newLines.length;
   let followPair = false;
@@ -110,11 +120,14 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
     }
   }
   anchors.reverse();
+  const pairs = anchors.length
+    ? extendCodeAnchors(anchors, oldLines.map(codeShape), newLines.map(codeShape), similarities, width)
+    : anchors;
 
   const result: AlignedLineGroup[] = [];
   oldIndex = 0;
   newIndex = 0;
-  for (const [oldAnchor, newAnchor] of anchors) {
+  for (const [oldAnchor, newAnchor] of pairs) {
     if (oldAnchor > oldIndex) result.push([oldLines.slice(oldIndex, oldAnchor), []]);
     if (newAnchor > newIndex) result.push([[], newLines.slice(newIndex, newAnchor)]);
     result.push([[oldLines[oldAnchor]], [newLines[newAnchor]]]);
@@ -123,6 +136,79 @@ export function alignChangedLines(oldLines: DiffLine[], newLines: DiffLine[], la
   }
   if (oldIndex < oldLines.length) result.push([oldLines.slice(oldIndex), []]);
   if (newIndex < newLines.length) result.push([[], newLines.slice(newIndex)]);
+  return result;
+}
+
+function codeShape(line: DiffLine): CodeShape | undefined {
+  const text = line.content.slice(1);
+  const trimmed = text.trim();
+  // Comments, literals and punctuation-only rows must not lend their matching
+  // score to unrelated neighboring code. This is lexical, not keyword-specific.
+  if (!/^[\p{L}_$]/u.test(trimmed) || /^(?:[fFrRbBuU]{1,2})?["']/.test(trimmed)) return undefined;
+  return {
+    indentation: /^[ \t]*/.exec(text)![0],
+    identifiers: new Set(trimmed.match(/[\p{L}_$][\p{L}\p{N}_$]*/gu) ?? []),
+  };
+}
+
+function extendCodeAnchors(
+  anchors: LinePair[],
+  oldShapes: Array<CodeShape | undefined>,
+  newShapes: Array<CodeShape | undefined>,
+  similarities: Float64Array,
+  width: number,
+): LinePair[] {
+  if (!anchors.length) return anchors;
+  const score = ([old, next]: LinePair) => similarities[(old + 1) * width + next + 1];
+  const isCode = ([old, next]: LinePair) => !!oldShapes[old] && !!newShapes[next];
+  const canExtend = (pair: LinePair): boolean => {
+    const [old, next] = pair;
+    const left = oldShapes[old];
+    const right = newShapes[next];
+    return !!(
+      left &&
+      right &&
+      left.indentation === right.indentation &&
+      score(pair) >= MIN_NEIGHBOR_SIMILARITY &&
+      [...left.identifiers].some((identifier) => right.identifiers.has(identifier))
+    );
+  };
+
+  const result: LinePair[] = [];
+  for (let index = 0; index <= anchors.length; index++) {
+    const before = anchors[index - 1];
+    const after = anchors[index];
+    let oldStart = before ? before[0] + 1 : 0;
+    let newStart = before ? before[1] + 1 : 0;
+    let oldEnd = after ? after[0] : oldShapes.length;
+    let newEnd = after ? after[1] : newShapes.length;
+    const prefix: LinePair[] = [];
+    const suffix: LinePair[] = [];
+    const extend = (fromStart: boolean) => {
+      const boundary = fromStart ? before : after;
+      if (!boundary || !isCode(boundary)) return;
+      while (oldStart < oldEnd && newStart < newEnd) {
+        const pair: LinePair = fromStart ? [oldStart, newStart] : [oldEnd - 1, newEnd - 1];
+        if (!canExtend(pair)) break;
+        if (fromStart) {
+          prefix.push(pair);
+          oldStart++;
+          newStart++;
+        } else {
+          suffix.push(pair);
+          oldEnd--;
+          newEnd--;
+        }
+      }
+    };
+    // Both ends may claim an unequal gap. Start with its stronger existing
+    // anchor, then extend the other side only into the still-unmatched range.
+    const fromStart = !!before && isCode(before) && (!after || !isCode(after) || score(before) >= score(after));
+    extend(fromStart);
+    extend(!fromStart);
+    result.push(...prefix, ...suffix.reverse());
+    if (after) result.push(after);
+  }
   return result;
 }
 
@@ -172,7 +258,7 @@ function declarationShape(text: string): string | undefined {
 function similarity(left: string, right: string, budget: number): { score: number; work: number } | undefined {
   if (left === right) return { score: 1, work: 0 };
   const length = Math.max(left.length, right.length);
-  if (Math.min(left.length, right.length) / length <= MIN_SIMILARITY) return { score: 0, work: 0 };
+  if (Math.min(left.length, right.length) / length <= MIN_NEIGHBOR_SIMILARITY) return { score: 0, work: 0 };
 
   // Unchanged indentation, identifiers and long URL prefixes should not cause
   // quadratic character comparisons for every possible pair of lines.

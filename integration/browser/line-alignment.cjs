@@ -198,6 +198,33 @@ const cases = [
       [4, 5],
     ],
   },
+  {
+    name: "changed-guard-and-return",
+    patch: [
+      "--- selection.py",
+      "+++ selection.py",
+      "@@ -51,11 +51,11 @@",
+      " def pick_optional(value):",
+      '     """Select a value for the next operation."""',
+      "     value = normalize(value)",
+      " ",
+      "     # Keep the guard next to its early return.",
+      "     record_request(value)",
+      " ",
+      "-    if not exists(value):",
+      "-        return value",
+      "+    if value is None:",
+      "+        return None",
+      " ",
+      "     return transform(value)",
+      "",
+    ].join("\n"),
+    pairs: [
+      [58, 58],
+      [59, 59],
+    ],
+    verifyUnifiedPairs: true,
+  },
 ];
 function externalFixture() {
   try {
@@ -450,6 +477,11 @@ const server = http.createServer((request, response) => {
         );
         const oldRow = (number) => snapshot.rows[0].find((row) => row.old === number);
         const newRow = (number) => snapshot.rows[format === "side-by-side" ? 1 : 0].find((row) => row.new === number);
+        // Save failed-regression evidence too, before checking line pairing.
+        await page.screenshot({
+          fullPage: true,
+          path: path.join(artifactDirectory, `line-alignment-${fixture.name}-${format}.png`),
+        });
         if (format === "side-by-side") {
           assert.deepEqual(
             snapshot.rows[0].map((row) => [row.top, row.height]),
@@ -467,6 +499,16 @@ const server = http.createServer((request, response) => {
             assert.equal(snapshot.rows[1][oldRow(3).index].new, 0, "Removed URL comment must not displace decorators");
             assert.equal(snapshot.rows[0][newRow(6).index].old, 0, "Moved docstring URL belongs to its own added row");
           }
+        } else if (fixture.verifyUnifiedPairs) {
+          for (const [oldNumber, newNumber] of fixture.pairs) {
+            const left = oldRow(oldNumber);
+            const right = newRow(newNumber);
+            assert.equal(right.index, left.index + 1, `${fixture.name}: unified replacement rows must be adjacent`);
+            assert(
+              left.kind.includes("d2h-change") && right.kind.includes("d2h-change"),
+              "Unified replacements need inline matching",
+            );
+          }
         }
         if (fixture.name === "repeated-constructors") {
           for (const number of [3, 4])
@@ -483,10 +525,6 @@ const server = http.createServer((request, response) => {
           }
           assert(newRow(3).kind.includes("d2h-ins"), "New docstring remains added");
         }
-        await page.screenshot({
-          fullPage: true,
-          path: path.join(artifactDirectory, `line-alignment-${fixture.name}-${format}.png`),
-        });
         assert.deepEqual(errors, []);
         results.push({ fixture: fixture.name, format, snapshot, errors });
         await page.close();
@@ -520,7 +558,7 @@ const server = http.createServer((request, response) => {
       return;
     }
     console.log(
-      "Line alignment browser checks passed: moved URL, repeated constructors and their combined class sequence in both layouts, source projections and geometry preserved; screenshots:",
+      "Line alignment browser checks passed: moved URL, repeated constructors, combined class sequence and changed guard/return in both layouts; source projections and geometry preserved; screenshots:",
       artifactDirectory,
     );
   } catch (error) {
