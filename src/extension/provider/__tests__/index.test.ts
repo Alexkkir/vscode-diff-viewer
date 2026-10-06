@@ -97,6 +97,10 @@ describe("DiffViewerProvider", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest
+      .mocked(highlightDiffProgressively)
+      .mockReset()
+      .mockResolvedValue(undefined as never);
     (
       vscode.window.tabGroups as unknown as {
         all: Array<{ tabs: Array<{ input: unknown }> }>;
@@ -741,6 +745,7 @@ describe("DiffViewerProvider", () => {
         onWebviewActionRequested: expect.any(Function),
         onReadyReceived: expect.any(Function),
         onFocusReceived: expect.any(Function),
+        onSyntaxRequested: expect.any(Function),
         onTestStateReported: expect.any(Function),
         onTestActionResultReported: expect.any(Function),
       });
@@ -780,19 +785,21 @@ describe("DiffViewerProvider", () => {
       expect(mockOnDidChangeConfiguration).toHaveBeenCalled();
     });
 
-    it("does not redraw identical data after focus and file notifications", async () => {
+    it("keeps unchanged focus quiet but invalidates a notified file update until refreshed", async () => {
       await provider.resolveCustomTextEditor(mockTextDocument, mockWebviewPanel, mockCancellationToken);
       const callbacks = jest.mocked(MessageToExtensionHandlerImpl).mock.calls.at(-1)?.[0];
       callbacks?.onReadyReceived?.({ shellGeneration: 1 });
       await jest.runAllTimersAsync();
       jest.mocked(mockWebview.postMessage).mockClear();
-      const onChange = jest.mocked(vscode.workspace.onDidChangeTextDocument).mock.calls.at(-1)?.[0];
-      onChange?.({ document: mockTextDocument } as vscode.TextDocumentChangeEvent);
-      await jest.runAllTimersAsync();
       const onFocus = jest.mocked(vscode.window.onDidChangeWindowState).mock.calls.at(-1)?.[0];
       onFocus?.({ focused: true, active: true });
       await jest.runAllTimersAsync();
       expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      const onChange = jest.mocked(vscode.workspace.onDidChangeTextDocument).mock.calls.at(-1)?.[0];
+      onChange?.({ document: mockTextDocument } as vscode.TextDocumentChangeEvent);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "invalidate" }));
+      await jest.runAllTimersAsync();
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
     });
 
     it("should handle diff parsing and webview update", async () => {
@@ -946,13 +953,97 @@ describe("DiffViewerProvider", () => {
       webviewReady: true,
     });
 
+    it("shows a large preview without waiting for source paths or any native syntax", async () => {
+      jest.mocked(mockTextDocument.getText).mockReturnValue(mockDiffContent + "\n".repeat(520_000));
+      jest.mocked(vscode.workspace.fs.stat).mockImplementation(() => new Promise(() => {}));
+      const context = readyContext();
+      Reflect.get(provider, "updateWebview").call(provider, context);
+      await jest.advanceTimersByTimeAsync(20);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          kind: "updateWebview",
+          payload: expect.objectContaining({
+            accessiblePaths: [],
+            syntax: undefined,
+            performance: expect.objectContaining({ lazyFiles: true }),
+          }),
+        }),
+      );
+      expect(highlightDiffProgressively).not.toHaveBeenCalled();
+    });
+
+    it("colors requested file indexes once and discards their late enrichment after invalidation", async () => {
+      jest.mocked(mockTextDocument.getText).mockReturnValue(mockDiffContent + "\n".repeat(520_000));
+      const base = mockParse.getMockImplementation()!(mockDiffContent)!;
+      mockParse.mockReturnValue([base[0], { ...base[0], oldName: "second.py", newName: "second.py" }]);
+      const context = readyContext();
+      Reflect.get(provider, "updateWebview").call(provider, context);
+      await jest.advanceTimersByTimeAsync(20);
+      jest.mocked(mockWebview.postMessage).mockClear();
+      let finish!: (syntax: [null]) => void;
+      jest.mocked(highlightDiffProgressively).mockResolvedValueOnce({
+        syntax: [null],
+        enriched: new Promise<[null]>((resolve) => {
+          finish = resolve;
+        }),
+      });
+      Reflect.get(provider, "requestSyntax").call(provider, context, {
+        renderId: context.renderRequestId,
+        fileIndexes: [1, 1, -1, 999],
+      });
+      await jest.advanceTimersByTimeAsync(1);
+      expect(highlightDiffProgressively).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(highlightDiffProgressively).mock.calls[0][0].map((file) => file.newName)).toEqual([
+        "second.py",
+      ]);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith({
+        kind: "updateSyntax",
+        payload: { renderId: context.renderRequestId, syntax: [null, null], fileIndexes: [1] },
+      });
+      const current = jest.mocked(highlightDiffProgressively).mock.calls[0][2]!;
+      expect(current()).toBe(true);
+      Reflect.get(provider, "updateWebview").call(provider, context, undefined, true);
+      expect(current()).toBe(false);
+      jest.mocked(mockWebview.postMessage).mockClear();
+      finish([null]);
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(mockWebview.postMessage).not.toHaveBeenCalledWith(expect.objectContaining({ kind: "updateSyntax" }));
+    });
+
+    it("hides stale content before slow preprocessing, even when focus discovers a missed change", async () => {
+      mockParse.mockImplementation(jest.requireActual<typeof import("diff2html")>("diff2html").parse);
+      const context = readyContext();
+      Reflect.get(provider, "updateWebview").call(provider, context);
+      await jest.advanceTimersByTimeAsync(20);
+      jest.mocked(mockWebview.postMessage).mockClear();
+      let finish!: (value: { syntax: []; enriched: Promise<[]> }) => void;
+      jest.mocked(highlightDiffProgressively).mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      );
+      jest.mocked(mockTextDocument.getText).mockReturnValue(mockDiffContent.replace("line2modified", "new-content"));
+      Reflect.get(provider, "updateWebview").call(provider, context);
+      await jest.advanceTimersByTimeAsync(20);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith({
+        kind: "invalidate",
+        payload: { renderId: context.renderRequestId },
+      });
+      expect(mockWebview.postMessage).not.toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
+      finish({ syntax: [], enriched: Promise.resolve([]) });
+      await jest.advanceTimersByTimeAsync(1);
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
+    });
+
     it.each([
       ["empty", ""],
       ["unparseable", "command is still writing"],
       ["header only", "diff --git a/file1.txt b/file1.txt\n--- a/file1.txt\n+++ b/file1.txt\n"],
       ["partial hunk", "--- a/file1.txt\n+++ b/file1.txt\n@@ -1,3 +1,3 @@\n line1\n-line2\n+partial"],
       ["parse failure", "throw during parse"],
-    ])("keeps the previous diff while a transient %s snapshot finishes writing", async (_label, incomplete) => {
+    ])("hides the previous diff while a transient %s snapshot finishes writing", async (_label, incomplete) => {
       const actualParse = jest.requireActual<typeof import("diff2html")>("diff2html").parse;
       mockParse.mockImplementation((text, config) => {
         if (text === "throw during parse") throw new Error("incomplete patch");
@@ -968,7 +1059,8 @@ describe("DiffViewerProvider", () => {
       jest.mocked(mockTextDocument.getText).mockReturnValue(incomplete);
       update();
       await jest.advanceTimersByTimeAsync(100);
-      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(mockWebview.postMessage).toHaveBeenCalledWith(expect.objectContaining({ kind: "invalidate" }));
+      expect(mockWebview.postMessage).not.toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
       expect(mockWebviewPanel.dispose).not.toHaveBeenCalled();
       const complete = mockDiffContent.replace("line2modified", "finished-version");
       jest.mocked(mockTextDocument.getText).mockReturnValue(complete);
@@ -993,7 +1085,7 @@ describe("DiffViewerProvider", () => {
       jest.mocked(mockTextDocument.getText).mockReturnValue("");
       update();
       await jest.advanceTimersByTimeAsync(219);
-      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(mockWebview.postMessage).not.toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
       await jest.advanceTimersByTimeAsync(1);
       expect(mockWebview.postMessage).toHaveBeenCalledWith({
         kind: "updateWebview",
@@ -1014,7 +1106,7 @@ describe("DiffViewerProvider", () => {
       jest.mocked(mockTextDocument.getText).mockReturnValue("");
       update();
       await jest.advanceTimersByTimeAsync(80);
-      expect(mockWebview.postMessage).not.toHaveBeenCalled();
+      expect(mockWebview.postMessage).not.toHaveBeenCalledWith(expect.objectContaining({ kind: "updateWebview" }));
       jest.mocked(mockTextDocument.getText).mockReturnValue(mockDiffContent.replace("line2modified", "latest-version"));
       update();
       await jest.advanceTimersByTimeAsync(20);
@@ -1038,6 +1130,7 @@ describe("DiffViewerProvider", () => {
       update();
       await jest.advanceTimersByTimeAsync(20);
       context.isDisposed = true;
+      jest.mocked(mockWebview.postMessage).mockClear();
       jest.mocked(mockTextDocument.getText).mockClear();
       await jest.advanceTimersByTimeAsync(200);
       expect(mockTextDocument.getText).not.toHaveBeenCalled();
@@ -1687,7 +1780,7 @@ describe("DiffViewerProvider", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (provider as any).registerEventHandlers({ webviewContext, messageHandler });
 
-      expect(mockUpdateWebview).toHaveBeenCalledWith(webviewContext);
+      expect(mockUpdateWebview).toHaveBeenCalledWith(webviewContext, undefined, true);
     });
 
     it("should only update webview for configuration changes affecting app config", () => {

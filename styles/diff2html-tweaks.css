@@ -221,8 +221,9 @@ body.vscode-high-contrast {
     transparent 100%
   );
   background-size: 8px 8px;
-  /* Align stripes across adjacent placeholder cells of arbitrary row height. */
-  background-attachment: fixed;
+  /* Keep stripes attached to their cells: a viewport-fixed image repaints
+   * large offscreen surfaces on every vertical scroll. */
+  background-attachment: scroll;
 }
 .d2h-wrapper .d2h-files-diff .d2h-code-side-line.d2h-code-side-emptyplaceholder {
   background-color: transparent;
@@ -241,4 +242,17 @@ body.vscode-high-contrast {
 }
 .d2h-file-side-diff .diff-no-newline {
   padding: 0 4.5em;
+}
+
+/* Keep offscreen file bodies out of layout/paint while retaining native text
+ * selection, Find and sticky headers. Each body carries a folded-row estimate;
+ * auto remembers its measured height after it has entered the viewport. */
+.diff-lazy-files .d2h-file-wrapper > .d2h-file-diff,
+.diff-lazy-files .d2h-file-wrapper > .d2h-files-diff {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 1000px;
+}
+.diff-file-loading {
+  padding: 12px;
+  color: var(--vscode-descriptionForeground, var(--d2h-dim-color));
 }

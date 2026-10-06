@@ -13,6 +13,10 @@ export function createRenderPlan(args: {
 }): WebviewRenderPlan {
   const isLargeDiff =
     args.text.length >= LARGE_DIFF_TEXT_THRESHOLD || args.diffFiles.length >= LARGE_DIFF_FILE_THRESHOLD;
+  const sourceLines = args.diffFiles.reduce(
+    (sum, file) => sum + file.blocks.reduce((count, block) => count + block.lines.length, 0),
+    0,
+  );
   const warningParts: string[] = [];
 
   if (isLargeDiff) {
@@ -23,6 +27,7 @@ export function createRenderPlan(args: {
     collapseAll: args.collapseAll || isLargeDiff,
     performance: {
       isLargeDiff,
+      lazyFiles: isLargeDiff || sourceLines >= 2000,
       warning: warningParts.length > 0 ? warningParts.join(" ") : undefined,
       deferViewedStateHashing: isLargeDiff,
     },

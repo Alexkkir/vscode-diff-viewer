@@ -17,6 +17,7 @@ export class MessageToExtensionHandlerImpl extends GenericMessageHandlerImpl imp
       onWebviewActionRequested: (action: WebviewAction) => void;
       onReadyReceived?: (payload: { shellGeneration: number }) => void;
       onFocusReceived?: (payload: { shellGeneration: number }) => void;
+      onSyntaxRequested?: (payload: { renderId: number; fileIndexes: number[] }) => void;
     } & MessageToExtensionReportCallbacks,
   ) {
     super();
@@ -66,6 +67,10 @@ export class MessageToExtensionHandlerImpl extends GenericMessageHandlerImpl imp
 
   public requestWebviewAction(payload: { action: WebviewAction }): void {
     this.args.onWebviewActionRequested(payload.action);
+  }
+
+  public requestSyntax(payload: { renderId: number; fileIndexes: number[] }): void {
+    this.args.onSyntaxRequested?.(payload);
   }
 
   public reportTestState(payload: Parameters<MessageToExtensionReportDispatcher["reportTestState"]>[0]): void {

@@ -20,6 +20,7 @@ export interface WebviewUiState {
 
 export interface WebviewPerformanceHints {
   isLargeDiff: boolean;
+  lazyFiles?: boolean;
   warning?: string;
   deferViewedStateHashing: boolean;
 }
@@ -38,10 +39,13 @@ export interface UpdateWebviewPayload {
 export interface UpdateSyntaxPayload {
   renderId: number;
   syntax: Array<FileSyntax | null>;
+  fileIndexes?: number[];
 }
 
 export interface MessageToWebviewRenderApi {
   prepare: () => void;
+  invalidate: (payload: { renderId: number }) => void;
+  updateAccessiblePaths: (payload: { renderId: number; accessiblePaths: string[] }) => void;
   updateWebview: (payload: UpdateWebviewPayload) => Promise<void>;
   updateSyntax: (payload: UpdateSyntaxPayload) => void;
   performWebviewAction: (payload: { action: WebviewAction }) => void;
@@ -51,6 +55,8 @@ export interface MessageToWebviewApi extends MessageToWebviewRenderApi, MessageT
 
 export const MESSAGE_TO_WEBVIEW_RENDER_KINDS = [
   "prepare",
+  "invalidate",
+  "updateAccessiblePaths",
   "updateWebview",
   "updateSyntax",
   "performWebviewAction",

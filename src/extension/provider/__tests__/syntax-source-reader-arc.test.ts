@@ -167,3 +167,45 @@ describe("Arc syntax source selection", () => {
     expect(vscode.workspace.fs.readFile).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("obsolete syntax requests", () => {
+  it("does not start filesystem work after cancellation", async () => {
+    await expect(readSyntaxSources([arcDiff()], deepDiffUri("file", ""), () => false)).rejects.toThrow(
+      "Obsolete syntax request",
+    );
+    expect(vscode.workspace.fs.stat).not.toHaveBeenCalled();
+    expect(vscode.workspace.fs.readFile).not.toHaveBeenCalled();
+  });
+
+  it.each(["stat", "readFile"])("stops after the pending %s finishes without scanning more sources", async (stage) => {
+    let current = true;
+    addSource(uri(`/home/user/5arcadia/${sourcePath}`));
+    const method = vscode.workspace.fs[stage as "stat" | "readFile"] as jest.Mock;
+    const original = method.getMockImplementation()!;
+    method.mockImplementationOnce(async (target: vscode.Uri) => {
+      const result = await original(target);
+      current = false;
+      return result;
+    });
+
+    await expect(readSyntaxSources([arcDiff(), arcDiff()], deepDiffUri("file", ""), () => current)).rejects.toThrow(
+      "Obsolete syntax request",
+    );
+    expect(vscode.workspace.fs.stat).toHaveBeenCalledTimes(1);
+    expect(vscode.workspace.fs.readFile).toHaveBeenCalledTimes(stage === "stat" ? 0 : 1);
+  });
+
+  it("does not continue parent-directory fallback after a cancelled stat fails", async () => {
+    arcMode = false;
+    let current = true;
+    (vscode.workspace.fs.stat as jest.Mock).mockImplementationOnce(async () => {
+      current = false;
+      throw new Error("File not found");
+    });
+    await expect(readSyntaxSources([arcDiff()], deepDiffUri("file", ""), () => current)).rejects.toThrow(
+      "Obsolete syntax request",
+    );
+    expect(vscode.workspace.fs.stat).toHaveBeenCalledTimes(1);
+    expect(vscode.workspace.fs.readFile).not.toHaveBeenCalled();
+  });
+});

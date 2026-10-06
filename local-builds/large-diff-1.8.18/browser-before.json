@@ -1,0 +1,292 @@
+{
+  "mode": "headless-chromium-webview-only",
+  "browser": "145.0.7632.6",
+  "results": [
+    {
+      "fixture": "collapsed-20k",
+      "format": "line-by-line",
+      "input": "private",
+      "characters": 952023,
+      "patchLines": 20459,
+      "files": 313,
+      "sourceRows": 19189,
+      "parseAndAlignmentMs": 44.7,
+      "initial": {
+        "milliseconds": 519,
+        "rows": 19189,
+        "elements": 192902,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 5,
+        "maxFrameGapMs": 458.4,
+        "longTasks": 1,
+        "maxLongTaskMs": 455,
+        "paint": {
+          "maxLayers": 103,
+          "layers": 103,
+          "drawingLayers": 100,
+          "paints": 101,
+          "paintedArea": 28919027,
+          "layoutCount": 4,
+          "styleRecalcCount": 55,
+          "layoutMs": 13.1,
+          "scriptMs": 10.5,
+          "taskMs": 662.3,
+          "heapMB": 17.3
+        }
+      },
+      "expandFirst": {
+        "milliseconds": 25.8,
+        "rows": 19189,
+        "elements": 192902,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 3,
+        "maxFrameGapMs": 9.2,
+        "longTasks": 0,
+        "maxLongTaskMs": 0
+      },
+      "expandAll": {
+        "milliseconds": 1181.3,
+        "rows": 19189,
+        "elements": 192902,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 5,
+        "maxFrameGapMs": 990.8,
+        "longTasks": 3,
+        "maxLongTaskMs": 832,
+        "partialProgressFrames": 0,
+        "firstProgressMs": null,
+        "paint": {
+          "maxLayers": 17,
+          "layers": 17,
+          "drawingLayers": 13,
+          "paints": 22,
+          "paintedArea": 1234529831,
+          "layoutCount": 3,
+          "styleRecalcCount": 3,
+          "layoutMs": 566.1,
+          "scriptMs": 18,
+          "taskMs": 1176.9,
+          "heapMB": 17.3
+        }
+      },
+      "invalidate": {
+        "milliseconds": 12.3,
+        "staleContentVisible": true,
+        "rows": 19189
+      }
+    },
+    {
+      "fixture": "expanded-6k",
+      "format": "line-by-line",
+      "input": "private",
+      "characters": 287620,
+      "patchLines": 6657,
+      "files": 73,
+      "sourceRows": 6438,
+      "parseAndAlignmentMs": 14.4,
+      "initial": {
+        "milliseconds": 606.6,
+        "rows": 6438,
+        "elements": 61008,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 4,
+        "maxFrameGapMs": 583.3,
+        "longTasks": 2,
+        "maxLongTaskMs": 493,
+        "paint": {
+          "maxLayers": 12,
+          "layers": 12,
+          "drawingLayers": 8,
+          "paints": 9,
+          "paintedArea": 190530384,
+          "layoutCount": 6,
+          "styleRecalcCount": 28,
+          "layoutMs": 231.6,
+          "scriptMs": 4.1,
+          "taskMs": 642.8,
+          "heapMB": 13.9
+        }
+      },
+      "verticalScroll": {
+        "milliseconds": 1198.6,
+        "rows": 6438,
+        "elements": 61008,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 90,
+        "maxFrameGapMs": 25.1,
+        "longTasks": 0,
+        "maxLongTaskMs": 0,
+        "scrollRange": 129237,
+        "frames": 89,
+        "p95FrameGapMs": 17.5,
+        "over34ms": 0,
+        "paint": {
+          "maxLayers": 26,
+          "layers": 16,
+          "drawingLayers": 13,
+          "paints": 280,
+          "paintedArea": 2024309975,
+          "layoutCount": 0,
+          "styleRecalcCount": 1,
+          "layoutMs": 0,
+          "scriptMs": 6.4,
+          "taskMs": 1186.2,
+          "heapMB": 8.2
+        }
+      },
+      "invalidate": {
+        "milliseconds": 8.7,
+        "staleContentVisible": true,
+        "rows": 6438
+      }
+    },
+    {
+      "fixture": "collapsed-20k",
+      "format": "side-by-side",
+      "input": "private",
+      "characters": 952023,
+      "patchLines": 20459,
+      "files": 313,
+      "sourceRows": 19189,
+      "parseAndAlignmentMs": 44.7,
+      "initial": {
+        "milliseconds": 604.3,
+        "rows": 37112,
+        "elements": 285185,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 4,
+        "maxFrameGapMs": 558.3,
+        "longTasks": 1,
+        "maxLongTaskMs": 548,
+        "paint": {
+          "maxLayers": 103,
+          "layers": 103,
+          "drawingLayers": 100,
+          "paints": 101,
+          "paintedArea": 28919027,
+          "layoutCount": 4,
+          "styleRecalcCount": 49,
+          "layoutMs": 12.3,
+          "scriptMs": 12.2,
+          "taskMs": 736.6,
+          "heapMB": 76.8
+        }
+      },
+      "expandFirst": {
+        "milliseconds": 24.8,
+        "rows": 37112,
+        "elements": 285185,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 3,
+        "maxFrameGapMs": 8.4,
+        "longTasks": 0,
+        "maxLongTaskMs": 0
+      },
+      "expandAll": {
+        "milliseconds": 1982.8,
+        "rows": 37112,
+        "elements": 285185,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 5,
+        "maxFrameGapMs": 1783.4,
+        "longTasks": 3,
+        "maxLongTaskMs": 1553,
+        "partialProgressFrames": 0,
+        "firstProgressMs": null,
+        "paint": {
+          "maxLayers": 37,
+          "layers": 37,
+          "drawingLayers": 24,
+          "paints": 24,
+          "paintedArea": 609042434,
+          "layoutCount": 3,
+          "styleRecalcCount": 3,
+          "layoutMs": 819.3,
+          "scriptMs": 277.9,
+          "taskMs": 1995.3,
+          "heapMB": 19
+        }
+      },
+      "invalidate": {
+        "milliseconds": 4.5,
+        "staleContentVisible": true,
+        "rows": 37112
+      }
+    },
+    {
+      "fixture": "expanded-6k",
+      "format": "side-by-side",
+      "input": "private",
+      "characters": 287620,
+      "patchLines": 6657,
+      "files": 73,
+      "sourceRows": 6438,
+      "parseAndAlignmentMs": 14.4,
+      "initial": {
+        "milliseconds": 985.4,
+        "rows": 12340,
+        "elements": 89744,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 6,
+        "maxFrameGapMs": 950.1,
+        "longTasks": 2,
+        "maxLongTaskMs": 789,
+        "paint": {
+          "maxLayers": 19,
+          "layers": 19,
+          "drawingLayers": 12,
+          "paints": 14,
+          "paintedArea": 224857506,
+          "layoutCount": 6,
+          "styleRecalcCount": 26,
+          "layoutMs": 408.3,
+          "scriptMs": 12.6,
+          "taskMs": 1018.6,
+          "heapMB": 16.9
+        }
+      },
+      "verticalScroll": {
+        "milliseconds": 2356.7,
+        "rows": 12340,
+        "elements": 89744,
+        "pendingFiles": 0,
+        "syntaxRequestedFiles": 0,
+        "frameCount": 90,
+        "maxFrameGapMs": 50,
+        "longTasks": 0,
+        "maxLongTaskMs": 0,
+        "scrollRange": 123609,
+        "frames": 89,
+        "p95FrameGapMs": 34.2,
+        "over34ms": 5,
+        "paint": {
+          "maxLayers": 70,
+          "layers": 29,
+          "drawingLayers": 20,
+          "paints": 1002,
+          "paintedArea": 3026684209,
+          "layoutCount": 0,
+          "styleRecalcCount": 1,
+          "layoutMs": 0,
+          "scriptMs": 29,
+          "taskMs": 2340.7,
+          "heapMB": 17
+        }
+      },
+      "invalidate": {
+        "milliseconds": 13.6,
+        "staleContentVisible": true,
+        "rows": 12340
+      }
+    }
+  ]
+}

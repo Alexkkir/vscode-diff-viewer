@@ -1,3 +1,5 @@
+import { LazyFileRenderer } from "./lazy-files";
+import type { FileSyntax } from "../../../shared/syntax";
 import { renderNoNewlineMarkers } from "./no-newline";
 import { captureViewState, restoreViewState } from "./view-state";
 import { getRenderedFileWrappers, linkRenderedFileSummaries } from "./rendered-file-wrappers";
@@ -37,8 +39,19 @@ const FILE_NAME_LINK_CLASS = "diff-file-link";
 export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl implements MessageToWebviewHandler {
   private readonly syntaxHighlightingController = new SyntaxHighlightingController({
     getEnabled: () => this.currentUiState.syntaxHighlighting !== false,
-    setEnabled: (syntaxHighlighting) => this.persistUiState({ syntaxHighlighting }),
+    setEnabled: (syntaxHighlighting) => {
+      this.persistUiState({ syntaxHighlighting });
+      this.horizontalScrollbarController.invalidateMeasurements();
+      this.horizontalScrollbarController.scheduleRefresh(!!this.lazyFiles);
+    },
   });
+  private lazyFiles: LazyFileRenderer | undefined;
+  private currentSyntax: Array<FileSyntax | null> | undefined;
+  private requestedSyntax = new Set<number>();
+  private pendingRenderId: number | undefined;
+  private hiddenViewState: ReturnType<typeof captureViewState> | undefined;
+  private currentDiffFiles: DiffFile[] = [];
+  private pendingAccessibility: { renderId: number; accessiblePaths: string[] } | undefined;
   private hasRendered = false;
   private updateGeneration = 0;
   private currentRenderId: number | undefined;
@@ -52,7 +65,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     setState: (contextExpansions) => this.persistUiState({ contextExpansions }),
     onChange: () => {
       this.syntaxHighlightingController.refreshVisible();
-      this.horizontalScrollbarController.refresh();
+      this.horizontalScrollbarController.invalidateMeasurements();
+      this.horizontalScrollbarController.scheduleRefresh(!!this.lazyFiles);
       this.findController.refresh();
     },
   });
@@ -92,6 +106,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       getRenderGeneration: () => this.updateGeneration,
       getFileBindings: () => this.fileBindings,
       getSelectedPath: () => this.currentUiState.selectedPath,
+      afterAction: () => this.lazyFiles?.whenIdle() ?? Promise.resolve(),
       getClickedLineNumber: (element) => this.getClickedLineNumber(element),
     });
   }
@@ -102,13 +117,73 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     showEmpty(false);
   }
 
+  public invalidate(payload: { renderId: number }): void {
+    if (!Number.isFinite(payload.renderId) || payload.renderId < (this.pendingRenderId ?? this.currentRenderId ?? 0))
+      return;
+    this.hiddenViewState ??= captureViewState(this.fileBindings);
+    this.pendingRenderId = payload.renderId;
+    ++this.updateGeneration;
+    this.lazyFiles?.dispose();
+    this.lazyFiles = undefined;
+    this.contextFoldingController.reset();
+    this.rendering = true;
+    this.pendingSyntax = undefined;
+    this.contextSelection = undefined;
+    globalThis.getSelection()?.removeAllRanges();
+    this.findController.suspend();
+    this.pendingInteractions.unshift(
+      ...Array.from(this.pendingViewedRequests, ([path, request]) => ({ path, ...request })),
+    );
+    this.pendingViewedRequests.clear();
+    const container = document.getElementById(SkeletonElementIds.DiffContainer);
+    if (container) container.style.display = "none";
+    const footer = document.querySelector("footer");
+    if (footer) footer.style.display = "none";
+    updateLargeDiffNotice();
+    showEmpty(false);
+    showLoading(true, "Updating diff…");
+  }
+
+  public updateAccessiblePaths(payload: { renderId: number; accessiblePaths: string[] }): void {
+    if (
+      payload.renderId !== this.currentRenderId ||
+      (this.pendingRenderId !== undefined && payload.renderId < this.pendingRenderId)
+    )
+      return;
+    if (this.rendering) {
+      this.pendingAccessibility = payload;
+      return;
+    }
+    const paths = new Set(payload.accessiblePaths);
+    if (paths.size === this.accessiblePaths.size && [...paths].every((path) => this.accessiblePaths.has(path))) return;
+    this.accessiblePaths = paths;
+    const container = document.getElementById(SkeletonElementIds.DiffContainer);
+    if (!container) return;
+    for (const { file, wrapper } of getRenderedFileWrappers(container, this.currentDiffFiles)) {
+      const model = buildDiffFileViewModel(file, this.accessiblePaths);
+      const name = wrapper.querySelector<HTMLElement>(Diff2HtmlCssClassElements.A__FileName);
+      if (name && !this.accessiblePaths.has(model.primaryPath)) {
+        name.classList.remove(FILE_NAME_LINK_CLASS);
+        for (const attribute of ["role", "tabindex", "title", "aria-label"]) name.removeAttribute(attribute);
+      }
+      this.enhanceFileNameLink(wrapper, model);
+      wrapper.querySelector(`.${FILE_ACTIONS_CLASS}`)?.remove();
+      this.appendFileNavigationActions(wrapper, model);
+    }
+  }
+
   public async updateWebview(payload: UpdateWebviewPayload): Promise<void> {
+    if (payload.renderId !== undefined && this.pendingRenderId !== undefined && payload.renderId < this.pendingRenderId)
+      return;
+
     const diffContainer = document.getElementById(SkeletonElementIds.DiffContainer);
     if (!diffContainer) {
       return;
     }
 
     const generation = ++this.updateGeneration;
+    this.lazyFiles?.dispose();
+    this.lazyFiles = undefined;
     // A check can still be hashing when a refresh begins. Preserve that user
     // intent before canceling the old async write, just like actions made while
     // a refresh is already pending. Later queued interactions must win.
@@ -117,6 +192,9 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     );
     this.pendingViewedRequests.clear();
     this.currentRenderId = payload.renderId;
+    this.currentSyntax = payload.syntax;
+    if (this.pendingAccessibility?.renderId !== payload.renderId) this.pendingAccessibility = undefined;
+    this.requestedSyntax.clear();
     this.rendering = true;
     this.pendingSyntax = undefined;
     await this.withLoading(generation, async () => {
@@ -130,10 +208,13 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       });
       if (generation !== this.updateGeneration) return;
 
-      await this.contextFoldingController.prepare(payload.diffFiles);
+      const lazyFiles = payload.performance.lazyFiles ?? payload.performance.isLargeDiff;
+      if (lazyFiles) this.contextFoldingController.reset();
+      else await this.contextFoldingController.prepare(payload.diffFiles);
       if (generation !== this.updateGeneration) return;
 
-      const viewState = captureViewState(this.fileBindings);
+      const viewState = this.hiddenViewState ?? captureViewState(this.fileBindings);
+      this.currentDiffFiles = payload.diffFiles;
       this.currentConfig = payload.config;
       this.accessiblePaths = accessiblePaths;
       this.currentDiffFilesByPath = currentDiffFilesByPath;
@@ -150,17 +231,44 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         diffContainer.style.display = "none";
       }
 
-      const diff2html = new Diff2HtmlUI(diffContainer, payload.diffFiles, {
-        ...this.currentConfig.diff2html,
-        highlight: false,
-      });
+      diffContainer.classList.toggle("diff-lazy-files", lazyFiles);
+      const rendererConfig = { ...this.currentConfig.diff2html, highlight: false };
+      const diff2html = new Diff2HtmlUI(diffContainer, payload.diffFiles, rendererConfig, lazyFiles);
       diff2html.draw();
       linkRenderedFileSummaries(diffContainer, payload.diffFiles);
-      renderNoNewlineMarkers(diffContainer, payload.diffFiles);
-      await this.contextFoldingController.render(diffContainer, payload.diffFiles);
+      if (!lazyFiles) {
+        renderNoNewlineMarkers(diffContainer, payload.diffFiles);
+        await this.contextFoldingController.render(diffContainer, payload.diffFiles);
+      }
       if (generation !== this.updateGeneration) return;
 
-      this.syntaxHighlightingController.render(diffContainer, payload.syntax, payload.diffFiles);
+      this.syntaxHighlightingController.render(diffContainer, this.currentSyntax, payload.diffFiles);
+      if (lazyFiles) {
+        this.lazyFiles = new LazyFileRenderer(
+          diffContainer,
+          payload.diffFiles,
+          rendererConfig,
+          async (container, file, fileIndex) => {
+            if (generation !== this.updateGeneration) return;
+            renderNoNewlineMarkers(container, [file]);
+            await this.contextFoldingController.render(container, [file], true);
+            if (generation !== this.updateGeneration) return;
+            this.syntaxHighlightingController.render(container, this.currentSyntax, [file], fileIndex);
+            if (payload.renderId !== undefined && !this.requestedSyntax.has(fileIndex)) {
+              this.requestedSyntax.add(fileIndex);
+              this.args.postMessageToExtensionFn({
+                kind: "requestSyntax",
+                payload: { renderId: payload.renderId, fileIndexes: [fileIndex] },
+              });
+            }
+          },
+          () => {
+            if (generation !== this.updateGeneration) return;
+            this.horizontalScrollbarController.scheduleRefresh(!!this.lazyFiles);
+            this.findController.refresh();
+          },
+        );
+      }
       this.fileBindings = this.enhanceRenderedDiff(diffContainer, payload.diffFiles);
       this.registerDiffContainerHandlers(diffContainer);
       this.horizontalScrollbarController.ensureWindowHandlersRegistered();
@@ -188,6 +296,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
           this.updateDiff2HtmlFileCollapsed(binding.viewedToggle, collapsed);
         }
       }
+      await this.lazyFiles?.renderExpanded();
+      if (generation !== this.updateGeneration) return;
       this.restoreSelection();
       const expandAllToggle = document.getElementById(SkeletonElementIds.ExpandAllToggle);
       if (expandAllToggle instanceof HTMLInputElement) {
@@ -201,13 +311,27 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       updateFooter(this.fileBindings);
 
       diffContainer.style.display = "block";
-      restoreViewState(viewState, this.fileBindings);
+      const footer = document.querySelector("footer");
+      if (footer) footer.style.display = "";
+      this.hiddenViewState = undefined;
+      this.pendingRenderId = undefined;
+      this.findController.resume();
+      if (this.lazyFiles) await this.horizontalScrollbarController.refreshCooperatively();
+      if (generation !== this.updateGeneration) return;
+      restoreViewState(viewState, this.fileBindings, (pane, left) =>
+        this.horizontalScrollbarController.recordScrollLeft(pane, left),
+      );
       this.horizontalScrollbarController.refresh();
-      this.horizontalScrollbarController.scheduleRefresh();
+      this.horizontalScrollbarController.scheduleRefresh(!!this.lazyFiles);
       this.findController.refresh();
     });
     if (generation === this.updateGeneration) {
       this.rendering = false;
+      if (this.pendingAccessibility) {
+        const paths = this.pendingAccessibility;
+        this.pendingAccessibility = undefined;
+        this.updateAccessiblePaths(paths);
+      }
       if (this.pendingSyntax) this.updateSyntax(this.pendingSyntax);
       const pending = this.pendingInteractions;
       this.pendingInteractions = [];
@@ -246,13 +370,32 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
   }
 
   public updateSyntax(payload: UpdateSyntaxPayload): void {
-    if (payload.renderId !== this.currentRenderId) return;
+    if (
+      payload.renderId !== this.currentRenderId ||
+      (this.pendingRenderId !== undefined && payload.renderId < this.pendingRenderId)
+    )
+      return;
+    if (payload.fileIndexes) {
+      this.currentSyntax ??= [];
+      for (const index of payload.fileIndexes) this.currentSyntax[index] = payload.syntax[index] ?? null;
+    } else this.currentSyntax = payload.syntax;
     if (this.rendering) {
-      this.pendingSyntax = payload;
+      // Several lazily opened files can finish while the initial view is still
+      // being assembled. Retain every patch, not just the last file's tokens.
+      this.pendingSyntax = { renderId: payload.renderId, syntax: this.currentSyntax };
       return;
     }
     this.pendingSyntax = undefined;
-    this.syntaxHighlightingController.updateNative(payload.syntax);
+    this.syntaxHighlightingController.updateNative(this.currentSyntax, payload.fileIndexes);
+    if (payload.fileIndexes) {
+      const changed = new Set(payload.fileIndexes);
+      const container = document.getElementById(SkeletonElementIds.DiffContainer);
+      if (container)
+        for (const { fileIndex, wrapper } of getRenderedFileWrappers(container, this.currentDiffFiles)) {
+          if (changed.has(fileIndex)) this.horizontalScrollbarController.invalidateMeasurements(wrapper);
+        }
+    } else this.horizontalScrollbarController.invalidateMeasurements();
+    this.horizontalScrollbarController.scheduleRefresh(!!this.lazyFiles);
     this.findController.refresh();
   }
 
@@ -613,6 +756,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     label?.classList.toggle(Diff2HtmlCssClasses.Input__ViewedToggle__Selected, collapse);
     const fileContent = fileContainer?.querySelector(Diff2HtmlCssClassElements.Div__DiffFileContent);
     fileContent?.classList.toggle(Diff2HtmlCssClasses.Div__DiffFileContent__Collapsed, collapse);
+    if (!collapse && fileContainer && !this.rendering) void this.lazyFiles?.request(fileContainer);
   }
 
   private setAllViewedStates(viewed: boolean): void {

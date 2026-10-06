@@ -16,7 +16,7 @@ const onig = loadWASM(Uint8Array.from(atob(wasm.split(",")[1]), (c) => c.charCod
   createOnigString: (text: string) => new OnigString(text),
 }));
 function fileSuffix(file: DiffFile): string {
-  return "." + file.language.toLowerCase();
+  return "." + (file.language ?? "").toLowerCase();
 }
 function languageExtensions(installed: readonly vscode.Extension<unknown>[]): Map<string, string> {
   const result = new Map<string, string>();
@@ -395,10 +395,11 @@ export async function highlightDiffProgressively(
   diffUri?: vscode.Uri,
   isCurrent: () => boolean = () => true,
 ): Promise<ProgressiveSyntax> {
+  if (!isCurrent()) throw new Error("Obsolete syntax request");
   const snapshot = themeSnapshot();
   const entry = acquireEnvironment(snapshot);
   try {
-    const [sources, environment] = await Promise.all([readSyntaxSources(files, diffUri), entry.promise]);
+    const [sources, environment] = await Promise.all([readSyntaxSources(files, diffUri, isCurrent), entry.promise]);
     if (!isCurrent()) throw new Error("Obsolete syntax request");
     if (!environment) {
       const syntax = files.map(() => null);
@@ -414,9 +415,6 @@ export async function highlightDiffProgressively(
         custom: editor.get("semanticTokenColorCustomizations", {}),
       };
     });
-    const semanticSpans = Promise.all(
-      sources.map((source) => (source ? readSemanticSpans(source).catch(() => []) : Promise.resolve([]))),
-    );
     const key = JSON.stringify([
       snapshot.key,
       files,
@@ -431,6 +429,14 @@ export async function highlightDiffProgressively(
       lexicalCache.set(key, prepared);
       while (lexicalCache.size > 3) lexicalCache.delete(lexicalCache.keys().next().value!);
     }
+    // Start language servers only after the lexical pass has completed. A
+    // superseded pass, unsupported grammar, or disabled semantic setting needs
+    // no live source document or semantic provider request.
+    const semanticSpans = Promise.all(
+      sources.map((source, index) =>
+        source && prepared.semantics[index]?.enabled ? readSemanticSpans(source).catch(() => []) : Promise.resolve([]),
+      ),
+    );
     return {
       syntax: prepared.syntax,
       enriched: semanticSpans.then((spans) => (isCurrent() ? enrichSyntax(prepared, spans) : prepared.syntax)),

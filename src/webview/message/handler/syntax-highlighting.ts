@@ -51,15 +51,22 @@ export class SyntaxHighlightingController {
 
   constructor(private readonly args: { getEnabled: () => boolean; setEnabled: (enabled: boolean) => void }) {}
 
-  public render(container: HTMLElement, syntax?: Array<FileSyntax | null>, files?: readonly DiffFile[]): void {
-    this.lines = [];
+  public render(
+    container: HTMLElement,
+    syntax?: Array<FileSyntax | null>,
+    files?: readonly DiffFile[],
+    appendAtFileIndex?: number,
+  ): void {
+    if (appendAtFileIndex === undefined) this.lines = [];
+    const firstNewLine = this.lines.length;
     const wrappers = files
       ? getRenderedFileWrappers(container, files)
       : Array.from(container.querySelectorAll<HTMLElement>(".d2h-file-wrapper"), (wrapper, fileIndex) => ({
           wrapper,
           fileIndex,
         }));
-    wrappers.forEach(({ wrapper: file, fileIndex }) => {
+    wrappers.forEach(({ wrapper: file, fileIndex: index }) => {
+      const fileIndex = appendAtFileIndex ?? index;
       // Parsing has already removed actual Arc revision labels. A Git filename
       // may literally end with the same text, so keep its parsed extension intact.
       const extension = file.dataset.lang ?? "";
@@ -102,14 +109,16 @@ export class SyntaxHighlightingController {
         this.apply();
       };
     }
-    this.apply();
+    this.apply(this.lines.slice(firstNewLine));
   }
 
   // Semantic providers can enrich the already-visible lexical colors without
   // rebuilding the diff DOM, losing expanded context, or moving the viewport.
-  public updateNative(syntax?: Array<FileSyntax | null>): void {
+  public updateNative(syntax?: Array<FileSyntax | null>, fileIndexes?: number[]): void {
+    const changed = fileIndexes ? new Set(fileIndexes) : undefined;
     this.preserveSelection(() => {
       for (const line of this.lines) {
+        if (changed && !changed.has(line.fileIndex)) continue;
         const file = syntax?.[line.fileIndex];
         const tokens = file?.new[line.newNumber] ?? file?.old[line.oldNumber];
         if (sameTokens(line.tokens, tokens)) continue;
@@ -133,10 +142,10 @@ export class SyntaxHighlightingController {
     line.highlighted = false;
   }
 
-  private apply(): void {
+  private apply(lines = this.lines): void {
     const enabled = this.args.getEnabled();
     this.preserveSelection(() => {
-      for (const line of this.lines) {
+      for (const line of lines) {
         if (enabled) {
           if (!line.highlighted && !line.row.hidden) this.highlight(line);
         } else this.restore(line);

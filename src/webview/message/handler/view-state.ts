@@ -166,7 +166,11 @@ function resolveAnchor(wrapper: HTMLElement, anchor: SourceAnchor): HTMLElement 
 }
 
 /** Restore only once the new DOM is visible and its collapsed states have been applied. */
-export function restoreViewState(state: RenderedViewState, bindings: FileDomBinding[]): void {
+export function restoreViewState(
+  state: RenderedViewState,
+  bindings: FileDomBinding[],
+  onHorizontalScroll?: (pane: HTMLElement, left: number) => void,
+): void {
   const nextBindings = numberedBindings(bindings);
   const savedFiles = new Map(state.files.map((file) => [`${file.occurrence}:${file.path}`, file]));
   for (const binding of nextBindings) {
@@ -177,6 +181,7 @@ export function restoreViewState(state: RenderedViewState, bindings: FileDomBind
       // Changing layout carries the furthest visible column into the new pane(s).
       const left = targets.length === saved.left.length ? saved.left[index] : Math.max(0, ...saved.left);
       setProgrammaticScroll(pane, "scrollLeft", left ?? 0);
+      onHorizontalScroll?.(pane, left ?? 0);
     });
   }
   let top = state.scrollTop;

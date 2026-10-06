@@ -8,6 +8,7 @@ export interface MessageToExtensionCommandApi {
   copyText: (payload: { text: string }) => Promise<void>;
   toggleFileViewed: (payload: { path: string; viewedSha1: string | null }) => void;
   requestWebviewAction: (payload: { action: WebviewAction }) => void;
+  requestSyntax: (payload: { renderId: number; fileIndexes: number[] }) => void;
 }
 
 export interface MessageToExtensionApi extends MessageToExtensionCommandApi, MessageToExtensionReportApi {}
@@ -19,6 +20,7 @@ export const MESSAGE_TO_EXTENSION_COMMAND_KINDS = [
   "copyText",
   "toggleFileViewed",
   "requestWebviewAction",
+  "requestSyntax",
 ] as const satisfies readonly (keyof MessageToExtensionCommandApi)[];
 
 export const MESSAGE_TO_EXTENSION_KINDS = [

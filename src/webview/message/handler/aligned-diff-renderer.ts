@@ -29,11 +29,13 @@ class AlignedSideBySideRenderer extends SideBySideRenderer {
   constructor(
     private readonly hogan: HoganJsUtils,
     private readonly alignmentConfig: RendererConfig,
+    private readonly headersOnly = false,
   ) {
     super(hogan, alignmentConfig);
   }
 
   override generateFileHtml(file: DiffFile) {
+    if (this.headersOnly) return { left: "", right: "" };
     this.combined = file.isCombined;
     this.language = file.language;
     return super.generateFileHtml(file);
@@ -68,11 +70,13 @@ class AlignedLineByLineRenderer extends LineByLineRenderer {
   constructor(
     private readonly hogan: HoganJsUtils,
     private readonly alignmentConfig: RendererConfig,
+    private readonly headersOnly = false,
   ) {
     super(hogan, alignmentConfig);
   }
 
   override generateFileHtml(file: DiffFile) {
+    if (this.headersOnly) return "";
     this.combined = file.isCombined;
     this.language = file.language;
     return super.generateFileHtml(file);
@@ -96,7 +100,11 @@ class AlignedLineByLineRenderer extends LineByLineRenderer {
   }
 }
 
-export function renderAlignedDiffHtml(files: DiffFile[], configuration: Diff2HtmlConfig = {}): string {
+export function renderAlignedDiffHtml(
+  files: DiffFile[],
+  configuration: Diff2HtmlConfig = {},
+  headersOnly = false,
+): string {
   const config = { ...defaultDiff2HtmlConfig, ...configuration };
   const hogan = new HoganJsUtils(config);
   const fileList = config.drawFileList
@@ -104,8 +112,8 @@ export function renderAlignedDiffHtml(files: DiffFile[], configuration: Diff2Htm
     : "";
   const renderer =
     config.outputFormat === "side-by-side"
-      ? new AlignedSideBySideRenderer(hogan, config)
-      : new AlignedLineByLineRenderer(hogan, config);
+      ? new AlignedSideBySideRenderer(hogan, config, headersOnly)
+      : new AlignedLineByLineRenderer(hogan, config, headersOnly);
   // The HTML parser normalizes literal CR characters to LF, including source
   // text inside code cells. A character reference retains the original byte.
   return (fileList + renderer.render(files)).replaceAll("\r", "&#13;");
@@ -115,11 +123,11 @@ export function renderAlignedDiffHtml(files: DiffFile[], configuration: Diff2Htm
 export class AlignedDiff2HtmlUI extends Diff2HtmlUI {
   override readonly diffHtml: string;
 
-  constructor(target: HTMLElement, files: DiffFile[], config: Diff2HtmlUIConfig = {}) {
+  constructor(target: HTMLElement, files: DiffFile[], config: Diff2HtmlUIConfig = {}, headersOnly = false) {
     // An omitted input makes the base class serialize target.innerHTML, which
     // can be expensive when refreshing an already-rendered large diff.
     super(target, [], config);
-    this.diffHtml = renderAlignedDiffHtml(files, this.config);
+    this.diffHtml = renderAlignedDiffHtml(files, this.config, headersOnly);
   }
 
   override synchronisedScroll(): void {

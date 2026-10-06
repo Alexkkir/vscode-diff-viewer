@@ -33,6 +33,13 @@ export class ContextFoldingController {
     },
   ) {}
 
+  public reset(): void {
+    this.generation++;
+    this.prepared = undefined;
+    this.rowGaps = new WeakMap();
+    this.state = { ...this.args.getState() };
+  }
+
   // Compute keys before drawing, so no frame briefly shows all the folded rows.
   public async prepare(files: DiffFile[]): Promise<void> {
     const entries = await Promise.all(
@@ -44,14 +51,14 @@ export class ContextFoldingController {
     this.prepared = { files, entries };
   }
 
-  public async render(container: HTMLElement, files: DiffFile[]): Promise<void> {
+  public async render(container: HTMLElement, files: DiffFile[], append = false): Promise<void> {
     const generation = ++this.generation;
     if (this.prepared?.files !== files) await this.prepare(files);
     if (generation !== this.generation) return;
     const prepared = this.prepared!;
-    this.rowGaps = new WeakMap();
+    if (!append) this.rowGaps = new WeakMap();
     const previous = this.args.getState();
-    this.state = {};
+    this.state = append ? { ...previous } : {};
     getRenderedFileWrappers(container, files).forEach(({ file, fileIndex, wrapper }) => {
       const { key, gaps } = prepared.entries[fileIndex];
       if (!wrapper || !gaps.length) return;

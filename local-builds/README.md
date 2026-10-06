@@ -1,3 +1,15 @@
+# Latest local build: 1.8.18
+
+Install `diff-viewer-1.8.18-large-diff.vsix`, then run **Developer: Reload Window**.
+
+Collapsed large diffs now create only headers, without code rows, syntax tokenization or source-file reads. Opened files receive their body and native colors on demand. Expand all and global scrollbar measurement yield between batches. Offscreen body containment, cached geometry and non-fixed diagonal backgrounds reduce scroll work. Missing file extensions no longer abort native highlighting for the whole diff.
+
+A changed file immediately invalidates the visible preview and shows **Updating diff…** while the replacement is prepared. This also applies during shell-redirection truncation; it supersedes the older policy of retaining the old view. Unchanged focus remains quiet, and stale renders/syntax replies are ignored.
+
+The [performance report](large-diff-1.8.18.md) distinguishes desktop timings, browser-only timings, remaining spikes and total versus blocking time. Local installed VS Code on the supplied 20k-line patch: collapsed opening **1625 → 421 ms**, with **0 code rows** before expansion. Validation: 900 unit tests, TypeScript, lint, formatting, the 28 UI groups and eight desktop regressions passed, plus the exact private large-diff benchmarks. Private patch contents and names are not included in the repository.
+
+Build with the commands below using output version 1.8.18. Run `node integration/browser/large-diff.cjs` and `node scripts/test-large-diff-desktop.mjs` after building; both default to synthetic fixtures and support optional external fixtures through environment variables.
+
 # Latest local build: 1.8.17
 
 Install `diff-viewer-1.8.17-viewed-anchors.vsix`, then run **Developer: Reload Window**.

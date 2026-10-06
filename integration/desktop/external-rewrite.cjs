@@ -20,7 +20,7 @@ exports.run = async function () {
       try {
         state = await vscode.commands.executeCommand("diffviewer._captureActiveTestState");
       } catch {}
-      if (state?.codeLineTexts.some((line) => line.includes(label))) return state;
+      if (!state?.loadingVisible && state?.codeLineTexts.some((line) => line.includes(label))) return state;
       await wait(100);
     }
     console.log(
@@ -44,17 +44,22 @@ exports.run = async function () {
     try {
       await wait(80);
       const duringTruncate = await vscode.commands.executeCommand("diffviewer._captureActiveTestState");
-      assert.equal(duringTruncate.fileCount, 1, "Truncation must not briefly clear the previous diff");
-      assert.equal(duringTruncate.renderGeneration, first.renderGeneration, "Truncation must not redraw the view");
-      assert.ok(duringTruncate.codeLineTexts.some((line) => line.includes("first-version")));
-      assert.equal(duringTruncate.loadingVisible, false);
+      assert.equal(duringTruncate.loadingVisible, true, "A changed file must invalidate the old preview immediately");
+      assert.equal(
+        duringTruncate.visibleCodeLineTexts.length,
+        0,
+        "Old source must not be shown while waiting for the new diff",
+      );
       fs.writeSync(output, patch("second-version"));
     } finally {
       fs.closeSync(output);
     }
     await vscode.commands.executeCommand("vscode.openWith", uri, "diffViewer");
     const second = await expectRendered("second-version");
-    assert.equal(second.renderGeneration, first.renderGeneration + 1, "A completed rewrite must redraw only once");
+    assert.ok(
+      second.renderGeneration > first.renderGeneration,
+      "The completed rewrite must replace the invalidated preview",
+    );
     await wait(300);
     const settled = await vscode.commands.executeCommand("diffviewer._captureActiveTestState");
     assert.equal(settled.renderGeneration, second.renderGeneration, "Delayed truncate retries must not redraw again");

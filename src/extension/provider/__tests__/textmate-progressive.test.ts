@@ -157,6 +157,23 @@ it("matches the literal parsed extension while still recognizing actual Arc head
   expect(registries[0].loadGrammar).toHaveBeenCalledWith("source.python");
 });
 
+it("preserves supported files' colors when another parsed file has no language", async () => {
+  const extensionless = parse("--- a/OWNERS\n+++ b/OWNERS\n@@ -1 +1 @@\n-old\n+new\n")[0];
+  expect(extensionless.language).toBeUndefined();
+  readSources.mockResolvedValue([undefined, source]);
+  const result = await highlightDiff([extensionless, ...files]);
+  expect(result[0]).toBeNull();
+  expect(result[1]?.new[1]).toHaveLength(1);
+  expect(readSemantics).toHaveBeenCalledTimes(1);
+});
+
+it("does not start source, theme, or semantic work for an obsolete request", async () => {
+  await expect(highlightDiffProgressively(files, undefined, () => false)).rejects.toThrow("Obsolete syntax request");
+  expect(readSources).not.toHaveBeenCalled();
+  expect(readFile).not.toHaveBeenCalled();
+  expect(readSemantics).not.toHaveBeenCalled();
+});
+
 it("returns lexical colors while semantic tokens are still pending, then overlays without retokenizing or mutating the first result", async () => {
   const response = deferred<SemanticSpan[]>();
   readSemantics.mockReturnValue(response.promise);
@@ -226,6 +243,14 @@ it("keeps Python constant fallback in the initial result and respects semantic c
   const third = await highlightDiffProgressively(files);
   expect(at(third.syntax, "new", 1, 0)).toBe("#ff0000");
   expect(createRegistry).toHaveBeenCalledTimes(1);
+});
+
+it("does not open semantic source documents when semantic highlighting is disabled", async () => {
+  semanticEnabled = false;
+  const result = await highlightDiffProgressively(files);
+  expect(result.syntax[0]).not.toBeNull();
+  expect(await result.enriched).toBe(result.syntax);
+  expect(readSemantics).not.toHaveBeenCalled();
 });
 
 it("creates a fresh registry when lexical customizations or installed extension versions change", async () => {
@@ -339,6 +364,7 @@ it("yields to a newer request and does not cache a cancelled partial snapshot", 
       "Obsolete syntax request",
     );
     expect(tokenize.mock.calls.length).toBeLessThan(100);
+    expect(readSemantics).not.toHaveBeenCalled();
     tokenize.mockClear();
     current = true;
     const result = await highlightDiffProgressively(files, undefined, () => current);

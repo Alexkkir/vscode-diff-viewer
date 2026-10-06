@@ -64,11 +64,13 @@ A missing final newline is shown as `\ No newline at end of file` beside the aff
 
 ### Large diffs and refresh
 
-External file changes refresh the existing view without a Loading overlay. Where remote filesystem notifications are unavailable, visible diff editors check file metadata every 250 ms; a full content check every two seconds covers providers with unchanged/coarse timestamps. Unsaved editor changes take priority over disk content.
+When the diff file changes, the old preview is hidden behind **Updating diff…** until its replacement is ready. Stale results cannot revive the old view. Switching focus without a file change does not hide or reload it. Where remote filesystem notifications are unavailable, visible diff editors check file metadata every 250 ms; a full content check every two seconds covers providers with unchanged/coarse timestamps. Unsaved editor changes take priority over disk content.
 
 Refresh and theme/layout changes preserve per-file horizontal offsets and the visible source-line anchor. Manually opened files in a large diff remain open on refresh. Native syntax enrichment preserves the selected source text so a delayed language-server response does not interrupt copying.
 
-Native lexical colors appear with the diff. Language-server colors arrive separately without rebuilding the view or changing expanded context. Folded context retains its full text and tokenization state; its DOM receives syntax colors when revealed, including through Find.
+Large diffs create lightweight file headers first, with bodies materialized only when opened. Their native syntax and source lookup are requested for opened files instead of delaying the initial preview. Expand all works in batches with browser frames between them; global scrollbar measurements are also scheduled cooperatively. Offscreen bodies avoid unnecessary layout/paint work. A very large individual file can still take time to open.
+
+Native and language-server colors update existing rows without rebuilding the view or changing expanded context. Folded context within an opened file retains its full text and tokenization state; its DOM receives syntax colors when revealed, including through Find.
 
 Literal parsed filenames are used unchanged for navigation and syntax sources, including names containing spaces or text resembling revision labels. Carriage-return bytes are retained in source cells. Changed groups containing CR omit intraline change spans because the upstream highlighter does not safely separate their old/new text; syntax colors and whole-line diff colors remain available.
 

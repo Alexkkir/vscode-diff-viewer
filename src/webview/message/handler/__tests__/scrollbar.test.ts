@@ -6,6 +6,7 @@ import { ColorSchemeType } from "diff2html/lib/types";
 import { AppConfig } from "../../../../extension/configuration";
 import { SkeletonElementIds } from "../../../../shared/css/elements";
 import { HorizontalScrollbarController } from "../scrollbar";
+import { restoreViewState } from "../view-state";
 import { FileDomBinding } from "../types";
 
 const createConfig = (globalScrollbar: boolean): AppConfig => ({
@@ -385,5 +386,123 @@ describe("HorizontalScrollbarController", () => {
 
     requestAnimationFrame.mockRestore();
     cancelAnimationFrame.mockRestore();
+  });
+  it("caches offscreen lazy body measurements until the affected file or viewport changes", () => {
+    const first = createSideBySideBinding();
+    const second = createSideBySideBinding();
+    const root = document.createElement("div");
+    root.className = "diff-lazy-files";
+    root.append(first.binding.fileContainer, second.binding.fileContainer);
+    document.body.append(root);
+    fileBindings = [first.binding, second.binding];
+    const reads = [...first.sideDiffs, ...second.sideDiffs].map((target) => {
+      const read = jest.fn(() => 400);
+      Object.defineProperty(target, "scrollWidth", { configurable: true, get: read });
+      Object.defineProperty(target, "clientWidth", { configurable: true, value: 100 });
+      return read;
+    });
+    controller.refresh();
+    controller.refresh();
+    expect(reads.map((read) => read.mock.calls.length)).toEqual([1, 1, 1, 1]);
+    controller.invalidateMeasurements(first.binding.fileContainer);
+    controller.refresh();
+    expect(reads.map((read) => read.mock.calls.length)).toEqual([2, 2, 1, 1]);
+    controller.invalidateMeasurements();
+    controller.refresh();
+    expect(reads.map((read) => read.mock.calls.length)).toEqual([3, 3, 2, 2]);
+  });
+
+  it("does not cache zero widths while an invalidated snapshot is hidden", () => {
+    const first = createInlineBinding();
+    const root = document.createElement("div");
+    root.id = SkeletonElementIds.DiffContainer;
+    root.className = "diff-lazy-files";
+    root.style.display = "none";
+    root.append(first.binding.fileContainer);
+    document.body.append(root);
+    fileBindings = [first.binding];
+    const read = jest.fn(() => 400);
+    Object.defineProperty(first.content, "scrollWidth", { configurable: true, get: read });
+    Object.defineProperty(first.content, "clientWidth", { configurable: true, value: 100 });
+    controller.refresh();
+    expect(read).not.toHaveBeenCalled();
+    root.style.display = "block";
+    controller.refresh();
+    expect(read).toHaveBeenCalledTimes(1);
+  });
+  it("yields between expensive lazy-file measurements and publishes exact geometry after completion", async () => {
+    const first = createInlineBinding();
+    const second = createInlineBinding();
+    const root = document.createElement("div");
+    root.id = SkeletonElementIds.DiffContainer;
+    root.className = "diff-lazy-files";
+    root.append(first.binding.fileContainer, second.binding.fileContainer);
+    document.body.append(root);
+    fileBindings = [first.binding, second.binding];
+    const reads = [first.content, second.content].map((target, index) => {
+      const read = jest.fn(() => 400 + index * 200);
+      Object.defineProperty(target, "scrollWidth", { configurable: true, get: read });
+      Object.defineProperty(target, "clientWidth", { configurable: true, value: 100 });
+      return read;
+    });
+    const scrollbar = document.getElementById(SkeletonElementIds.HorizontalScrollbarContainer)!;
+    setElementDimensions(scrollbar, { clientWidth: 120, scrollWidth: 120 });
+    let clock = 0;
+    const times = jest.spyOn(performance, "now").mockImplementation(() => (clock += 10));
+    const frames: FrameRequestCallback[] = [];
+    const raf = jest.spyOn(globalThis, "requestAnimationFrame").mockImplementation((callback) => frames.push(callback));
+    try {
+      const pending = controller.refreshCooperatively();
+      expect(reads.map((read) => read.mock.calls.length)).toEqual([1, 0]);
+      expect(scrollbar.getAttribute("aria-busy")).toBe("true");
+      frames.shift()!(0);
+      await Promise.resolve();
+      expect(reads.map((read) => read.mock.calls.length)).toEqual([1, 1]);
+      frames.shift()!(0);
+      await pending;
+      expect(scrollbar.hasAttribute("aria-busy")).toBe(false);
+      expect(scrollbar.style.display).toBe("block");
+      expect(document.getElementById(SkeletonElementIds.HorizontalScrollbarContent)!.style.width).toBe("24px");
+    } finally {
+      times.mockRestore();
+      raf.mockRestore();
+    }
+  });
+  it("restores the global thumb from exact cached offsets without remeasuring offscreen source panes", () => {
+    const file = createSideBySideBinding();
+    const root = document.createElement("div");
+    root.className = "diff-lazy-files";
+    root.append(file.binding.fileContainer);
+    document.body.append(root);
+    fileBindings = [file.binding];
+    const widthReads = file.sideDiffs.map((pane, index) => {
+      const maximum = index ? 300 : 80;
+      let left = 0;
+      const read = jest.fn(() => 100 + maximum);
+      Object.defineProperty(pane, "clientWidth", { configurable: true, value: 100 });
+      Object.defineProperty(pane, "scrollWidth", { configurable: true, get: read });
+      Object.defineProperty(pane, "scrollLeft", {
+        configurable: true,
+        get: () => left,
+        set: (value: number) => {
+          left = Math.max(0, Math.min(value, maximum));
+        },
+      });
+      return read;
+    });
+    const scrollbar = document.getElementById(SkeletonElementIds.HorizontalScrollbarContainer)!;
+    const thumb = document.getElementById(SkeletonElementIds.HorizontalScrollbarContent)!;
+    setElementDimensions(scrollbar, { clientWidth: 200, scrollWidth: 200 });
+    controller.refresh();
+    expect(thumb.style.transform).toBe("translateX(0px)");
+    restoreViewState(
+      { scrollTop: window.scrollY, files: [{ path: file.binding.filePath, occurrence: 0, left: [300, 300] }] },
+      fileBindings,
+      (pane, left) => controller.recordScrollLeft(pane, left),
+    );
+    controller.refresh();
+    expect(file.sideDiffs.map((pane) => pane.scrollLeft)).toEqual([80, 300]);
+    expect(thumb.style.transform).toBe("translateX(150px)");
+    expect(widthReads.map((read) => read.mock.calls.length)).toEqual([1, 1]);
   });
 });

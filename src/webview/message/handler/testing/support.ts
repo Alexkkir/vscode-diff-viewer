@@ -13,6 +13,7 @@ export class WebviewHandlerTestSupport {
       getRenderGeneration?: () => number;
       getFileBindings: () => FileDomBinding[];
       getSelectedPath: () => string | undefined;
+      afterAction?: () => Promise<void>;
       getClickedLineNumber: (element: HTMLElement) => number | undefined;
     },
   ) {}
@@ -30,6 +31,7 @@ export class WebviewHandlerTestSupport {
   public async runTestAction(payload: { requestId: string; action: WebviewTestAction }): Promise<void> {
     try {
       await this.executeTestAction(payload.action);
+      await this.args.afterAction?.();
       this.args.postMessageToExtensionFn({
         kind: "reportTestActionResult",
         payload: { requestId: payload.requestId },
@@ -158,7 +160,11 @@ export class WebviewHandlerTestSupport {
         buttons: Array.from(row.querySelectorAll("button"), (button) => button.textContent ?? ""),
       })),
       hiddenContextRows: diffContainer?.querySelectorAll("tr.diff-context-hidden").length ?? 0,
-      visibleCodeLineTexts: Array.from(diffContainer?.querySelectorAll<HTMLElement>(".d2h-code-line-ctn") ?? [])
+      visibleCodeLineTexts: Array.from(
+        (diffContainer && getComputedStyle(diffContainer).display !== "none"
+          ? diffContainer.querySelectorAll<HTMLElement>(".d2h-code-line-ctn")
+          : []) ?? [],
+      )
         .filter((line) => !line.closest("[hidden]"))
         .slice(0, 2000)
         .map((line) => line.textContent ?? ""),

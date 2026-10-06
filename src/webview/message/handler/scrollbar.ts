@@ -15,8 +15,14 @@ export class HorizontalScrollbarController {
   private horizontalScrollTargets: HTMLElement[] = [];
   private resizeHandlerRegistered = false;
   private pendingRefreshFrame: number | undefined = undefined;
+  private measurementGeneration = 0;
   private horizontalScrollbarHandlersRegistered = false;
   private metrics: HorizontalScrollbarMetrics | undefined = undefined;
+  private measuredTargets = new WeakMap<
+    HTMLElement,
+    { clientWidth: number; scrollWidth: number; scrollLeft: number }
+  >();
+  private readonly fileTargets = new WeakMap<HTMLElement, { content: HTMLElement; targets: HTMLElement[] }>();
   private dragPointerId: number | undefined = undefined;
   private dragOffset = 0;
 
@@ -35,6 +41,10 @@ export class HorizontalScrollbarController {
     }
 
     this.registerScrollbarHandlers();
+    if (document.getElementById(SkeletonElementIds.DiffContainer)?.style.display === "none") {
+      scrollbar.style.display = "none";
+      return;
+    }
 
     if (!this.args.getConfig()?.globalScrollbar) {
       this.updateHorizontalScrollListeners([]);
@@ -58,8 +68,8 @@ export class HorizontalScrollbarController {
       return;
     }
 
-    const maxClientWidth = Math.max(...nextTargets.map((target) => target.clientWidth), 0);
-    const maxScrollWidth = Math.max(...nextTargets.map((target) => target.scrollWidth), 0);
+    const maxClientWidth = Math.max(...nextTargets.map((target) => this.measure(target).clientWidth), 0);
+    const maxScrollWidth = Math.max(...nextTargets.map((target) => this.measure(target).scrollWidth), 0);
     const hasOverflow = maxScrollWidth > maxClientWidth;
 
     scrollbar.style.display = hasOverflow ? "block" : "none";
@@ -73,7 +83,7 @@ export class HorizontalScrollbarController {
 
     // A narrower first pane may have clamped the global offset. Preserve the
     // largest actual pane position when refreshing instead of moving it back.
-    const scrollLeft = Math.max(...nextTargets.map((target) => target.scrollLeft), 0);
+    const scrollLeft = Math.max(...nextTargets.map((target) => this.measure(target).scrollLeft), 0);
     this.metrics = {
       maxClientWidth,
       maxScrollWidth,
@@ -82,14 +92,61 @@ export class HorizontalScrollbarController {
     this.updateVisual(this.metrics.scrollLeft);
   }
 
-  public scheduleRefresh(): void {
+  public recordScrollLeft(element: HTMLElement, left: number): void {
+    const measured = this.measuredTargets.get(element);
+    if (measured) measured.scrollLeft = Math.max(0, Math.min(left, measured.scrollWidth - measured.clientWidth));
+  }
+
+  public invalidateMeasurements(wrapper?: HTMLElement): void {
+    this.measurementGeneration++;
+    this.getScrollbarContainer()?.removeAttribute("aria-busy");
+    if (!wrapper) this.measuredTargets = new WeakMap();
+    else {
+      const cached = this.fileTargets.get(wrapper);
+      for (const target of cached?.targets ?? []) this.measuredTargets.delete(target);
+      if (cached) this.measuredTargets.delete(cached.content);
+    }
+  }
+
+  public async refreshCooperatively(): Promise<void> {
+    if (this.pendingRefreshFrame !== undefined) {
+      cancelAnimationFrame(this.pendingRefreshFrame);
+      this.pendingRefreshFrame = undefined;
+    }
+    const generation = ++this.measurementGeneration;
+    const container = document.getElementById(SkeletonElementIds.DiffContainer);
+    if (!this.args.getConfig()?.globalScrollbar || !container?.classList.contains("diff-lazy-files")) {
+      this.refresh();
+      return;
+    }
+    if (container.style.display === "none") return;
+    const scrollbar = this.getScrollbarContainer();
+    scrollbar?.setAttribute("aria-busy", "true");
+    try {
+      let started = performance.now();
+      for (const binding of this.args.getFileBindings()) {
+        if (generation !== this.measurementGeneration || container.style.display === "none") return;
+        this.getHorizontalScrollTargetsForFile(binding.fileContainer);
+        if (performance.now() - started >= 8) {
+          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+          started = performance.now();
+        }
+      }
+      if (generation === this.measurementGeneration) this.refresh();
+    } finally {
+      if (generation === this.measurementGeneration) scrollbar?.removeAttribute("aria-busy");
+    }
+  }
+
+  public scheduleRefresh(cooperative = false): void {
     if (this.pendingRefreshFrame !== undefined) {
       globalThis.cancelAnimationFrame(this.pendingRefreshFrame);
     }
 
     this.pendingRefreshFrame = globalThis.requestAnimationFrame(() => {
       this.pendingRefreshFrame = undefined;
-      this.refresh();
+      if (cooperative) void this.refreshCooperatively();
+      else this.refresh();
     });
   }
 
@@ -103,6 +160,7 @@ export class HorizontalScrollbarController {
   }
 
   private readonly onWindowResized = (): void => {
+    this.invalidateMeasurements();
     this.refresh();
   };
 
@@ -209,14 +267,16 @@ export class HorizontalScrollbarController {
   }
 
   private updateHorizontalScrollListeners(nextTargets: HTMLElement[]): void {
+    const next = new Set(nextTargets);
+    const previous = new Set(this.horizontalScrollTargets);
     this.horizontalScrollTargets.forEach((target) => {
-      if (!nextTargets.includes(target)) {
+      if (!next.has(target)) {
         target.removeEventListener("scroll", this.onHorizontalScrollTarget);
       }
     });
 
     nextTargets.forEach((target) => {
-      if (!this.horizontalScrollTargets.includes(target)) {
+      if (!previous.has(target)) {
         target.addEventListener("scroll", this.onHorizontalScrollTarget, { passive: true });
       }
     });
@@ -236,6 +296,19 @@ export class HorizontalScrollbarController {
   }
 
   private getHorizontalScrollTargetsForFile(fileContainer: HTMLElement): HTMLElement[] {
+    if (fileContainer.dataset.diffBodyPending) return [];
+    if (fileContainer.closest(".diff-lazy-files")) {
+      let cached = this.fileTargets.get(fileContainer);
+      if (!cached) {
+        const content = fileContainer.querySelector<HTMLElement>(Diff2HtmlCssClassElements.Div__DiffFileContent);
+        if (!content) return [];
+        const sides = Array.from(content.querySelectorAll<HTMLElement>(".d2h-file-side-diff"));
+        cached = { content, targets: sides.length ? sides : [content] };
+        this.fileTargets.set(fileContainer, cached);
+      }
+      if (cached.content.classList.contains(Diff2HtmlCssClasses.Div__DiffFileContent__Collapsed)) return [];
+      return cached.targets.filter((target) => this.isHorizontallyScrollable(target));
+    }
     const fileContents = fileContainer.querySelectorAll<HTMLElement>(Diff2HtmlCssClassElements.Div__DiffFileContent);
     return Array.from(fileContents).flatMap((content) => {
       if (content.classList.contains(Diff2HtmlCssClasses.Div__DiffFileContent__Collapsed)) {
@@ -253,8 +326,22 @@ export class HorizontalScrollbarController {
     });
   }
 
+  private measure(element: HTMLElement): { clientWidth: number; scrollWidth: number; scrollLeft: number } {
+    // Geometry reads inside an offscreen content-visibility subtree force that
+    // whole body to render. Cache unchanged lazy-file dimensions instead of
+    // doing this for every previous file each time another body is appended.
+    const lazy = !!element.closest(".diff-lazy-files");
+    let result = lazy ? this.measuredTargets.get(element) : undefined;
+    if (!result) {
+      result = { clientWidth: element.clientWidth, scrollWidth: element.scrollWidth, scrollLeft: element.scrollLeft };
+      if (lazy) this.measuredTargets.set(element, result);
+    }
+    return result;
+  }
+
   private isHorizontallyScrollable(element: HTMLElement): boolean {
-    return element.scrollWidth > element.clientWidth;
+    const { scrollWidth, clientWidth } = this.measure(element);
+    return scrollWidth > clientWidth;
   }
 
   private getRootHorizontalScrollTargets(): HTMLElement[] {
@@ -286,6 +373,7 @@ export class HorizontalScrollbarController {
 
   private applyScrollLeft(scrollLeft: number): void {
     this.horizontalScrollTargets.forEach((target) => {
+      this.recordScrollLeft(target, scrollLeft);
       setProgrammaticScroll(target, "scrollLeft", scrollLeft);
     });
     this.updateVisual(scrollLeft);

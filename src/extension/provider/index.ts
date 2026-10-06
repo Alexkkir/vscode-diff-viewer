@@ -154,7 +154,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         args.webviewContext.document,
         () => {
           clearAccessiblePathsCache(args.webviewContext);
-          this.updateWebview(args.webviewContext);
+          this.updateWebview(args.webviewContext, undefined, true);
         },
         () => args.webviewContext.panel.visible,
       ),
@@ -163,7 +163,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
           return;
         }
 
-        this.updateWebview(args.webviewContext);
+        this.updateWebview(args.webviewContext, undefined, true);
       }),
       args.webviewContext.panel.webview.onDidReceiveMessage((m: unknown) => {
         if (!isMessageToExtension(m)) {
@@ -299,6 +299,7 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
           void this.hidePanelForEditor(args.webviewContext);
         }
       },
+      onSyntaxRequested: (payload) => this.requestSyntax(args.webviewContext, payload),
       onTestStateReported: (payload) => {
         this.testSupport.onTestStateReported(args.webviewContext, payload);
       },
@@ -319,8 +320,16 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     }
   }
 
-  private updateWebview(webviewContext: WebviewContext, collapseAll?: boolean): void {
+  private updateWebview(webviewContext: WebviewContext, collapseAll?: boolean, contentChanged = false): void {
     const requestId = ++webviewContext.renderRequestId;
+    if (contentChanged) {
+      webviewContext.contentInvalidated = true;
+      if (webviewContext.webviewReady)
+        this.postMessageToWebviewWrapper({
+          webview: webviewContext.panel.webview,
+          message: { kind: "invalidate", payload: { renderId: requestId } },
+        });
+    }
     if (webviewContext.pendingRender) {
       clearTimeout(webviewContext.pendingRender);
     }
@@ -369,12 +378,17 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         return;
       }
 
-      const { renderedData, enriched } = result;
+      const { renderedData, enriched, resolvePaths } = result;
       const serialized = JSON.stringify(renderedData);
       const context = args.webviewContext;
-      if (context.lastRenderedData !== serialized) {
+      if (context.lastRenderedData !== serialized || context.contentInvalidated) {
         this.prepareWebviewForRender(context);
         context.lastRenderedId = args.requestId;
+        context.contentInvalidated = false;
+        context.syntaxFiles = renderedData.diffFiles;
+        context.syntaxRequested = new Set();
+        context.syntaxQueue = [];
+        context.syntaxQueueRenderId = undefined;
         context.lastRenderedSyntax = JSON.stringify(renderedData.syntax);
         this.postUpdateWebviewMessage({ webviewContext: context, renderedData });
         context.lastRenderedData = serialized;
@@ -383,6 +397,20 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
         context.pendingWebviewActions = undefined;
         for (const action of pendingActions) this.performWebviewAction(action, context);
       }
+      const renderedId = context.lastRenderedId;
+      if (resolvePaths && renderedId !== undefined)
+        void resolvePaths()
+          .then((accessiblePaths) => {
+            if (context.isDisposed || context.contentInvalidated || context.lastRenderedId !== renderedId) return;
+            this.postMessageToWebviewWrapper({
+              webview: context.panel.webview,
+              message: {
+                kind: "updateAccessiblePaths",
+                payload: { renderId: renderedId, accessiblePaths },
+              },
+            });
+          })
+          .catch(() => {});
       // Slow language servers enrich the existing view; they never hold up content
       // or replace a newer diff, and no full redraw is needed just to change colors.
       void enriched
@@ -413,11 +441,13 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     | {
         renderedData: RenderedWebviewData;
         enriched?: Promise<NonNullable<RenderedWebviewData["syntax"]>>;
+        resolvePaths?: () => Promise<string[]>;
       }
     | undefined
   > {
     let text = await readDiffText(args.webviewContext.document);
     if (!isActiveRenderRequest(args)) return;
+    this.observeSource(args.webviewContext, text, args.requestId);
     if (hasCombinedDiff(text)) {
       this.handleCombinedDiff(args.webviewContext);
       return;
@@ -430,13 +460,13 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
     }
     if (!isActiveRenderRequest(args)) return;
     if (args.webviewContext.lastRenderedData !== undefined && needsWriteStabilization(diffFiles)) {
-      // Shell redirection truncates the file before the diff command writes its
-      // result. Briefly retain the previous view only for suspicious snapshots;
-      // complete diffs stay fast, while an intentionally empty file still clears.
+      // Shell redirection truncates before writing. Keep the invalidated view
+      // hidden while suspicious snapshots settle; never show stale source as new.
       await new Promise<void>((resolve) => setTimeout(resolve, 200));
       if (!isActiveRenderRequest(args)) return;
       text = await readDiffText(args.webviewContext.document);
       if (!isActiveRenderRequest(args)) return;
+      this.observeSource(args.webviewContext, text, args.requestId);
       if (hasCombinedDiff(text)) {
         this.handleCombinedDiff(args.webviewContext);
         return;
@@ -461,6 +491,19 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       return;
     }
 
+    if (renderPlan.performance.lazyFiles) {
+      const files = diffFiles;
+      return {
+        renderedData: {
+          diffFiles: files,
+          viewedState: args.webviewContext.viewedStateStore.getViewedState(),
+          accessiblePaths: [],
+          renderPlan,
+        },
+        resolvePaths: () => collectAccessiblePaths({ webviewContext: args.webviewContext, diffFiles: files }),
+      };
+    }
+
     const [accessiblePaths, highlighting] = await Promise.all([
       collectAccessiblePaths({
         webviewContext: args.webviewContext,
@@ -480,6 +523,89 @@ export class DiffViewerProvider implements vscode.CustomTextEditorProvider {
       },
       enriched: highlighting?.enriched,
     };
+  }
+
+  private observeSource(context: WebviewContext, text: string, renderId: number): void {
+    if (
+      context.lastObservedText !== undefined &&
+      context.lastObservedText !== text &&
+      !context.contentInvalidated &&
+      context.lastRenderedId !== undefined
+    ) {
+      context.contentInvalidated = true;
+      this.postMessageToWebviewWrapper({
+        webview: context.panel.webview,
+        message: { kind: "invalidate", payload: { renderId } },
+      });
+    }
+    context.lastObservedText = text;
+  }
+
+  private requestSyntax(context: WebviewContext, payload: { renderId: number; fileIndexes: number[] }): void {
+    const files = context.syntaxFiles;
+    if (
+      context.isDisposed ||
+      context.contentInvalidated ||
+      !files ||
+      payload?.renderId !== context.lastRenderedId ||
+      !Array.isArray(payload.fileIndexes)
+    )
+      return;
+    const requested = (context.syntaxRequested ??= new Set());
+    const queue = (context.syntaxQueue ??= []);
+    for (const index of payload.fileIndexes) {
+      if (!Number.isInteger(index) || index < 0 || index >= files.length || requested.has(index)) continue;
+      requested.add(index);
+      queue.push(index);
+    }
+    if (!queue.length || context.syntaxQueueRenderId === payload.renderId) return;
+    const renderId = payload.renderId;
+    context.syntaxQueueRenderId = renderId;
+    const isCurrent = () =>
+      !context.isDisposed &&
+      !context.contentInvalidated &&
+      context.lastRenderedId === renderId &&
+      context.syntaxFiles === files;
+    const send = (indexes: number[], syntax: NonNullable<RenderedWebviewData["syntax"]>) => {
+      if (!isCurrent()) return;
+      const mapped: NonNullable<RenderedWebviewData["syntax"]> = new Array(files.length).fill(null);
+      indexes.forEach((index, offset) => {
+        mapped[index] = syntax[offset] ?? null;
+      });
+      this.postMessageToWebviewWrapper({
+        webview: context.panel.webview,
+        message: {
+          kind: "updateSyntax",
+          payload: { renderId, syntax: mapped, fileIndexes: indexes },
+        },
+      });
+    };
+    // Let the header/body paint before starting filesystem and grammar work.
+    setTimeout(() => {
+      void (async () => {
+        while (isCurrent() && queue.length) {
+          const indexes = queue.splice(0, 4);
+          try {
+            const result = await highlightDiffProgressively(
+              indexes.map((index) => files[index]),
+              context.document.uri,
+              isCurrent,
+            );
+            if (!isCurrent()) return;
+            send(indexes, result.syntax);
+            void result.enriched
+              .then((syntax) => {
+                if (JSON.stringify(syntax) !== JSON.stringify(result.syntax)) send(indexes, syntax);
+              })
+              .catch(() => {});
+          } catch {
+            // Keep fallback colors; obsolete requests must not revive an old view.
+          }
+        }
+      })().finally(() => {
+        if (context.syntaxQueueRenderId === renderId) context.syntaxQueueRenderId = undefined;
+      });
+    }, 0);
   }
 
   private postUpdateWebviewMessage(args: { webviewContext: WebviewContext; renderedData: RenderedWebviewData }): void {

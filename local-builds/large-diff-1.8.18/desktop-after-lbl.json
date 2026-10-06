@@ -1,0 +1,105 @@
+{
+  "mode": "final",
+  "vscode": "1.139.0",
+  "configuration": {
+    "outputFormat": "line-by-line",
+    "drawFileList": true,
+    "globalScrollbar": true,
+    "matching": "none"
+  },
+  "build": {
+    "version": "1.8.18",
+    "extensionSha256": "34c64c5232bff3e671fb1b284901c85852567ceae96528abacc8b4f508f55557",
+    "webviewSha256": "dd85b1184d893e17eb085a084605ece1f590b6a2e9bbf48d3112d22fc67b4496"
+  },
+  "results": [
+    {
+      "fixture": "collapsed-20k",
+      "input": "private",
+      "characters": 952023,
+      "patchLines": 20459,
+      "files": 313,
+      "sourceRows": 19190,
+      "initial": {
+        "milliseconds": 421,
+        "files": 313,
+        "rows": 0,
+        "elements": 7244,
+        "expandedFiles": 0,
+        "pendingFiles": 313,
+        "nativeTokens": 0,
+        "loadingVisible": false,
+        "previewVisible": true
+      },
+      "expandFirst": {
+        "milliseconds": 199.4,
+        "files": 313,
+        "rows": 16,
+        "elements": 7458,
+        "expandedFiles": 1,
+        "pendingFiles": 312,
+        "nativeTokens": 0,
+        "loadingVisible": false,
+        "previewVisible": true
+      },
+      "nativeColor": {
+        "ready": true,
+        "milliseconds": 206.5
+      },
+      "unchangedFocus": {
+        "hidden": false,
+        "loading": false
+      },
+      "duringTruncate": {
+        "milliseconds": 80.8,
+        "files": 313,
+        "rows": 16,
+        "elements": 7560,
+        "expandedFiles": 1,
+        "pendingFiles": 312,
+        "nativeTokens": 151,
+        "loadingVisible": true,
+        "previewVisible": false
+      },
+      "rewriteComplete": {
+        "milliseconds": 145.8,
+        "files": 1,
+        "rows": 2,
+        "elements": 91,
+        "expandedFiles": 1,
+        "pendingFiles": 0,
+        "nativeTokens": 4,
+        "loadingVisible": false,
+        "previewVisible": true
+      }
+    },
+    {
+      "fixture": "expanded-6k",
+      "input": "private",
+      "characters": 287620,
+      "patchLines": 6657,
+      "files": 73,
+      "sourceRows": 6438,
+      "initial": {
+        "milliseconds": 681.5,
+        "files": 73,
+        "rows": 6438,
+        "elements": 68917,
+        "expandedFiles": 73,
+        "pendingFiles": 0,
+        "nativeTokens": 10277,
+        "loadingVisible": false,
+        "previewVisible": true
+      },
+      "verticalScroll": {
+        "milliseconds": 873.7,
+        "scrollRange": 111008,
+        "frames": 89,
+        "p95FrameGapMs": 17.4,
+        "maxFrameGapMs": 58.3,
+        "over34ms": 2
+      }
+    }
+  ],
+  "failures": []
+}

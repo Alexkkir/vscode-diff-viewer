@@ -4,6 +4,8 @@ export function findTextRanges(root: HTMLElement, query: string, matchCase = fal
   const ranges: Range[] = [];
   const pattern = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), matchCase ? "gu" : "giu");
   for (const block of root.querySelectorAll<HTMLElement>(".d2h-code-line-ctn, .d2h-file-name")) {
+    const matches = Array.from((block.textContent ?? "").matchAll(pattern));
+    if (!matches.length) continue;
     // Folded context remains searchable, but collapsed files and other hidden
     // content are excluded, like the native browser find widget.
     let hidden = false;
@@ -22,8 +24,7 @@ export function findTextRanges(root: HTMLElement, query: string, matchCase = fal
     const nodes: Text[] = [];
     let node: Node | null;
     while ((node = walker.nextNode())) nodes.push(node as Text);
-    const text = nodes.map((n) => n.data).join("");
-    for (const match of text.matchAll(pattern)) {
+    for (const match of matches) {
       const range = document.createRange();
       const start = match.index;
       const end = start + match[0].length;
@@ -47,6 +48,8 @@ export class FindController {
   // Keep all matches navigable, but avoid asking Chromium to paint hundreds of
   // thousands of off-screen ranges on every keystroke or content update.
   private static readonly maxPaintedMatches = 2000;
+  private suspended = false;
+  private restoreOpen = false;
   private panel: HTMLElement | undefined;
   private input!: HTMLInputElement;
   private count!: HTMLElement;
@@ -55,6 +58,24 @@ export class FindController {
   private index = 0;
 
   constructor(private readonly options: { revealMatch?: (element: HTMLElement) => void } = {}) {}
+
+  public suspend(): void {
+    this.suspended = true;
+    this.restoreOpen ||= !!this.panel && !this.panel.hidden;
+    if (this.panel) this.panel.hidden = true;
+    if (globalThis.CSS?.highlights) {
+      CSS.highlights.delete("diff-find");
+      CSS.highlights.delete("diff-find-current");
+    }
+    this.ranges = [];
+  }
+
+  public resume(): void {
+    this.suspended = false;
+    if (this.panel && this.restoreOpen) this.panel.hidden = false;
+    this.restoreOpen = false;
+    this.refresh();
+  }
 
   public open(): void {
     this.ensurePanel();
@@ -66,7 +87,7 @@ export class FindController {
   }
 
   public refresh(): void {
-    if (!this.panel || this.panel.hidden) return;
+    if (this.suspended || !this.panel || this.panel.hidden) return;
     const root = document.getElementById("diff-container");
     this.ranges = root ? findTextRanges(root, this.input.value, this.matchCase.checked) : [];
     this.index = Math.min(this.index, Math.max(0, this.ranges.length - 1));

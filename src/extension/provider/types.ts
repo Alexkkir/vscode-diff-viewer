@@ -24,6 +24,12 @@ export interface WebviewContext {
   lastRenderedData?: string;
   lastRenderedId?: number;
   lastRenderedSyntax?: string;
+  contentInvalidated?: boolean;
+  lastObservedText?: string;
+  syntaxFiles?: DiffFileWithMetadata[];
+  syntaxRequested?: Set<number>;
+  syntaxQueue?: number[];
+  syntaxQueueRenderId?: number;
   pendingReadyRender?: {
     collapseAll: boolean;
   };
@@ -37,6 +43,7 @@ export interface WebviewRenderPlan {
   collapseAll: boolean;
   performance: {
     isLargeDiff: boolean;
+    lazyFiles?: boolean;
     warning?: string;
     deferViewedStateHashing: boolean;
   };

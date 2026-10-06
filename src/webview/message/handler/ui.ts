@@ -54,12 +54,14 @@ export function updateLargeDiffNotice(warning?: string): void {
   notice.style.display = warning && notice.dataset.dismissed !== "true" ? "flex" : "none";
 }
 
-export function showLoading(isLoading: boolean): void {
+export function showLoading(isLoading: boolean, message = "Loading..."): void {
   const loadingContainer = document.getElementById(SkeletonElementIds.LoadingContainer);
   if (!loadingContainer) {
     return;
   }
 
+  const label = loadingContainer.querySelector("span");
+  if (label) label.textContent = message;
   loadingContainer.style.display = isLoading ? "block" : "none";
 }
 

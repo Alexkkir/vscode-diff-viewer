@@ -1,0 +1,78 @@
+{
+  "mode": "baseline",
+  "vscode": "1.139.0",
+  "configuration": {
+    "outputFormat": "line-by-line",
+    "drawFileList": true,
+    "globalScrollbar": true,
+    "matching": "none"
+  },
+  "build": {
+    "version": "1.8.17",
+    "extensionSha256": "0f56e1b096b38469e120a7c5a8c10bc72f38fb1461fc5e96af0ab9d369bca43b",
+    "webviewSha256": "7b768e1fa19e33de8434e5febb13cc9376be48434e14eed3fa6ab0f41668ea00"
+  },
+  "results": [
+    {
+      "fixture": "collapsed-20k",
+      "input": "private",
+      "characters": 952023,
+      "patchLines": 20459,
+      "files": 313,
+      "sourceRows": 19190,
+      "initial": {
+        "milliseconds": 1625.3,
+        "files": 313,
+        "rows": 19189,
+        "elements": 195413,
+        "expandedFiles": 0,
+        "pendingFiles": 0,
+        "nativeTokens": 0,
+        "loadingVisible": false,
+        "previewVisible": true
+      },
+      "expandFirst": {
+        "milliseconds": 34.6,
+        "files": 313,
+        "rows": 19189,
+        "elements": 195413,
+        "expandedFiles": 1,
+        "pendingFiles": 0,
+        "nativeTokens": 0,
+        "loadingVisible": false,
+        "previewVisible": true
+      },
+      "nativeColor": {
+        "ready": false,
+        "milliseconds": 5055.7
+      },
+      "unchangedFocus": {
+        "hidden": false,
+        "loading": false
+      },
+      "duringTruncate": {
+        "milliseconds": 81.8,
+        "files": 313,
+        "rows": 19189,
+        "elements": 195413,
+        "expandedFiles": 1,
+        "pendingFiles": 0,
+        "nativeTokens": 0,
+        "loadingVisible": false,
+        "previewVisible": true
+      },
+      "rewriteComplete": {
+        "milliseconds": 171,
+        "files": 1,
+        "rows": 2,
+        "elements": 91,
+        "expandedFiles": 1,
+        "pendingFiles": 0,
+        "nativeTokens": 4,
+        "loadingVisible": false,
+        "previewVisible": true
+      }
+    }
+  ],
+  "failures": []
+}

@@ -268,7 +268,7 @@ describe("MessageToWebviewHandlerImpl", () => {
       handler.updateSyntax({ renderId: 9, syntax: [null] });
       expect(update).not.toHaveBeenCalled();
       handler.updateSyntax({ renderId: 10, syntax: [null] });
-      expect(update).toHaveBeenCalledWith([null]);
+      expect(update).toHaveBeenCalledWith([null], undefined);
       expect(marker.isConnected).toBe(true);
       expect(jest.mocked(Diff2HtmlUI).mock.calls).toHaveLength(draws);
       expect(document.getElementById(SkeletonElementIds.LoadingContainer)!.style.display).toBe("none");
@@ -331,7 +331,7 @@ describe("MessageToWebviewHandlerImpl", () => {
       handler.updateSyntax({ renderId: 11, syntax: [] });
       await Promise.all([first, latest]);
       expect(update).toHaveBeenCalledTimes(1);
-      expect(update).toHaveBeenCalledWith([]);
+      expect(update).toHaveBeenCalledWith([], undefined);
     } finally {
       update.mockRestore();
     }
@@ -368,7 +368,7 @@ describe("MessageToWebviewHandlerImpl", () => {
         diffFiles: [createMockDiffFile({ oldName: "old.ts", newName: "old.ts" })],
         accessiblePaths: ["old.ts"],
         collapseAll: true,
-        performance: { isLargeDiff: true, warning: "Old warning", deferViewedStateHashing: false },
+        performance: { isLargeDiff: phase === "hashes", warning: "Old warning", deferViewedStateHashing: false },
       });
       const config = createConfig();
       config.diff2html.outputFormat = "line-by-line";
@@ -403,10 +403,12 @@ describe("MessageToWebviewHandlerImpl", () => {
         await older;
 
         expect(Diff2HtmlUI).toHaveBeenCalledTimes(1);
-        expect(Diff2HtmlUI).toHaveBeenCalledWith(expect.any(HTMLElement), latestPayload.diffFiles, {
-          ...config.diff2html,
-          highlight: false,
-        });
+        expect(Diff2HtmlUI).toHaveBeenCalledWith(
+          expect.any(HTMLElement),
+          latestPayload.diffFiles,
+          { ...config.diff2html, highlight: false },
+          false,
+        );
         expect(document.querySelector(".d2h-file-name")?.textContent).toBe("latest.ts");
         expect(document.getElementById(SkeletonElementIds.DiffContainer)?.style.display).toBe("block");
         expect(document.getElementById(SkeletonElementIds.LargeDiffNoticeContainer)?.style.display).toBe("none");
