@@ -1,4 +1,5 @@
 import { renderNoNewlineMarkers } from "./no-newline";
+import { captureViewState, restoreViewState } from "./view-state";
 import { getRenderedFileWrappers, linkRenderedFileSummaries } from "./rendered-file-wrappers";
 import { SyntaxHighlightingController } from "./syntax-highlighting";
 import { FindController } from "./find";
@@ -124,6 +125,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       await this.contextFoldingController.prepare(payload.diffFiles);
       if (generation !== this.updateGeneration) return;
 
+      const viewState = captureViewState(this.fileBindings);
       this.currentConfig = payload.config;
       this.accessiblePaths = accessiblePaths;
       this.currentDiffFilesByPath = currentDiffFilesByPath;
@@ -158,6 +160,8 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       if (collapseAll) {
         if (payload.performance.isLargeDiff) {
           this.setAllCollapsedStates(true);
+          await this.hideViewedFiles(payload.viewedState, generation);
+          if (generation !== this.updateGeneration) return;
         } else {
           this.setAllViewedStates(true);
         }
@@ -166,6 +170,16 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         if (generation !== this.updateGeneration) return;
       }
 
+      for (const binding of this.fileBindings) {
+        const collapsed = this.currentUiState.fileCollapsedOverrides?.[binding.filePath];
+        if (
+          binding.viewedToggle &&
+          typeof collapsed === "boolean" &&
+          !binding.viewedToggle.classList.contains(CHANGED_SINCE_VIEWED)
+        ) {
+          this.updateDiff2HtmlFileCollapsed(binding.viewedToggle, collapsed);
+        }
+      }
       this.restoreSelection();
       const expandAllToggle = document.getElementById(SkeletonElementIds.ExpandAllToggle);
       if (expandAllToggle instanceof HTMLInputElement) {
@@ -179,6 +193,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       updateFooter(this.fileBindings);
 
       diffContainer.style.display = "block";
+      restoreViewState(viewState, this.fileBindings);
       this.horizontalScrollbarController.refresh();
       this.horizontalScrollbarController.scheduleRefresh();
       this.findController.refresh();
@@ -240,7 +255,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
         this.findController.open();
         return;
       case "collapseAll":
-        this.persistUiState({ expandAllFiles: false });
+        this.persistUiState({ expandAllFiles: false, fileCollapsedOverrides: {} });
         this.setAllViewedStates(true);
         this.clearChangedSinceViewedIndicators();
         updateFooter(this.fileBindings);
@@ -249,7 +264,7 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
       case "expandAll":
         this.setAllViewedStates(false);
         this.clearChangedSinceViewedIndicators();
-        this.persistUiState({ selectedPath: undefined, expandAllFiles: true });
+        this.persistUiState({ selectedPath: undefined, expandAllFiles: true, fileCollapsedOverrides: {} });
         updateFooter(this.fileBindings);
         this.horizontalScrollbarController.refresh();
         return;
@@ -329,6 +344,10 @@ export class MessageToWebviewHandlerImpl extends GenericMessageHandlerImpl imple
     this.horizontalScrollbarController.refresh();
     const path = this.getDiffElementFileName(viewedToggle);
     const file = path && this.currentDiffFilesByPath[path];
+    if (path)
+      this.persistUiState({
+        fileCollapsedOverrides: { ...this.currentUiState.fileCollapsedOverrides, [path]: viewedToggle.checked },
+      });
     if (this.rendering && path && file) {
       this.pendingInteractions.push({ path, file, viewed: viewedToggle.checked });
     } else void this.sendFileViewedMessage(viewedToggle, viewedToggle.checked);

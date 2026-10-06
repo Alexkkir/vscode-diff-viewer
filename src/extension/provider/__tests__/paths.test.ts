@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { clearAccessiblePathsCache, collectAccessiblePaths } from "../paths";
+import { parseDiff } from "../../../shared/diff";
 
 jest.mock("vscode", () => ({
   workspace: {
@@ -55,7 +56,7 @@ describe("provider/paths", () => {
     (vscode.workspace.getConfiguration as jest.Mock).mockImplementation(() => ({ get: () => arcMode }));
     const args = {
       webviewContext: { document: { uri: { path: "/workspace/test.diff", scheme: "file" } } } as never,
-      diffFiles: [{ oldName: "src/file.ts", newName: "src/file.ts (working tree)" }] as never,
+      diffFiles: parseDiff("--- src/file.ts\t(abcdef123)\n+++ src/file.ts\t(working tree)\n@@ -1 +1 @@\n-a\n+b\n"),
     };
     expect(await collectAccessiblePaths(args)).toEqual(["src/file.ts"]);
     const before = (vscode.workspace.fs.stat as jest.Mock).mock.calls.length;
@@ -65,6 +66,18 @@ describe("provider/paths", () => {
     await collectAccessiblePaths(args);
     expect((vscode.workspace.fs.stat as jest.Mock).mock.calls.length).toBeGreaterThan(before);
   });
+
+  it.each(["literal (working tree)", "literal (abcdef0123)", "literal {old → new}.txt"])(
+    "checks the exact parsed path rather than interpreting it as a display label: %s",
+    async (path) => {
+      const result = await collectAccessiblePaths({
+        webviewContext: { document: { uri: { path: "/workspace/test.diff", scheme: "file" } } } as never,
+        diffFiles: [{ oldName: "/dev/null", newName: path }] as never,
+      });
+      expect(result).toEqual([path]);
+      expect(vscode.workspace.fs.stat).toHaveBeenCalledWith(expect.objectContaining({ path: `/workspace/${path}` }));
+    },
+  );
 
   it("clears the accessible path cache", () => {
     const webviewContext = {

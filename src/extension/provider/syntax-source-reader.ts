@@ -1,5 +1,5 @@
 import { getArcadiaRoot, getArcFileUri, isArcModeEnabled } from "../arc-paths";
-import { normalizeDiffFilePath } from "../../shared/extract";
+import { parsedDiffFilePath } from "../../shared/extract";
 import * as vscode from "vscode";
 import { DiffFile } from "diff2html/lib/types";
 import { reconstructSyntaxSources } from "./syntax-source";
@@ -12,7 +12,7 @@ export async function readSyntaxSources(files: DiffFile[], diffUri?: vscode.Uri)
   let budget = 8 * 1024 * 1024;
   for (const file of files) {
     let source: Sources;
-    const path = normalizeDiffFilePath(file.newName);
+    const path = parsedDiffFilePath(file.newName);
     if (budget > 0 && path && !file.isBinary && !file.isCombined) {
       const candidates: vscode.Uri[] = [];
       if (path.startsWith("/")) candidates.push(diffUri.with({ path, query: "", fragment: "" }));

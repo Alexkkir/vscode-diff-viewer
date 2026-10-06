@@ -1,6 +1,8 @@
 /** @jest-environment jsdom */
 import { html, parse } from "diff2html";
 import { AlignedDiff2HtmlUI, renderAlignedDiffHtml } from "../aligned-diff-renderer";
+import { parseDiff } from "../../../../shared/diff";
+import { SyntaxHighlightingController } from "../syntax-highlighting";
 
 const patch = [
   "--- a/example.py",
@@ -24,6 +26,52 @@ const patch = [
 ].join("\n");
 
 describe("aligned diff renderer", () => {
+  const carriageReturnCases = (["side-by-side", "line-by-line"] as const).flatMap((outputFormat) =>
+    (["lines", "words"] as const).flatMap((matching) =>
+      [false, true].flatMap((syntaxEnabled) =>
+        [false, true].map((addedCarriageReturn) => ({ outputFormat, matching, syntaxEnabled, addedCarriageReturn })),
+      ),
+    ),
+  );
+
+  it.each(carriageReturnCases)("keeps a changed CR exclusively on its own side: %j", (scenario) => {
+    const { outputFormat, matching, syntaxEnabled, addedCarriageReturn } = scenario;
+    const oldText = addedCarriageReturn ? "ab" : "a\rb";
+    const newText = addedCarriageReturn ? "a\rb" : "ab";
+    const files = parseDiff(
+      `--- a/rows.txt\n+++ b/rows.txt\n@@ -1,3 +1,3 @@\n-${oldText}\n+${newText}\n context after\n-value = old;\n+value = new;\n`,
+    );
+    const original = JSON.stringify(files);
+    const root = document.createElement("div");
+    new AlignedDiff2HtmlUI(root, files, { outputFormat, matching, highlight: false }).draw();
+    new SyntaxHighlightingController({ getEnabled: () => syntaxEnabled, setEnabled: () => undefined }).render(
+      root,
+      undefined,
+      files,
+    );
+    const panes = Array.from(root.querySelectorAll(".d2h-file-side-diff"));
+    for (const [side, index, expected] of [
+      ["old", 0, [oldText, "context after", "value = old;"]],
+      ["new", 1, [newText, "context after", "value = new;"]],
+    ] as const) {
+      const rows = Array.from((panes[index] ?? root).querySelectorAll("tr"));
+      for (const [offset, text] of expected.entries()) {
+        const row = rows.find(
+          (candidate) =>
+            Number(
+              candidate.querySelector(panes.length ? ".d2h-code-side-linenumber" : `.line-num${index + 1}`)
+                ?.textContent,
+            ) ===
+            offset + 1,
+        )!;
+        expect({ side, text: row.querySelector(".d2h-code-line-ctn")?.textContent }).toEqual({ side, text });
+        if (offset === 0) expect(row.querySelector("ins, del")).toBeNull();
+        if (offset === 2) expect(row.querySelector("ins, del")).not.toBeNull();
+      }
+    }
+    expect(JSON.stringify(files)).toBe(original);
+  });
+
   it("keeps local pane scrolling synchronized without bouncing a clamped opposite pane", () => {
     const root = document.createElement("div");
     new AlignedDiff2HtmlUI(root, parse(patch), { outputFormat: "side-by-side", highlight: false }).draw();

@@ -1,0 +1,260 @@
+{
+  "version": "1.8.16",
+  "build": {
+    "extension": "0f56e1b096b38469e120a7c5a8c10bc72f38fb1461fc5e96af0ab9d369bca43b",
+    "webview": "dc6cc71cf264e56bdc9ba2dddc74cd41d9761d0e273987671771d6539efc7419"
+  },
+  "vscode": "1.139.0",
+  "filter": "find-active|semantic",
+  "results": [
+    {
+      "name": "find-active-match-after-layout-config",
+      "before": {
+        "count": "1 / 1",
+        "y": 380.796875,
+        "bottom": 394.796875,
+        "height": 776,
+        "scrollY": 10520,
+        "headers": [
+          {
+            "cls": "d2h-file-header d2h-sticky-header",
+            "id": "",
+            "top": 0,
+            "bottom": 35
+          },
+          {
+            "cls": "",
+            "id": "viewed-progress-container",
+            "top": 750.5,
+            "bottom": 762.5
+          },
+          {
+            "cls": "",
+            "id": "diff-find-widget",
+            "top": 8,
+            "bottom": 51.5
+          }
+        ]
+      },
+      "after": {
+        "count": "1 / 1",
+        "y": 380.796875,
+        "bottom": 394.796875,
+        "height": 776,
+        "scrollY": 3302,
+        "headers": [
+          {
+            "cls": "d2h-file-header d2h-sticky-header",
+            "id": "",
+            "top": 0,
+            "bottom": 35
+          },
+          {
+            "cls": "",
+            "id": "viewed-progress-container",
+            "top": 750.5,
+            "bottom": 762.5
+          },
+          {
+            "cls": "",
+            "id": "diff-find-widget",
+            "top": 8,
+            "bottom": 51.5
+          }
+        ]
+      },
+      "status": "pass",
+      "state": {
+        "selection": "",
+        "active": "<input type=\"text\" aria-label=\"Find in diff\" placeholder=\"Find in diff\" data-vscode-context=\"{&quot;webviewSection&quot;:&quot;findInput&quot;,&quot;preventDefaultContextMenuItems&quot;:false}\">",
+        "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+        "events": [
+          {
+            "type": "message",
+            "kind": "performWebviewAction",
+            "time": 226.90000000596046,
+            "selection": ""
+          },
+          {
+            "type": "selectionchange",
+            "target": "INPUT",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 241.5
+          },
+          {
+            "type": "selectionchange",
+            "target": "INPUT",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 257.70000000298023
+          },
+          {
+            "type": "message",
+            "kind": "updateWebview",
+            "time": 562.8000000044703,
+            "selection": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "semantic-enrichment-preserves-selection",
+      "before": {
+        "selection": "selected_token = 12",
+        "active": "<body data-shell-generation=\"1\" data-vscode-context=\"{&quot;preventDefaultContextMenuItems&quot;:true,&quot;webviewSection&quot;:&quot;diff&quot;,&quot;diffviewerHasSelection&quot;:true}\" role=\"document\" class=\"vscode-dark\" data-vscode-theme-kind=\"vscode-dark\" data-vscode-theme-name=\"Dark 2026\" data-vscode-theme-id=\"Dark 2026\">\n    <div id=\"loading-container\" style=\"display: none;\">\n      <span>Loading...</span>\n    </div>\n    <div id=\"empty-mess",
+        "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+        "events": [
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 189.69999999552965
+          },
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 190.5
+          },
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 190.79999999701977
+          },
+          {
+            "type": "selectionchange",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 195.59999999403954
+          }
+        ]
+      },
+      "semanticCalls": 1,
+      "after": {
+        "selection": "selected_token = 12",
+        "active": "<body data-shell-generation=\"1\" data-vscode-context=\"{&quot;preventDefaultContextMenuItems&quot;:true,&quot;webviewSection&quot;:&quot;diff&quot;,&quot;diffviewerHasSelection&quot;:true}\" role=\"document\" class=\"vscode-dark\" data-vscode-theme-kind=\"vscode-dark\" data-vscode-theme-name=\"Dark 2026\" data-vscode-theme-id=\"Dark 2026\">\n    <div id=\"loading-container\" style=\"display: none;\">\n      <span>Loading...</span>\n    </div>\n    <div id=\"empty-mess",
+        "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+        "events": [
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 189.69999999552965
+          },
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 190.5
+          },
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 190.79999999701977
+          },
+          {
+            "type": "selectionchange",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 195.59999999403954
+          },
+          {
+            "type": "message",
+            "kind": "updateSyntax",
+            "time": 202.09999999403954,
+            "selection": "selected_token = 12"
+          },
+          {
+            "type": "selectionchange",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+            "time": 202.09999999403954
+          }
+        ]
+      },
+      "html": "<ins><span class=\"diff-textmate-token\" style=\"color: rgb(18, 52, 86);\">selected_token</span></ins><span class=\"diff-textmate-token\" style=\"color: rgb(187, 190, 191);\"> </span><span class=\"diff-textmate-token\" style=\"color: rgb(212, 212, 212);\">=</span><span class=\"diff-textmate-token\" style=\"color: rgb(187, 190, 191);\"> </span><ins><span class=\"diff-textmate-token\" style=\"color: rgb(181, 206, 168);\">12</span></ins>",
+      "copied": "selected_token = 12",
+      "status": "pass",
+      "state": {
+        "selection": "selected_token = 12",
+        "active": "<body data-shell-generation=\"1\" data-vscode-context=\"{&quot;preventDefaultContextMenuItems&quot;:true,&quot;webviewSection&quot;:&quot;diff&quot;,&quot;diffviewerHasSelection&quot;:true}\" role=\"document\" class=\"vscode-dark\" data-vscode-theme-kind=\"vscode-dark\" data-vscode-theme-name=\"Dark 2026\" data-vscode-theme-id=\"Dark 2026\">\n    <div id=\"loading-container\" style=\"display: none;\">\n      <span>Loading...</span>\n    </div>\n    <div id=\"empty-mess",
+        "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+        "events": [
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 189.69999999552965
+          },
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 190.5
+          },
+          {
+            "type": "pointerdown",
+            "button": 0,
+            "target": "SPAN",
+            "selection": "",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 190.79999999701977
+          },
+          {
+            "type": "selectionchange",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":false}",
+            "time": 195.59999999403954
+          },
+          {
+            "type": "message",
+            "kind": "updateSyntax",
+            "time": 202.09999999403954,
+            "selection": "selected_token = 12"
+          },
+          {
+            "type": "selectionchange",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+            "time": 202.09999999403954
+          },
+          {
+            "type": "keydown",
+            "key": "Meta",
+            "target": "BODY",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+            "time": 272.79999999701977
+          },
+          {
+            "type": "keydown",
+            "key": "c",
+            "target": "BODY",
+            "selection": "selected_token = 12",
+            "bodyContext": "{\"preventDefaultContextMenuItems\":true,\"webviewSection\":\"diff\",\"diffviewerHasSelection\":true}",
+            "time": 274.5
+          }
+        ]
+      }
+    }
+  ]
+}

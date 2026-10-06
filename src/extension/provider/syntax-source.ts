@@ -1,4 +1,5 @@
-import { DiffFile, DiffLine, LineType } from "diff2html/lib/types";
+import { DiffLine, LineType } from "diff2html/lib/types";
+import type { DiffFileWithMetadata } from "../../shared/diff";
 
 const MAX_SOURCE_LENGTH = 2 * 1024 * 1024;
 const MAX_SOURCE_LINES = 50_000;
@@ -7,13 +8,19 @@ const MAX_SOURCE_LINES = 50_000;
 // Reconstruct the old side only after checking every hunk against the new side;
 // a stale or unrelated source must never supply misleading tokenization state.
 export function reconstructSyntaxSources(
-  file: DiffFile,
+  file: DiffFileWithMetadata,
   newSource: string,
 ): { old: string[]; new: string[] } | undefined {
   if (file.isCombined || file.isBinary || newSource.length > MAX_SOURCE_LENGTH) return;
   const newLines = newSource === "" ? [] : newSource.split(/\r?\n/);
   if (newSource.endsWith("\n")) newLines.pop();
   if (newLines.length > MAX_SOURCE_LINES) return;
+  // Lexical/semantic sources use editor line text without the CRLF terminator.
+  // Keep embedded CR and an EOF CR byte that has no following source newline.
+  const sourceText = (line: DiffLine, side: "old" | "new"): string => {
+    const text = line.content.slice(1);
+    return file.noNewline?.[side] === line[`${side}Number`] ? text : text.replace(/\r$/, "");
+  };
 
   const oldLines: string[] = [];
   let cursor = 0;
@@ -52,7 +59,7 @@ export function reconstructSyntaxSources(
 
     for (let i = 0; i < newProjection.length; i++) {
       const line = newProjection[i];
-      if (line.newNumber !== newStart + i + 1 || line.content.slice(1) !== newLines[newStart + i]) return;
+      if (line.newNumber !== newStart + i + 1 || sourceText(line, "new") !== newLines[newStart + i]) return;
     }
     for (let i = 0; i < oldProjection.length; i++) {
       if (oldProjection[i].oldNumber !== oldStart + i + 1) return;
@@ -60,7 +67,7 @@ export function reconstructSyntaxSources(
     // Apply the inverse patch in one pass, retaining untouched source between
     // hunks. Avoid spreading a large hunk into splice's argument list.
     for (let i = cursor; i < newStart; i++) oldLines.push(newLines[i]);
-    for (const line of oldProjection) oldLines.push(line.content.slice(1));
+    for (const line of oldProjection) oldLines.push(sourceText(line, "old"));
     cursor = newStart + newProjection.length;
   }
   if (oldLines.length + newLines.length - cursor > MAX_SOURCE_LINES) return;

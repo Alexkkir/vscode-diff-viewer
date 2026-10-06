@@ -13,6 +13,7 @@ export interface WebviewUiState {
   scrollTop: number;
   syntaxHighlighting?: boolean;
   expandAllFiles?: boolean;
+  fileCollapsedOverrides?: Record<string, boolean>;
   contextExpansions?: ContextExpansionState;
   selectedPath?: string;
 }

@@ -1,11 +1,32 @@
 import { parse } from "diff2html";
 import { reconstructSyntaxSources } from "../syntax-source";
+import { parseDiff } from "../../../shared/diff";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 function diff(hunks: string) {
   return parse(`--- a/demo.py\n+++ b/demo.py\n${hunks}`)[0];
 }
 
 describe("reconstructSyntaxSources", () => {
+  const fixtures: Array<{ id: string; oldSource: string; newSource: string; patch: string }> = JSON.parse(
+    readFileSync(join(__dirname, "../../../shared/testing/git-source-fidelity.json"), "utf8"),
+  );
+
+  it.each(
+    fixtures.filter(({ id }) => ["crlf", "mixed-eol", "bare-cr-middle", "bare-cr-metadata", "eof-cr"].includes(id)),
+  )("retains editor syntax context after source CR preservation: $id", (fixture) => {
+    const lines = (source: string) => {
+      const result = source.split(/\r?\n/);
+      if (source.endsWith("\n")) result.pop();
+      return result;
+    };
+    expect(reconstructSyntaxSources(parseDiff(fixture.patch)[0], fixture.newSource)).toEqual({
+      old: lines(fixture.oldSource),
+      new: lines(fixture.newSource),
+    });
+  });
+
   it("retains multiline-string context before and between separated hunks", () => {
     const file = diff(
       '@@ -3,2 +3,2 @@\n-old {value}\n+new {value}\n """\n' + "@@ -7,2 +7,3 @@\n keep = 1\n+extra = 2\n print(keep)\n",

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { parse } from "diff2html";
+import { parseDiff } from "../../../shared/diff";
 import { readSyntaxSources } from "../syntax-source-reader";
 
 jest.mock("vscode", () => ({
@@ -39,12 +39,26 @@ function uri(path: string, scheme = "file", authority = "", query = "", fragment
 }
 
 function arcDiff() {
-  return parse(
+  return parseDiff(
     `--- ${sourcePath} (446896b256014781a4d94f1ccc267c8615eb1474)\n` +
       `+++ ${sourcePath} (working tree)\n` +
       "@@ -1 +1 @@\n-VALUE = 1\n+VALUE = 2\n",
   )[0];
 }
+
+describe("literal parsed source filenames", () => {
+  it.each(["literal (working tree)", "literal (abcdef0123)", "literal {old → new}.txt"])(
+    "reads exactly the parsed path: %s",
+    async (name) => {
+      const expected = uri(`/home/user/5arcadia/${name}`);
+      addSource(expected);
+      const file = { ...arcDiff(), oldName: name, newName: name };
+      const [source] = await readSyntaxSources([file], uri("/home/user/5arcadia/review.patch"));
+      expect(source?.uri.toString()).toBe(expected.toString());
+      expect(source?.new).toEqual(["VALUE = 2"]);
+    },
+  );
+});
 
 function addSource(target: vscode.Uri) {
   files.set(target.toString(), Buffer.from(newSource, "utf8"));

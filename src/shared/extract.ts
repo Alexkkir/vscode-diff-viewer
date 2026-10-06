@@ -8,7 +8,12 @@ export function extractNewFileNameFromDiffName(diffName: string): string {
   return diffName.replaceAll(renamedFileNameRegex, "$2");
 }
 
-/** Arc revision labels and diff2html rename presentation are not filesystem names. */
+/** Parsed file names already have metadata removed; their remaining characters are literal. */
+export function parsedDiffFilePath(path?: string): string | undefined {
+  return path && path !== "/dev/null" ? path : undefined;
+}
+
+/** Only for legacy display labels, never for DiffFile.oldName/newName or filesystem paths. */
 export function normalizeDiffFilePath(path?: string): string | undefined {
   if (!path) return undefined;
   const normalized = extractNewFileNameFromDiffName(path).replace(/[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i, "");

@@ -1,0 +1,234 @@
+[
+  {
+    "id": "plain",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "first\nold\nlast\n",
+    "newSource": "first\nnew\nlast\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex dad2832..3c6ec42 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,3 +1,3 @@\n first\n-old\n+new\n last\n"
+  },
+  {
+    "id": "crlf",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "first\r\nold\r\nlast\r\n",
+    "newSource": "first\r\nnew\r\nlast\r\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 118179e..bdaa0ed 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,3 +1,3 @@\n first\r\n-old\r\n+new\r\n last\r\n"
+  },
+  {
+    "id": "mixed-eol",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "first\r\nold\nlast\r\n",
+    "newSource": "first\r\nnew\nlast\r\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex eadcb8c..011dd03 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,3 +1,3 @@\n first\r\n-old\n+new\n last\r\n"
+  },
+  {
+    "id": "bare-cr-middle",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "first\nold\rcarriage\nlast\n",
+    "newSource": "first\nnew\rcarriage\nlast\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 31cd866..1075201 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,3 +1,3 @@\n first\n-old\rcarriage\n+new\rcarriage\n last\n"
+  },
+  {
+    "id": "bare-cr-metadata",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "first\nold\r+++ forged\nlast\n",
+    "newSource": "first\nnew\r+++ forged\nlast\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 696a069..1d55a4e 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,3 +1,3 @@\n first\n-old\r+++ forged\n+new\r+++ forged\n last\n"
+  },
+  {
+    "id": "whitespace",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "a\n \n\t\n\nend\n",
+    "newSource": "a\n  \n\t \n\nend\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex acf8735..48827fa 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,5 +1,5 @@\n a\n- \n-\t\n+  \n+\t \n \n end\n"
+  },
+  {
+    "id": "eof-empty",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "a\n",
+    "newSource": "a\n\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 7898192..442406a 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1 +1,2 @@\n a\n+\n"
+  },
+  {
+    "id": "eof-empty-remove",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "a\n\n",
+    "newSource": "a\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 442406a..7898192 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,2 +1 @@\n a\n-\n"
+  },
+  {
+    "id": "eof-none",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "a",
+    "newSource": "b",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 2e65efe..63d8dbd 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1 +1 @@\n-a\n\\ No newline at end of file\n+b\n\\ No newline at end of file\n"
+  },
+  {
+    "id": "eof-cr",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "a\r",
+    "newSource": "b\r",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex db0a4d3..54988b2 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1 +1 @@\n-a\r\n\\ No newline at end of file\n+b\r\n\\ No newline at end of file\n"
+  },
+  {
+    "id": "unicode",
+    "oldName": "old/я 🚀.txt",
+    "newName": "new/я 🚀.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git \"a/old/\\321\\217 \\360\\237\\232\\200.txt\" \"b/new/\\321\\217 \\360\\237\\232\\200.txt\"\nindex 7898192..6178079 100644\n--- \"a/old/\\321\\217 \\360\\237\\232\\200.txt\"\t\n+++ \"b/new/\\321\\217 \\360\\237\\232\\200.txt\"\t\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "newline-path",
+    "oldName": "old/line\nname.txt",
+    "newName": "new/line\nname.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git \"a/old/line\\nname.txt\" \"b/new/line\\nname.txt\"\nindex 7898192..6178079 100644\n--- \"a/old/line\\nname.txt\"\n+++ \"b/new/line\\nname.txt\"\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "tab-path",
+    "oldName": "old/tab\tname.txt",
+    "newName": "new/tab\tname.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git \"a/old/tab\\tname.txt\" \"b/new/tab\\tname.txt\"\nindex 7898192..6178079 100644\n--- \"a/old/tab\\tname.txt\"\n+++ \"b/new/tab\\tname.txt\"\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "tab-suffix-path",
+    "oldName": "old/name.txt\t",
+    "newName": "new/name.txt\t",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git \"a/old/name.txt\\t\" \"b/new/name.txt\\t\"\nindex 7898192..6178079 100644\n--- \"a/old/name.txt\\t\"\n+++ \"b/new/name.txt\\t\"\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "quote-path",
+    "oldName": "old/quote\"name.txt",
+    "newName": "new/quote\"name.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git \"a/old/quote\\\"name.txt\" \"b/new/quote\\\"name.txt\"\nindex 7898192..6178079 100644\n--- \"a/old/quote\\\"name.txt\"\n+++ \"b/new/quote\\\"name.txt\"\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "backslash-path",
+    "oldName": "old/back\\slash.txt",
+    "newName": "new/back\\slash.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git \"a/old/back\\\\slash.txt\" \"b/new/back\\\\slash.txt\"\nindex 7898192..6178079 100644\n--- \"a/old/back\\\\slash.txt\"\n+++ \"b/new/back\\\\slash.txt\"\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "spaces-path",
+    "oldName": "old/path with spaces.txt",
+    "newName": "new/path with spaces.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git a/old/path with spaces.txt b/new/path with spaces.txt\nindex 7898192..6178079 100644\n--- a/old/path with spaces.txt\t\n+++ b/new/path with spaces.txt\t\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "arc-literal-path",
+    "oldName": "old/literal (working tree)",
+    "newName": "new/literal (working tree)",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git a/old/literal (working tree) b/new/literal (working tree)\nindex 7898192..6178079 100644\n--- a/old/literal (working tree)\t\n+++ b/new/literal (working tree)\t\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "arc-literal-extension",
+    "oldName": "old/literal.py (working tree)",
+    "newName": "new/literal.py (working tree)",
+    "oldSource": "print(\"old\")\n",
+    "newSource": "print(\"new\")\n",
+    "patch": "diff --git a/old/literal.py (working tree) b/new/literal.py (working tree)\nindex c3d1bb6..a797310 100644\n--- a/old/literal.py (working tree)\t\n+++ b/new/literal.py (working tree)\t\n@@ -1 +1 @@\n-print(\"old\")\n+print(\"new\")\n"
+  },
+  {
+    "id": "hex-literal-path",
+    "oldName": "old/literal (abcdef0123)",
+    "newName": "new/literal (abcdef0123)",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git a/old/literal (abcdef0123) b/new/literal (abcdef0123)\nindex 7898192..6178079 100644\n--- a/old/literal (abcdef0123)\t\n+++ b/new/literal (abcdef0123)\t\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "a-path",
+    "oldName": "old/a/path.txt",
+    "newName": "new/a/path.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git a/old/a/path.txt b/new/a/path.txt\nindex 7898192..6178079 100644\n--- a/old/a/path.txt\n+++ b/new/a/path.txt\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "b-path",
+    "oldName": "old/b/path.txt",
+    "newName": "new/b/path.txt",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git a/old/b/path.txt b/new/b/path.txt\nindex 7898192..6178079 100644\n--- a/old/b/path.txt\n+++ b/new/b/path.txt\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "space-suffix",
+    "oldName": "old/example.txt ",
+    "newName": "new/example.txt ",
+    "oldSource": "a\n",
+    "newSource": "b\n",
+    "patch": "diff --git a/old/example.txt  b/new/example.txt \nindex 7898192..6178079 100644\n--- a/old/example.txt \t\n+++ b/new/example.txt \t\n@@ -1 +1 @@\n-a\n+b\n"
+  },
+  {
+    "id": "binary",
+    "oldName": "old/image.bin",
+    "newName": "new/image.bin",
+    "oldSource": "a\u0000b\n",
+    "newSource": "a\u0000c\n",
+    "patch": "diff --git a/old/image.bin b/new/image.bin\nindex 1a23e4b..659b724 100644\nBinary files a/old/image.bin and b/new/image.bin differ\n"
+  },
+  {
+    "id": "source-quote-and-sentinel",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "x\n\\ No newline at end of file\npath123\n--- other\n",
+    "newSource": "x\n\\ No newline at end of file\npath124\n+++ other\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex 8122857..bc3e3cf 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -1,4 +1,4 @@\n x\n \\ No newline at end of file\n-path123\n---- other\n+path124\n++++ other\n"
+  },
+  {
+    "id": "mixed-hunks",
+    "oldName": "old/example.txt",
+    "newName": "new/example.txt",
+    "oldSource": "original 0\noriginal 1\noriginal 2\noriginal 3\noriginal 4\noriginal 5\noriginal 6\noriginal 7\noriginal 8\noriginal 9\noriginal 10\noriginal 11\noriginal 12\noriginal 13\noriginal 14\noriginal 15\noriginal 16\noriginal 17\noriginal 18\noriginal 19\noriginal 20\noriginal 21\noriginal 22\noriginal 23\noriginal 24\noriginal 25\noriginal 26\noriginal 27\noriginal 28\noriginal 29\noriginal 30\noriginal 31\noriginal 32\noriginal 33\noriginal 34\noriginal 35\noriginal 36\noriginal 37\noriginal 38\noriginal 39\noriginal 40\noriginal 41\noriginal 42\noriginal 43\noriginal 44\noriginal 45\noriginal 46\noriginal 47\noriginal 48\noriginal 49\noriginal 50\noriginal 51\noriginal 52\noriginal 53\noriginal 54\noriginal 55\noriginal 56\noriginal 57\noriginal 58\noriginal 59\noriginal 60\noriginal 61\noriginal 62\noriginal 63\noriginal 64\noriginal 65\noriginal 66\noriginal 67\noriginal 68\noriginal 69\noriginal 70\noriginal 71\noriginal 72\noriginal 73\noriginal 74\noriginal 75\noriginal 76\noriginal 77\noriginal 78\noriginal 79\noriginal 80\noriginal 81\noriginal 82\noriginal 83\noriginal 84\noriginal 85\noriginal 86\noriginal 87\noriginal 88\noriginal 89\noriginal 90\noriginal 91\noriginal 92\noriginal 93\noriginal 94\noriginal 95\noriginal 96\noriginal 97\noriginal 98\noriginal 99\n",
+    "newSource": "original 0\noriginal 1\noriginal 2\noriginal 3\noriginal 4\nnew first\noriginal 6\noriginal 7\noriginal 8\noriginal 9\noriginal 10\noriginal 11\noriginal 12\noriginal 13\noriginal 14\noriginal 15\noriginal 16\noriginal 17\noriginal 18\noriginal 19\noriginal 20\noriginal 21\noriginal 22\noriginal 23\noriginal 24\noriginal 25\noriginal 26\noriginal 27\noriginal 28\noriginal 29\noriginal 30\noriginal 31\noriginal 32\noriginal 33\noriginal 34\noriginal 35\noriginal 36\noriginal 37\noriginal 38\noriginal 39\noriginal 40\noriginal 41\noriginal 42\noriginal 43\noriginal 44\noriginal 45\noriginal 46\noriginal 47\noriginal 48\noriginal 49\noriginal 50\noriginal 51\noriginal 52\noriginal 53\noriginal 54\noriginal 55\noriginal 56\noriginal 57\noriginal 58\noriginal 59\noriginal 60\noriginal 61\noriginal 62\noriginal 63\noriginal 64\nnew second\noriginal 66\noriginal 67\noriginal 68\noriginal 69\noriginal 70\noriginal 71\noriginal 72\noriginal 73\noriginal 74\noriginal 75\noriginal 76\noriginal 77\noriginal 78\noriginal 79\noriginal 80\noriginal 81\noriginal 82\noriginal 83\noriginal 84\noriginal 85\noriginal 86\noriginal 87\noriginal 88\noriginal 89\noriginal 90\noriginal 91\noriginal 92\noriginal 93\noriginal 94\noriginal 95\noriginal 96\noriginal 97\noriginal 98\noriginal 99\n",
+    "patch": "diff --git a/old/example.txt b/new/example.txt\nindex cc5e9bb..bfe6cf0 100644\n--- a/old/example.txt\n+++ b/new/example.txt\n@@ -3,7 +3,7 @@ original 1\n original 2\n original 3\n original 4\n-original 5\n+new first\n original 6\n original 7\n original 8\n@@ -63,7 +63,7 @@ original 61\n original 62\n original 63\n original 64\n-original 65\n+new second\n original 66\n original 67\n original 68\n"
+  },
+  {
+    "id": "rename-only-literal (working tree)",
+    "oldName": "old/original.txt",
+    "newName": "new/literal (working tree)",
+    "oldSource": "same unchanged source\n",
+    "newSource": "same unchanged source\n",
+    "patch": "diff --git a/old/original.txt b/new/literal (working tree)\nsimilarity index 100%\nrename from old/original.txt\nrename to new/literal (working tree)\n"
+  },
+  {
+    "id": "rename-only-literal (abcdef0123)",
+    "oldName": "old/original.txt",
+    "newName": "new/literal (abcdef0123)",
+    "oldSource": "same unchanged source\n",
+    "newSource": "same unchanged source\n",
+    "patch": "diff --git a/old/original.txt b/new/literal (abcdef0123)\nsimilarity index 100%\nrename from old/original.txt\nrename to new/literal (abcdef0123)\n"
+  },
+  {
+    "id": "rename-only-literal {old → new}.txt",
+    "oldName": "old/original.txt",
+    "newName": "new/literal {old → new}.txt",
+    "oldSource": "same unchanged source\n",
+    "newSource": "same unchanged source\n",
+    "patch": "diff --git a/old/original.txt \"b/new/literal {old \\342\\206\\222 new}.txt\"\nsimilarity index 100%\nrename from old/original.txt\nrename to \"new/literal {old \\342\\206\\222 new}.txt\"\n"
+  }
+]

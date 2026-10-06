@@ -69,6 +69,7 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
   let literalToken = "\uE000";
   while (text.includes(literalToken)) literalToken += "\uE000";
   const literalMarker = NO_NEWLINE.replace("\\", literalToken);
+  const literalCarriageReturn = `${literalToken}cr`;
   const quotedPaths = new Map<string, string>();
   // Hide quoted names from upstream's permissive quote/whitespace parsing.
   // Only metadata is rewritten; escaped text inside source remains literal.
@@ -92,6 +93,7 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
   const restore = (value: string): string =>
     value
       .replaceAll(literalMarker, NO_NEWLINE)
+      .replaceAll(literalCarriageReturn, "\r")
       .replaceAll(`-${literalToken}- `, "--- ")
       .replaceAll(`--${literalToken} `, "--- ");
   const sections: DiffSection[] = [];
@@ -101,7 +103,20 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
   let hasHeaders = false;
   let hunk: Hunk | undefined;
   let combinedHunk: CombinedHunk | undefined;
-  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+  const lines = text.split("\n");
+  // Git's metadata uses the patch transport's line endings. Source CR bytes
+  // belong to the hunk and must not become line breaks or synthetic headers.
+  const firstHeader = lines.find((line) => /^(?:diff --(?:git|cc|combined) |--- |Binary files )/.test(line));
+  if (firstHeader?.endsWith("\r")) {
+    for (let index = 0; index < lines.length; index++) lines[index] = lines[index].replace(/\r$/, "");
+  }
+
+  const normalizeHeader = (line: string): string =>
+    // A literal TAB in a Git path is C-quoted and hidden by maskPaths. An
+    // unquoted TAB separates the filename from metadata, including an empty
+    // suffix emitted by Git for filenames containing spaces. Arc labels only
+    // occur outside Git sections; Git filenames may literally end in them.
+    maskPaths(isGit ? line : line.replace(ARC_REVISION, ""), true).split("\t", 1)[0];
 
   const startFile = (git: boolean): void => {
     if (hasFile) {
@@ -132,8 +147,8 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
       if (!isGit || hasHeaders) startFile(false);
       hasHeaders = true;
       // Strip only recognized revision metadata in actual file headers.
-      line = maskPaths(line.replace(ARC_REVISION, ""), true);
-      lines[index + 1] = maskPaths(lines[index + 1].replace(ARC_REVISION, ""), true);
+      line = normalizeHeader(line);
+      lines[index + 1] = normalizeHeader(lines[index + 1]);
     } else if (!insideHunk && /^(?:copy|rename) (?:from|to) /.test(line)) {
       line = maskPaths(line, false);
     } else if (!insideHunk && line.startsWith("Binary files")) {
@@ -194,7 +209,7 @@ export function parseDiff(text: string, config?: Diff2HtmlConfig): DiffFileWithM
       }
     }
     // The upstream parser otherwise deletes this phrase even inside source code.
-    section.lines.push(line.replaceAll(NO_NEWLINE, literalMarker));
+    section.lines.push(line.replaceAll(NO_NEWLINE, literalMarker).replaceAll("\r", literalCarriageReturn));
   }
   sections.push(section);
 

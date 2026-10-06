@@ -16,7 +16,7 @@ const onig = loadWASM(Uint8Array.from(atob(wasm.split(",")[1]), (c) => c.charCod
   createOnigString: (text: string) => new OnigString(text),
 }));
 function fileSuffix(file: DiffFile): string {
-  return "." + file.language.replace(/[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i, "").toLowerCase();
+  return "." + file.language.toLowerCase();
 }
 function languageExtensions(installed: readonly vscode.Extension<unknown>[]): Map<string, string> {
   const result = new Map<string, string>();

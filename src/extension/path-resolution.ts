@@ -1,12 +1,12 @@
 import { getArcadiaRoot, getArcFileUri, isArcModeEnabled } from "./arc-paths";
-import { normalizeDiffFilePath } from "../shared/extract";
+import { parsedDiffFilePath } from "../shared/extract";
 import * as vscode from "vscode";
 
 export async function resolveAccessibleUri(args: {
   diffDocument: vscode.TextDocument;
   path: string;
 }): Promise<vscode.Uri | undefined> {
-  const path = normalizeDiffFilePath(args.path);
+  const path = parsedDiffFilePath(args.path);
   if (!path) return undefined;
   if (!isAbsolutePath(path) && isArcModeEnabled(args.diffDocument.uri) && getArcadiaRoot(args.diffDocument.uri)) {
     const uri = getArcFileUri(args.diffDocument.uri, path);

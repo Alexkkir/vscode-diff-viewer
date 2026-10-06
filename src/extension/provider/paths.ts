@@ -1,6 +1,6 @@
 import { isArcModeEnabled } from "../arc-paths";
 import { parse } from "diff2html";
-import { normalizeDiffFilePath } from "../../shared/extract";
+import { parsedDiffFilePath } from "../../shared/extract";
 import { resolveAccessibleUri } from "../path-resolution";
 import { WebviewContext } from "./types";
 
@@ -11,8 +11,8 @@ export async function collectAccessiblePaths(args: {
   const candidatePaths = new Set<string>();
 
   for (const diffFile of args.diffFiles) {
-    const oldPath = normalizeDiffFilePath(diffFile.oldName);
-    const newPath = normalizeDiffFilePath(diffFile.newName);
+    const oldPath = parsedDiffFilePath(diffFile.oldName);
+    const newPath = parsedDiffFilePath(diffFile.newName);
     if (oldPath) {
       candidatePaths.add(oldPath);
     }

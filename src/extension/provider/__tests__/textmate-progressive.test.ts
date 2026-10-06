@@ -2,6 +2,9 @@ import { parse } from "diff2html";
 import type { DiffFile } from "diff2html/lib/types";
 import type { SemanticSpan } from "../semantic-tokens";
 import type { FileSyntax } from "../../../shared/syntax";
+import { parseDiff } from "../../../shared/diff";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 jest.mock("vscode", () => ({
   extensions: { all: [] },
@@ -135,6 +138,23 @@ beforeEach(() => {
     return registry;
   });
   ({ highlightDiffProgressively, highlightDiff } = require("../textmate"));
+});
+
+it("matches the literal parsed extension while still recognizing actual Arc header metadata", async () => {
+  const fixtures: Array<{ id: string; patch: string }> = JSON.parse(
+    readFileSync(join(__dirname, "../../../shared/testing/git-source-fidelity.json"), "utf8"),
+  );
+  files = parseDiff(fixtures.find(({ id }) => id === "arc-literal-extension")!.patch);
+  source = undefined;
+  expect(files[0].language).toBe("py (working tree)");
+  await expect(highlightDiff(files)).resolves.toEqual([null]);
+  expect(tokenize).not.toHaveBeenCalled();
+  expect(registries[0].loadGrammar).not.toHaveBeenCalled();
+
+  files = parseDiff("--- literal.py\t(abcdef123)\n+++ literal.py\t(working tree)\n@@ -1 +1 @@\n-old\n+new\n");
+  expect(files[0].language).toBe("py");
+  await expect(highlightDiff(files)).resolves.not.toEqual([null]);
+  expect(registries[0].loadGrammar).toHaveBeenCalledWith("source.python");
 });
 
 it("returns lexical colors while semantic tokens are still pending, then overlays without retokenizing or mutating the first result", async () => {

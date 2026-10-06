@@ -295,6 +295,25 @@ describe("MessageToWebviewHandlerImpl", () => {
     expect(postMessageToExtensionFn).not.toHaveBeenCalled();
   });
 
+  it("keeps a manually expanded file open through large-diff refreshes", async () => {
+    const payload = createUpdatePayload({
+      diffFiles: ["one.ts", "two.ts"].map((name) => createMockDiffFile({ oldName: name, newName: name })),
+      accessiblePaths: ["one.ts", "two.ts"],
+      collapseAll: true,
+      performance: { isLargeDiff: true, deferViewedStateHashing: true },
+    });
+    await handler.updateWebview(payload);
+    const toggles = () => Array.from(document.querySelectorAll<HTMLInputElement>(".d2h-file-collapse-input"));
+    expect(toggles().map((toggle) => toggle.checked)).toEqual([true, true]);
+    toggles()[0].click();
+    expect(toggles().map((toggle) => toggle.checked)).toEqual([false, true]);
+    await handler.updateWebview(payload);
+    expect(toggles().map((toggle) => toggle.checked)).toEqual([false, true]);
+    handler.performWebviewAction({ action: "collapseAll" });
+    await handler.updateWebview(payload);
+    expect(toggles().map((toggle) => toggle.checked)).toEqual([true, true]);
+  });
+
   it("queues early semantic colors until their diff is ready and discards superseded colors", async () => {
     const update = jest.spyOn(SyntaxHighlightingController.prototype, "updateNative");
     try {

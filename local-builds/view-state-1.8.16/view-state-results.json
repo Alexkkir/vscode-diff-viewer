@@ -1,0 +1,5896 @@
+[
+  {
+    "format": "line-by-line",
+    "before": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 370,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "identical": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 370,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "beforeTheme": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 370,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "theme": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 370,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "beforeUpdate": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 370,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "update": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 390,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {}
+      }
+    },
+    "beforeLayout": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 390,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {}
+      }
+    },
+    "layout": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 780,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {}
+      }
+    },
+    "errors": []
+  },
+  {
+    "format": "line-by-line",
+    "large": {
+      "manuallyExpanded": {
+        "y": 1612,
+        "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+        "anchorY": 57,
+        "x": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 0, 0, 0, 0, 0, 0, 0],
+        "hidden": 1560,
+        "gaps": [
+          {
+            "file": "file0.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          }
+        ],
+        "expanded": ["file12.py"],
+        "selection": "",
+        "uiState": {
+          "scrollTop": 0,
+          "selectedPath": "file12.py",
+          "fileCollapsedOverrides": {
+            "file12.py": false
+          }
+        }
+      },
+      "stages": [
+        {
+          "stage": "identical",
+          "y": 1612,
+          "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+          "anchorY": 57,
+          "x": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 0, 0, 0, 0, 0, 0, 0],
+          "hidden": 1560,
+          "gaps": [
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            }
+          ],
+          "expanded": ["file12.py"],
+          "selection": "",
+          "uiState": {
+            "scrollTop": 0,
+            "selectedPath": "file12.py",
+            "fileCollapsedOverrides": {
+              "file12.py": false
+            }
+          }
+        },
+        {
+          "stage": "theme",
+          "y": 1612,
+          "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+          "anchorY": 57,
+          "x": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 0, 0, 0, 0, 0, 0, 0],
+          "hidden": 1560,
+          "gaps": [
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            }
+          ],
+          "expanded": ["file12.py"],
+          "selection": "",
+          "uiState": {
+            "scrollTop": 0,
+            "selectedPath": "file12.py",
+            "fileCollapsedOverrides": {
+              "file12.py": false
+            }
+          }
+        },
+        {
+          "stage": "external-update",
+          "y": 1612,
+          "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+          "anchorY": 57,
+          "x": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 0, 0, 0, 0, 0, 0, 0],
+          "hidden": 1560,
+          "gaps": [
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            }
+          ],
+          "expanded": ["file12.py"],
+          "selection": "",
+          "uiState": {
+            "scrollTop": 0,
+            "selectedPath": "file12.py",
+            "fileCollapsedOverrides": {
+              "file12.py": false
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "format": "side-by-side",
+    "before": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 740,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "identical": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 740,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "beforeTheme": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 740,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "theme": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 740,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "beforeUpdate": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 740,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {
+          "5e5c773588a03046beb713ff098cef29537bcbb8": {
+            "0:122:161": {
+              "start": 142,
+              "end": 161
+            }
+          }
+        }
+      }
+    },
+    "update": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 780,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {}
+      }
+    },
+    "beforeLayout": {
+      "y": 14248,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430, 430, 430, 430, 430, 430],
+      "hidden": 780,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {}
+      }
+    },
+    "layout": {
+      "y": 14374,
+      "anchor": "file_3_line_66_wide_column_wide_column_wide_column_wide_column_wide_co",
+      "anchorY": 57,
+      "x": [430, 430, 430, 430, 430],
+      "hidden": 390,
+      "gaps": [
+        {
+          "file": "file0.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file0.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file1.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file2.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file3.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:0:20",
+          "hidden": "20"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:122:161",
+          "hidden": "39"
+        },
+        {
+          "file": "file4.py",
+          "id": "0:263:282",
+          "hidden": "19"
+        }
+      ],
+      "expanded": ["file0.py", "file1.py", "file2.py", "file3.py", "file4.py"],
+      "selection": "",
+      "uiState": {
+        "scrollTop": 0,
+        "contextExpansions": {}
+      }
+    },
+    "errors": []
+  },
+  {
+    "format": "side-by-side",
+    "large": {
+      "manuallyExpanded": {
+        "y": 1612,
+        "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+        "anchorY": 57,
+        "x": [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 430, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0
+        ],
+        "hidden": 3120,
+        "gaps": [
+          {
+            "file": "file0.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file0.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file1.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file2.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file3.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file4.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file5.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file6.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file7.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file8.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file9.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file10.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file11.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file12.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file13.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file14.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file15.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file16.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file17.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file18.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:0:20",
+            "hidden": "20"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:122:161",
+            "hidden": "39"
+          },
+          {
+            "file": "file19.py",
+            "id": "0:263:282",
+            "hidden": "19"
+          }
+        ],
+        "expanded": ["file12.py"],
+        "selection": "",
+        "uiState": {
+          "scrollTop": 0,
+          "selectedPath": "file12.py",
+          "fileCollapsedOverrides": {
+            "file12.py": false
+          }
+        }
+      },
+      "stages": [
+        {
+          "stage": "identical",
+          "y": 1612,
+          "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+          "anchorY": 57,
+          "x": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 430, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0
+          ],
+          "hidden": 3120,
+          "gaps": [
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            }
+          ],
+          "expanded": ["file12.py"],
+          "selection": "",
+          "uiState": {
+            "scrollTop": 0,
+            "selectedPath": "file12.py",
+            "fileCollapsedOverrides": {
+              "file12.py": false
+            }
+          }
+        },
+        {
+          "stage": "theme",
+          "y": 1612,
+          "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+          "anchorY": 57,
+          "x": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 430, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0
+          ],
+          "hidden": 3120,
+          "gaps": [
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            }
+          ],
+          "expanded": ["file12.py"],
+          "selection": "",
+          "uiState": {
+            "scrollTop": 0,
+            "selectedPath": "file12.py",
+            "fileCollapsedOverrides": {
+              "file12.py": false
+            }
+          }
+        },
+        {
+          "stage": "external-update",
+          "y": 1612,
+          "anchor": "file_12_line_66_wide_column_wide_column_wide_column_wide_column_wide_c",
+          "anchorY": 57,
+          "x": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 430, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0
+          ],
+          "hidden": 3120,
+          "gaps": [
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file0.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file1.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file2.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file3.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file4.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file5.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file6.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file7.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file8.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file9.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file10.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file11.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file12.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file13.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file14.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file15.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file16.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file17.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file18.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:0:20",
+              "hidden": "20"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:122:161",
+              "hidden": "39"
+            },
+            {
+              "file": "file19.py",
+              "id": "0:263:282",
+              "hidden": "19"
+            }
+          ],
+          "expanded": ["file12.py"],
+          "selection": "",
+          "uiState": {
+            "scrollTop": 0,
+            "selectedPath": "file12.py",
+            "fileCollapsedOverrides": {
+              "file12.py": false
+            }
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,3 +1,11 @@
+# Latest local build: 1.8.16
+
+Install `diff-viewer-1.8.16-refresh-fidelity.vsix`, then run **Developer: Reload Window**.
+
+This follow-up covers sequences of actions: refresh keeps horizontal scroll and manually opened large-diff files; layout changes keep the visible source-line anchor; delayed semantic highlighting preserves forward/backward and multiline selections. Real Git-generated patches also exposed source/path failures: embedded CR, header TAB delimiters, and literal filenames resembling revision or rename presentation. These are now handled at the parser boundary without changing decoded filesystem names.
+
+For changed groups containing CR, intraline highlighting is disabled to avoid an upstream bug that mixed deleted text into the inserted side. Source text, side pairing, syntax colors and whole-line backgrounds remain intact. The [report](refresh-fidelity-1.8.16.md) records before/after evidence and repeatable checks. Build with the commands below using output version 1.8.16.
+
 # Latest local build: 1.8.15
 
 Install `diff-viewer-1.8.15-ui-contracts.vsix`, then run **Developer: Reload Window**.

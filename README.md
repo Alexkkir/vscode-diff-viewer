@@ -66,7 +66,11 @@ A missing final newline is shown as `\ No newline at end of file` beside the aff
 
 External file changes refresh the existing view without a Loading overlay. Where remote filesystem notifications are unavailable, visible diff editors check file metadata every 250 ms; a full content check every two seconds covers providers with unchanged/coarse timestamps. Unsaved editor changes take priority over disk content.
 
+Refresh and theme/layout changes preserve per-file horizontal offsets and the visible source-line anchor. Manually opened files in a large diff remain open on refresh. Native syntax enrichment preserves the selected source text so a delayed language-server response does not interrupt copying.
+
 Native lexical colors appear with the diff. Language-server colors arrive separately without rebuilding the view or changing expanded context. Folded context retains its full text and tokenization state; its DOM receives syntax colors when revealed, including through Find.
+
+Literal parsed filenames are used unchanged for navigation and syntax sources, including names containing spaces or text resembling revision labels. Carriage-return bytes are retained in source cells. Changed groups containing CR omit intraline change spans because the upstream highlighter does not safely separate their old/new text; syntax colors and whole-line diff colors remain available.
 
 ### Find in a diff
 

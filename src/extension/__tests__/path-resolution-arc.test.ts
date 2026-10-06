@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { resolveAccessibleUri } from "../path-resolution";
+import { parseDiff } from "../../shared/diff";
 
 function uri(path: string, scheme = "file", authority = ""): vscode.Uri {
   return {
@@ -78,13 +79,22 @@ describe("Arc file resolution", () => {
     expect(vscode.workspace.getWorkspaceFolder).toHaveBeenCalledWith(diffUri);
   });
 
-  it.each([
-    "ml/tensorflow/train.py (working tree)",
-    "ml/tensorflow/train.py\t(446896b256014781a4d94f1ccc267c8615eb1474)",
-    "ml/tensorflow/{old.py (446896b256014781a4d94f1ccc267c8615eb1474) → train.py (working tree)}",
-  ])("normalizes revision and rename display metadata before resolving: %s", async (path) => {
-    expect((await resolve(uri("/home/user/5arcadia/project/diff.diff"), path))?.path).toBe(
+  it.each([" ", "\t"])("resolves Arc metadata only after parsing the file headers: %p", async (separator) => {
+    const [file] = parseDiff(
+      `--- ml/tensorflow/old.py${separator}(446896b256014781a4d94f1ccc267c8615eb1474)\n` +
+        `+++ ml/tensorflow/train.py${separator}(working tree)\n@@ -1 +1 @@\n-old\n+new\n`,
+    );
+    expect((await resolve(uri("/home/user/5arcadia/project/diff.diff"), file.newName))?.path).toBe(
       "/home/user/5arcadia/ml/tensorflow/train.py",
     );
   });
+
+  it.each(["literal (working tree)", "literal (abcdef0123)", "literal {old → new}.txt"])(
+    "preserves literal filename text when resolving a parsed path: %s",
+    async (path) => {
+      expect((await resolve(uri("/home/user/5arcadia/project/diff.diff"), path))?.path).toBe(
+        `/home/user/5arcadia/${path}`,
+      );
+    },
+  );
 });

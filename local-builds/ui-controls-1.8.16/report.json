@@ -1,0 +1,448 @@
+{
+  "build": {
+    "version": "1.8.16",
+    "extensionSha256": "0f56e1b096b38469e120a7c5a8c10bc72f38fb1461fc5e96af0ab9d369bca43b",
+    "webviewSha256": "dc6cc71cf264e56bdc9ba2dddc74cd41d9761d0e273987671771d6539efc7419"
+  },
+  "filter": null,
+  "vscode": "1.139.0",
+  "phase": "1.8.16-final",
+  "observations": [
+    {
+      "names": ["src/example.py", "second.py"],
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "Close",
+          "aria": "Dismiss large diff notice",
+          "title": "",
+          "id": "large-diff-notice-dismiss",
+          "cls": "",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "src/example.py",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "d2h-file-name",
+          "href": "#diff-viewer-file-0"
+        },
+        {
+          "tag": "A",
+          "text": "second.py",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "d2h-file-name",
+          "href": "#diff-viewer-file-1"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open file",
+          "aria": "Open file: src/example.py",
+          "title": "",
+          "id": "",
+          "cls": "diff-viewer-file-action-button",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Copy path",
+          "aria": "Copy path: src/example.py",
+          "title": "",
+          "id": "",
+          "cls": "diff-viewer-file-action-button diff-viewer-copy-path",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "d2h-file-collapse-input",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "↑ Expand 20 lines above",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "diff-context-expand",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "↓ Expand 20 lines below",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "diff-context-expand",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "↑ Expand 20 lines above",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "diff-context-expand",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "↓ Expand 14 lines below",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "diff-context-expand",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open file",
+          "aria": "Open file: second.py",
+          "title": "",
+          "id": "",
+          "cls": "diff-viewer-file-action-button",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Copy path",
+          "aria": "Copy path: second.py",
+          "title": "",
+          "id": "",
+          "cls": "diff-viewer-file-action-button diff-viewer-copy-path",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "aria": null,
+          "title": "",
+          "id": "",
+          "cls": "d2h-file-collapse-input",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "aria": null,
+          "title": "",
+          "id": "expand-all-toggle",
+          "cls": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "aria": null,
+          "title": "",
+          "id": "syntax-highlighting-toggle",
+          "cls": "",
+          "href": null
+        }
+      ],
+      "header": "<div class=\"d2h-file-header d2h-sticky-header\" data-vscode-context=\"{&quot;webviewSection&quot;:&quot;fileHeader&quot;,&quot;diffviewerFilePath&quot;:&quot;src/example.py&quot;,&quot;diffviewerFileName&quot;:&quot;example.py&quot;}\">\n    <span class=\"d2h-file-name-wrapper\">\n    <svg aria-hidden=\"true\" class=\"d2h-icon\" height=\"16\" version=\"1.1\" viewBox=\"0 0 12 16\" width=\"12\">\n        <path d=\"M6 5H2v-1h4v1zM2 8h7v-1H2v1z m0 2h7v-1H2v1z m0 2h7v-1H2v1z m10-7.5v9.5c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V2c0-0.55 0.45-1 1-1h7.5l3.5 3.5z m-1 0.5L8 2H1v12h10V5z\"></path>\n    </svg>    <span class=\"d2h-file-name diff-file-link\" role=\"link\" tabindex=\"0\" title=\"src/example.py\nCtrl/Cmd+click or Enter to open\" aria-label=\"Open file: src/example.py\">src/example.py</span>\n    <span class=\"d2h-tag d2h-changed d2h-changed-tag\">CHANGED</span></span>\n<div class=\"diff-viewer-file-actions\"><button type=\"button\" class=\"diff-viewer-file-action-button\" data-path=\"src/example.py\" aria-label=\"Open file: src/example.py\">Open file</button><button type=\"button\" class=\"diff-viewer-file-action-button diff-viewer-copy-path\" data-path=\"src/example.py\" aria-label=\"Copy path: src/example.py\" data-action=\"copy\">Copy path</button></div><label class=\"d2h-file-collapse\" style=\"display: flex;\">\n    <input class=\"d2h-file-collapse-input\" type=\"checkbox\" name=\"viewed\" value=\"viewed\">\n    Viewed\n</label>\n    </div>",
+      "selection": ""
+    },
+    {
+      "workbenchControls": [
+        {
+          "role": "toolbar",
+          "aria": "Editor actions"
+        },
+        {
+          "role": "button",
+          "aria": "Show diff side by side"
+        },
+        {
+          "role": "button",
+          "aria": "Collapse all files"
+        },
+        {
+          "role": "button",
+          "aria": "Expand all files"
+        },
+        {
+          "role": "button",
+          "aria": "Show raw file"
+        },
+        {
+          "role": "button",
+          "aria": "Find in diff (⌘F)"
+        },
+        {
+          "role": "button",
+          "aria": "Split Editor Right\n[⌥] Split Editor Down"
+        },
+        {
+          "role": "button",
+          "aria": "More Actions..."
+        }
+      ]
+    },
+    {
+      "filenameSelection": {
+        "selected": "src/example.py\n",
+        "copied": "src/example.py\n",
+        "computed": {
+          "userSelect": "text",
+          "parentUserSelect": "auto"
+        }
+      }
+    },
+    {
+      "filenameMenu": {
+        "menus": ["Copy file nameCopy file pathCopy selected text"],
+        "labels": ["Copy file name", "Copy file path", "Copy selected text"]
+      }
+    },
+    {
+      "codeMenu": {
+        "menus": ["Copy selected text"],
+        "labels": ["Copy selected text"]
+      }
+    },
+    {
+      "contextCopyDebug": {
+        "selected": "Alpha = 2",
+        "selectedInMenu": "",
+        "copied": "Alpha = 2",
+        "selectionAfter": ""
+      }
+    }
+  ],
+  "results": [
+    {
+      "name": "filename-selection-copy",
+      "status": "pass",
+      "evidence": {
+        "selected": "src/example.py\n",
+        "copied": "src/example.py\n",
+        "computed": {
+          "userSelect": "text",
+          "parentUserSelect": "auto"
+        }
+      }
+    },
+    {
+      "name": "filename-context-menu",
+      "status": "pass",
+      "evidence": {
+        "menus": ["Copy file nameCopy file pathCopy selected text"],
+        "labels": ["Copy file name", "Copy file path", "Copy selected text"]
+      }
+    },
+    {
+      "name": "code-context-menu",
+      "status": "pass",
+      "evidence": {
+        "menus": ["Copy selected text"],
+        "labels": ["Copy selected text"]
+      }
+    },
+    {
+      "name": "copy-path-button",
+      "status": "pass",
+      "evidence": {
+        "clipboard": "src/example.py"
+      }
+    },
+    {
+      "name": "filename-drag-copy",
+      "status": "pass",
+      "evidence": {
+        "selected": "src/example.py",
+        "copied": "src/example.py"
+      }
+    },
+    {
+      "name": "filename-context-copy-path-and-name",
+      "status": "pass",
+      "evidence": {
+        "Copy file path": "src/example.py",
+        "Copy file name": "example.py"
+      }
+    },
+    {
+      "name": "code-selection-context-copy",
+      "status": "pass",
+      "evidence": {
+        "selected": "Alpha = 2",
+        "clipboard": "Alpha = 2"
+      }
+    },
+    {
+      "name": "summary-show-hide-and-anchor",
+      "status": "pass",
+      "evidence": {
+        "target": "second.py",
+        "headerY": 724.984375
+      }
+    },
+    {
+      "name": "viewed-toggle-and-footer-expand-all",
+      "status": "pass",
+      "evidence": {
+        "viewed": true,
+        "indeterminate": true,
+        "footerCollapseAndExpand": true
+      }
+    },
+    {
+      "name": "syntax-toggle",
+      "status": "pass",
+      "evidence": {
+        "tokenCount": 828
+      }
+    },
+    {
+      "name": "find-all-controls-and-editable-context-menu",
+      "status": "pass",
+      "evidence": {
+        "matchCounts": ["1 / 2", "2 / 2", "1 / 1", "0 / 0"],
+        "keyboardOpenClose": true,
+        "editableMenu": ["Cut⌘X", "Copy⌘C", "Paste⌘V"]
+      }
+    },
+    {
+      "name": "toolbar-collapse-and-expand-all",
+      "status": "pass",
+      "evidence": true
+    },
+    {
+      "name": "toolbar-layout-side-by-side",
+      "status": "pass",
+      "evidence": {
+        "format": "side-by-side",
+        "panes": 4
+      }
+    },
+    {
+      "name": "toolbar-layout-line-by-line",
+      "status": "pass",
+      "evidence": {
+        "format": "line-by-line",
+        "panes": 0
+      }
+    },
+    {
+      "name": "context-expansion-final-steps",
+      "status": "pass",
+      "evidence": {
+        "steps": [20, 5, 20, 15, 14],
+        "remaining": 0
+      }
+    },
+    {
+      "name": "local-horizontal-scroll-wheel",
+      "status": "pass",
+      "evidence": [328.5, 328.5, 0, 0]
+    },
+    {
+      "name": "global-scrollbar-track-drag-wheel",
+      "status": "pass",
+      "evidence": {
+        "limits": [
+          {
+            "left": 6787,
+            "max": 6787
+          },
+          {
+            "left": 6787,
+            "max": 6787
+          },
+          {
+            "left": 0,
+            "max": 0
+          },
+          {
+            "left": 0,
+            "max": 0
+          }
+        ],
+        "afterDrag": [0, 0, 0, 0],
+        "afterWheel": [180, 180, 0, 0],
+        "afterShiftWheel": [360, 360, 0, 0]
+      }
+    },
+    {
+      "name": "open-file-button",
+      "status": "pass",
+      "evidence": {
+        "document": "/var/folders/3j/0qfjfdls2mq8m_q52ksp0v1mf42xt5/T/diff-ui-controls-8rJFaM/workspace/src/example.py"
+      }
+    },
+    {
+      "name": "filename-click-select-and-modifier-open",
+      "status": "pass",
+      "evidence": true
+    },
+    {
+      "name": "filename-keyboard-open",
+      "status": "pass",
+      "evidence": true
+    },
+    {
+      "name": "line-number-navigation",
+      "status": "pass",
+      "evidence": {
+        "line": 76
+      }
+    },
+    {
+      "name": "toolbar-show-raw",
+      "status": "pass",
+      "evidence": {
+        "document": "sample.diff",
+        "contentEqualsFixture": true
+      }
+    },
+    {
+      "name": "diagnostics-command-palette",
+      "status": "pass",
+      "evidence": {
+        "extensionVersion": "1.8.16"
+      }
+    },
+    {
+      "name": "explorer-open-collapsed",
+      "status": "pass",
+      "evidence": {
+        "viewed": "2 / 2"
+      }
+    },
+    {
+      "name": "side-by-side-context-expansion",
+      "status": "pass",
+      "evidence": {
+        "steps": [20, 5, 20, 15, 14],
+        "matchingPanes": true
+      }
+    },
+    {
+      "name": "renamed-file-open-old-and-new",
+      "status": "pass",
+      "evidence": ["old.py", "new.py"]
+    },
+    {
+      "name": "large-diff-notice-dismiss-and-expand",
+      "status": "pass",
+      "evidence": {
+        "dismissed": true,
+        "filesExpanded": 150
+      }
+    },
+    {
+      "name": "empty-diff-control-states",
+      "status": "pass",
+      "evidence": true
+    }
+  ],
+  "browserErrors": []
+}

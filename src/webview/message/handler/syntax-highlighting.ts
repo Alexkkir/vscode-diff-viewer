@@ -34,6 +34,17 @@ function sameTokens(left?: SyntaxToken[], right?: SyntaxToken[]): boolean {
   );
 }
 
+// HTML parsing normalizes literal CR to LF, even when source text must retain it.
+function preserveCarriageReturns(html: string): string {
+  return html.replace(/\r/g, "&#13;");
+}
+
+interface SelectionPoint {
+  node: Node;
+  offset: number;
+  line?: { element: HTMLElement; text: string; firstChild: ChildNode | null; offset: number };
+}
+
 // Native tokens and highlight.js only color text; neither renders diagnostics.
 export class SyntaxHighlightingController {
   private lines: CodeLine[] = [];
@@ -49,9 +60,9 @@ export class SyntaxHighlightingController {
           fileIndex,
         }));
     wrappers.forEach(({ wrapper: file, fileIndex }) => {
-      // Revision-labelled diffs append metadata to the extension in data-lang.
-      const extension = (file.dataset.lang ?? "").replace(/[ \t]+\((?:working tree|[a-f0-9]{7,64})\)$/i, "");
-      file.dataset.lang = extension;
+      // Parsing has already removed actual Arc revision labels. A Git filename
+      // may literally end with the same text, so keep its parsed extension intact.
+      const extension = file.dataset.lang ?? "";
       const detected = getLanguage(extension);
       const language = hljs.getLanguage(detected) ? detected : "plaintext";
       const sides = Array.from(file.querySelectorAll(".d2h-file-side-diff"));
@@ -97,16 +108,18 @@ export class SyntaxHighlightingController {
   // Semantic providers can enrich the already-visible lexical colors without
   // rebuilding the diff DOM, losing expanded context, or moving the viewport.
   public updateNative(syntax?: Array<FileSyntax | null>): void {
-    for (const line of this.lines) {
-      const file = syntax?.[line.fileIndex];
-      const tokens = file?.new[line.newNumber] ?? file?.old[line.oldNumber];
-      if (sameTokens(line.tokens, tokens)) continue;
-      line.tokens = tokens;
-      if (this.args.getEnabled()) {
-        this.restore(line);
-        if (!line.row.hidden) this.highlight(line);
+    this.preserveSelection(() => {
+      for (const line of this.lines) {
+        const file = syntax?.[line.fileIndex];
+        const tokens = file?.new[line.newNumber] ?? file?.old[line.oldNumber];
+        if (sameTokens(line.tokens, tokens)) continue;
+        line.tokens = tokens;
+        if (this.args.getEnabled()) {
+          this.restore(line);
+          if (!line.row.hidden) this.highlight(line);
+        }
       }
-    }
+    });
   }
 
   public refreshVisible(): void {
@@ -115,18 +128,67 @@ export class SyntaxHighlightingController {
 
   private restore(line: CodeLine): void {
     if (!line.highlighted) return;
-    line.element.innerHTML = line.html;
+    line.element.innerHTML = preserveCarriageReturns(line.html);
     line.element.className = line.className;
     line.highlighted = false;
   }
 
   private apply(): void {
     const enabled = this.args.getEnabled();
-    for (const line of this.lines) {
-      if (enabled) {
-        if (!line.highlighted && !line.row.hidden) this.highlight(line);
-      } else this.restore(line);
-    }
+    this.preserveSelection(() => {
+      for (const line of this.lines) {
+        if (enabled) {
+          if (!line.highlighted && !line.row.hidden) this.highlight(line);
+        } else this.restore(line);
+      }
+    });
+  }
+
+  // Recoloring replaces text nodes. Save logical endpoints once for the entire
+  // update so a cross-line or backwards selection survives all changed rows.
+  private preserveSelection(update: () => void): void {
+    const selection = globalThis.getSelection?.();
+    const capture = (node: Node | null, offset: number): SelectionPoint | undefined => {
+      if (!node) return;
+      const element = this.lines.find((line) => line.element.contains(node))?.element;
+      if (!element) return { node, offset };
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      range.setEnd(node, offset);
+      return {
+        node,
+        offset,
+        line: {
+          element,
+          text: element.textContent ?? "",
+          firstChild: element.firstChild,
+          offset: range.toString().length,
+        },
+      };
+    };
+    const anchor = capture(selection?.anchorNode ?? null, selection?.anchorOffset ?? 0);
+    const focus = capture(selection?.focusNode ?? null, selection?.focusOffset ?? 0);
+    update();
+    if (!selection || !anchor || !focus) return;
+    if (![anchor, focus].some((point) => point.line && point.line.firstChild !== point.line.element.firstChild)) return;
+    const resolve = (point: SelectionPoint): { node: Node; offset: number } | undefined => {
+      if (!point.line) return point.node.isConnected ? point : undefined;
+      const { element, text } = point.line;
+      if (!element.isConnected || element.textContent !== text) return;
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      let offset = point.line.offset;
+      let node: Node | null;
+      while ((node = walker.nextNode())) {
+        const length = node.textContent?.length ?? 0;
+        if (offset <= length) return { node, offset };
+        offset -= length;
+      }
+      return { node: element, offset: element.childNodes.length };
+    };
+    const nextAnchor = resolve(anchor);
+    const nextFocus = resolve(focus);
+    if (nextAnchor && nextFocus)
+      selection.setBaseAndExtent(nextAnchor.node, nextAnchor.offset, nextFocus.node, nextFocus.offset);
   }
 
   private highlight(line: CodeLine): void {
@@ -140,12 +202,12 @@ export class SyntaxHighlightingController {
     const original = nodeStream(element);
     if (original.length) {
       const highlighted = document.createElement("span");
-      highlighted.innerHTML = result.value;
+      highlighted.innerHTML = preserveCarriageReturns(result.value);
       result.value = mergeStreams(original, nodeStream(highlighted), text);
     }
     element.classList.add("hljs");
     if (result.language) element.classList.add(result.language);
-    element.innerHTML = result.value;
+    element.innerHTML = preserveCarriageReturns(result.value);
   }
 
   private applyTextMate({ element, text }: CodeLine, tokens: SyntaxToken[]): void {
@@ -166,7 +228,7 @@ export class SyntaxHighlightingController {
     if (offset < text.length) highlighted.append(document.createTextNode(text.slice(offset)));
     const original = nodeStream(element);
     if (original.length) {
-      element.innerHTML = mergeStreams(original, nodeStream(highlighted), text);
+      element.innerHTML = preserveCarriageReturns(mergeStreams(original, nodeStream(highlighted), text));
     } else {
       // Most rows have no intraline <ins>/<del> markup. Avoid serializing and
       // reparsing thousands of native spans just to insert those same nodes.

@@ -24,9 +24,10 @@ function matchLines(oldLines: DiffLine[], newLines: DiffLine[], config: Renderer
 class AlignedSideBySideRenderer extends SideBySideRenderer {
   private combined = false;
   private language?: string;
+  private withoutInlineHighlight?: SideBySideRenderer;
 
   constructor(
-    hogan: HoganJsUtils,
+    private readonly hogan: HoganJsUtils,
     private readonly alignmentConfig: RendererConfig,
   ) {
     super(hogan, alignmentConfig);
@@ -42,15 +43,30 @@ class AlignedSideBySideRenderer extends SideBySideRenderer {
     return this.combined
       ? super.applyRematchMatching(oldLines, newLines, matcher)
       : matchLines(oldLines, newLines, this.alignmentConfig, this.language);
+  }
+
+  override processChangedLines(isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]) {
+    // Upstream removes the opposite side's <ins>/<del> spans with a regex that
+    // does not match CR. Keep the already chosen pairs, but omit inline spans
+    // for this group so removed text cannot leak into the new side (or vice versa).
+    if ([...oldLines, ...newLines].some((line) => line.content.includes("\r"))) {
+      this.withoutInlineHighlight ??= new SideBySideRenderer(this.hogan, {
+        ...this.alignmentConfig,
+        maxLineLengthHighlight: 0,
+      });
+      return this.withoutInlineHighlight.processChangedLines(isCombined, oldLines, newLines);
+    }
+    return super.processChangedLines(isCombined, oldLines, newLines);
   }
 }
 
 class AlignedLineByLineRenderer extends LineByLineRenderer {
   private combined = false;
   private language?: string;
+  private withoutInlineHighlight?: LineByLineRenderer;
 
   constructor(
-    hogan: HoganJsUtils,
+    private readonly hogan: HoganJsUtils,
     private readonly alignmentConfig: RendererConfig,
   ) {
     super(hogan, alignmentConfig);
@@ -66,6 +82,17 @@ class AlignedLineByLineRenderer extends LineByLineRenderer {
     return this.combined
       ? super.applyRematchMatching(oldLines, newLines, matcher)
       : matchLines(oldLines, newLines, this.alignmentConfig, this.language);
+  }
+
+  override processChangedLines(file: DiffFile, isCombined: boolean, oldLines: DiffLine[], newLines: DiffLine[]) {
+    if ([...oldLines, ...newLines].some((line) => line.content.includes("\r"))) {
+      this.withoutInlineHighlight ??= new LineByLineRenderer(this.hogan, {
+        ...this.alignmentConfig,
+        maxLineLengthHighlight: 0,
+      });
+      return this.withoutInlineHighlight.processChangedLines(file, isCombined, oldLines, newLines);
+    }
+    return super.processChangedLines(file, isCombined, oldLines, newLines);
   }
 }
 
@@ -79,7 +106,9 @@ export function renderAlignedDiffHtml(files: DiffFile[], configuration: Diff2Htm
     config.outputFormat === "side-by-side"
       ? new AlignedSideBySideRenderer(hogan, config)
       : new AlignedLineByLineRenderer(hogan, config);
-  return fileList + renderer.render(files);
+  // The HTML parser normalizes literal CR characters to LF, including source
+  // text inside code cells. A character reference retains the original byte.
+  return (fileList + renderer.render(files)).replaceAll("\r", "&#13;");
 }
 
 /** Keep diff2html's UI behaviors and templates, replacing only line pairing. */
